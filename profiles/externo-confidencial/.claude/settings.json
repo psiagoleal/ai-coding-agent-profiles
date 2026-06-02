@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "_comentario": "Perfil EXTERNO-CONFIDENCIAL — econômico e restritivo. Garanta opt-out de retenção no provedor de modelo.",
+  "env": {
+    "MAX_THINKING_TOKENS": "10000",
+    "CLAUDE_CODE_SUBAGENT_MODEL": "haiku"
+  },
+  "permissions": {
+    "defaultMode": "default",
+    "deny": [
+      "Bash(cat *.env*)",
+      "Bash(env)",
+      "Bash(printenv*)",
+      "Bash(git config --list*)",
+      "Bash(aws configure list*)",
+      "Bash(gcloud auth print-access-token*)",
+      "Bash(az account show*)",
+      "Bash(kubectl get secret*)"
+    ],
+    "ask": [
+      "Bash(uv add*)",
+      "Bash(pip install*)",
+      "Bash(git push*)"
+    ]
+  }
+}

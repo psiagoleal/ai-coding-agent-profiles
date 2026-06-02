@@ -1,0 +1,26 @@
+# .claudeignore — perfil EXTERNO-CONFIDENCIAL
+# Protege dados/segredos do cliente e evita varreduras volumosas.
+
+# --- Segredos ---
+.env
+.env.*
+*.pem
+*.key
+secrets.json
+**/credentials
+
+# --- Dados do cliente (sensíveis sob NDA) ---
+data/
+client_data/
+*.csv
+*.parquet
+*.xlsx
+exports/
+
+# --- Volumosos / gerados ---
+.venv/
+node_modules/
+__pycache__/
+*.log
+build/
+dist/
