@@ -1,0 +1,26 @@
+# Caminho relativo: config.example.toml
+#
+# Modelo de configuração pessoal do framework. Copie para `config.toml` e ajuste:
+#
+#   cp config.example.toml config.toml
+#
+# O `config.toml` é PESSOAL e NÃO deve ser versionado (já está no .gitignore).
+# O script `scripts/setup-profile.sh` lê estes valores e substitui os placeholders
+# `{{CHAVE}}` ao copiar um perfil para o repositório alvo (hoje: perfil `pessoal`).
+#
+# Placeholders reconhecidos:
+#   {{AUTHOR_NAME}}    -> [user].author_name
+#   {{COPYRIGHT_YEAR}} -> [user].copyright_year
+#   {{SUPPORT_LABEL}}  -> [support].support_label
+#   {{SUPPORT_URL}}    -> [support].support_url
+
+[user]
+# Nome exibido na LICENSE (copyright), na seção "Apoie" do README e em exemplos Doxygen (\author).
+author_name = "Seu Nome"
+# Ano de copyright na LICENSE.
+copyright_year = "2026"
+
+[support]
+# Seção "Apoie" do perfil pessoal (open-source). Ajuste para o seu canal de apoio.
+support_label = "Buy Me a Coffee"
+support_url = "https://buymeacoffee.com/seu-usuario"

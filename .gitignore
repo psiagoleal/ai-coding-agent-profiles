@@ -1,0 +1,17 @@
+# Pasta de referências (documentos internos — NÃO publicar)
+docs/refs/
+
+# Configuração pessoal do usuário (gerada a partir de config.example.toml)
+config.toml
+
+# Segredos / ambiente
+.env
+.env.*
+*.pem
+*.key
+secrets.json
+
+# Volumosos / gerados
+.venv/
+node_modules/
+__pycache__/

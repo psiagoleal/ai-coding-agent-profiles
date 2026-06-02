@@ -1,0 +1,29 @@
+# .claudeignore — filtros de indexação do agente (perfil EMPRESA)
+# Impede varreduras em pastas volumosas e protege dados sensíveis do contexto.
+
+# --- Segredos (NUNCA indexar) ---
+.env
+.env.*
+*.pem
+*.key
+secrets.json
+**/credentials
+
+# --- Dados proprietários sensíveis ---
+data/raw/
+data/proprietary/
+data/reference/
+series_temporais/
+logs/
+
+# --- Volumosos / gerados ---
+.venv/
+node_modules/
+__pycache__/
+*.parquet
+*.hdf5
+dumps/
+snapshots/
+*.log
+build/
+dist/
