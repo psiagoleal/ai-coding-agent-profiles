@@ -9,13 +9,15 @@
 secrets.json
 **/credentials
 
-# --- Dados do cliente (sensíveis sob NDA) ---
+# --- Dados do cliente (sensíveis sob NDA — padrões do projeto) ---
+# USER:BEGIN id=projeto-ignore
 data/
 client_data/
 *.csv
 *.parquet
 *.xlsx
 exports/
+# USER:END
 
 # --- Volumosos / gerados ---
 .venv/

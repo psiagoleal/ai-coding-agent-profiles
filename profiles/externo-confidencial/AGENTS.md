@@ -26,6 +26,7 @@
 
 ## 2. Comandos exatos (ajuste por projeto)
 
+<!-- USER:BEGIN id=comandos-exatos -->
 ```bash
 uv sync
 ruff check . --fix --select E,W,F
@@ -33,11 +34,13 @@ black . && isort .
 mypy src/ --ignore-missing-imports
 pytest -v --cov=src
 ```
+<!-- USER:END -->
 
 > Mantenha esta seção fiel ao projeto do cliente. O agente não deve adivinhar comandos.
 
 ## 3. Estrutura de diretórios e mapeamento
 
+<!-- USER:BEGIN id=estrutura-diretorios -->
 ```
 src/                 # código-fonte do projeto do cliente
 tests/               # testes
@@ -45,6 +48,7 @@ docs/adr/            # ADRs — leitura obrigatória
 docs/CURRENT-STATE.md# handoff entre turnos
 data/                # dados do cliente — SENSÍVEIS, ver .claudeignore
 ```
+<!-- USER:END -->
 
 ## 4. Estilo de codificação
 

@@ -29,6 +29,7 @@
 
 ## 3. Comandos exatos (ajuste por projeto)
 
+<!-- USER:BEGIN id=comandos-exatos -->
 ```bash
 uv sync                                   # Python
 ruff check . --fix && black . && isort .  # lint + format Python
@@ -38,6 +39,7 @@ pytest -v --cov=src                       # Python (pytest)
 # cargo test                              # Rust
 # npm test && prettier --write .          # Web (Svelte)
 ```
+<!-- USER:END -->
 
 ## 4. Estilo de codificação
 

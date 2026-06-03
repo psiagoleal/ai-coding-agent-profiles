@@ -9,12 +9,14 @@
 secrets.json
 **/credentials
 
-# --- Dados proprietários sensíveis ---
+# --- Dados proprietários sensíveis (padrões do projeto) ---
+# USER:BEGIN id=projeto-ignore
 data/raw/
 data/proprietary/
 data/reference/
 series_temporais/
 logs/
+# USER:END
 
 # --- Volumosos / gerados ---
 .venv/

@@ -28,6 +28,7 @@
 > O agente **não deve adivinhar** comandos — use exatamente os abaixo. Mantenha esta
 > seção fiel ao projeto real.
 
+<!-- USER:BEGIN id=comandos-exatos -->
 ```bash
 # Dependências
 uv sync                                   # ou: pip install -r requirements.txt
@@ -48,9 +49,11 @@ mypy src/ --ignore-missing-imports
 # Testes
 pytest tests/unit/ -v --cov=src
 ```
+<!-- USER:END -->
 
 ## 3. Estrutura de diretórios e mapeamento
 
+<!-- USER:BEGIN id=estrutura-diretorios -->
 ```
 src/core/            # lógica de domínio / processamento principal
 src/data_ingestion/  # ETL de dados de entrada
@@ -59,6 +62,7 @@ docs/adr/            # Registros de Decisão de Arquitetura — LEITURA OBRIGAT�
 docs/CURRENT-STATE.md# handoff entre turnos (ver skill handoff-updater)
 data/reference/      # dados de referência versionados — NÃO MODIFICAR
 ```
+<!-- USER:END -->
 
 ## 4. Estilo de codificação
 
