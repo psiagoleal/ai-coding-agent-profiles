@@ -10,6 +10,9 @@ config.toml
 *.pem
 *.key
 secrets.json
+# Exceção: os TEMPLATES .env.example dos perfis são versionados (só placeholders).
+!.env.example
+!**/.env.example
 
 # Volumosos / gerados
 .venv/
