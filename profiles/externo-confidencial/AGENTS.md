@@ -90,8 +90,11 @@ Os quatro princípios de não-exposição (ver skill `secrets-guard`) valem inte
   `--dangerously-skip-permissions` em qualquer base que toque dados do cliente.
 - **Injeção indireta:** *allowlist* de domínios; separar canais instrucionais de canais de
   dados; revisar *diffs* com atenção a arquivos sensíveis.
-- **Proveniência:** varredura de segredos pré-commit (`gitleaks`); registrar
-  modelo/versão/prompt em *trailers* quando o contrato exigir rastreabilidade.
+- **Proveniência:** varredura de segredos pré-commit (`gitleaks`). Quando o contrato
+  exigir rastreabilidade do uso de IA, registrá-lo **apenas na mensagem de commit**, ao
+  final, **entre chaves**: `{agente: <nome>; modelo: <modelo/versão>}`. **Nenhum outro
+  artefato** (código, ADR, handoff, descrição/metadado de PR) deve mencionar uso de IA nem
+  atribuir autoria, coautoria ou decisão a um agente.
 
 ## 8. Fluxo ágil
 

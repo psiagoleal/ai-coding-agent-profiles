@@ -33,7 +33,7 @@ graph TD
 | Revisão de PR | Humana obrigatória + SAST/SCA/**SBOM** | Humana obrigatória | Revisão + secrets scan pré-commit |
 | README/CHANGELOG público | Não | Não | **Sim** (badges, contribuição, Apoie) |
 | Handoff `CURRENT-STATE.md` | Obrigatório | Obrigatório | Opcional (recomendado em colab.) |
-| Proveniência (modelo/prompt em commit) | Obrigatória | Conforme contrato | Leve |
+| Proveniência de IA (só na msg. de commit, entre chaves `{agente; modelo}`) | Obrigatória | Conforme contrato | Recomendada |
 
 ## O que é idêntico nos três
 

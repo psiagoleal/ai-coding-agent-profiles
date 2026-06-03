@@ -34,5 +34,5 @@ exceção (uso de ferramenta paga/licenciada) exige um novo ADR com justificativ
   pagos sem um ADR que as autorize.
 - **Obrigatório:** registrar e justificar qualquer exceção em um novo ADR antes de adotá-la.
 
-> Qualquer tentativa de desvio viola as diretrizes de conformidade arquitetural e deve ser
-> reportada ao operador humano antes de prosseguir.
+> Qualquer desvio viola as diretrizes de conformidade arquitetural do projeto e deve ser
+> reportado para revisão antes de prosseguir.

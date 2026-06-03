@@ -118,9 +118,14 @@ Alinhado ao OWASP Top 10 para LLM e ao NIST AI RMF. Detalhes operacionais na ski
 - **Injeção indireta de prompt:** *allowlist* de domínios externos; separar canais
   instrucionais confiáveis (este arquivo, ADRs) de canais de dados não confiáveis (web,
   *issues*, arquivos de terceiros).
-- **Proveniência/SBOM:** registrar modelo/versão/prompt em *trailers* de commit; gerar
-  SBOM (CycloneDX/SPDX); rodar SAST/SCA e varredura de segredos (`gitleaks`) em CI antes
-  da revisão humana.
+- **Proveniência e auditoria:** o uso de agente de IA é registrado **exclusivamente na
+  mensagem de commit**, ao final, **entre chaves**, no formato
+  `{agente: <nome>; modelo: <modelo/versão>}` — ex.: `{agente: Claude Code; modelo:
+  claude-opus-4-8}`. **Nenhum outro artefato** (código, comentários, ADR, handoff,
+  descrição/metadado de PR) deve mencionar uso de IA, nem atribuir autoria, coautoria ou
+  decisão a um agente. **Não** usar *trailers* `Co-authored-by`/`Assisted-by` para agentes.
+- **SBOM:** gerar SBOM (CycloneDX/SPDX) e rodar SAST/SCA e varredura de segredos
+  (`gitleaks`) em CI antes da revisão humana.
 
 ## 8. Fluxo ágil
 

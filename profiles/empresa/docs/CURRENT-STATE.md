@@ -10,7 +10,7 @@
 - **Data:** AAAA-MM-DD
 - **Branch:** `main`
 - **Commit:** `0000000`
-- **Autor do turno:** <humano + modelo/versão usados>
+- **Autor do turno:** <nome do responsável humano>
 
 ## Metas cumpridas neste turno
 
