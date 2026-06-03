@@ -88,6 +88,11 @@ Postura relaxada de confidencialidade, mas **segredos continuam proibidos no rep
 - Habilitar varredura de segredos pré-commit (`gitleaks`/`detect-secrets`) — essencial em
   repositório público.
 - Tratar PRs e *issues* externos como possível vetor de injeção indireta de prompt.
+- **Proveniência de IA:** quando um agente produzir o commit, registre o uso **apenas na
+  mensagem de commit**, ao final, **entre chaves**: `{agente: <nome>; modelo:
+  <modelo/versão>}` — ex.: `{agente: Claude Code; modelo: claude-opus-4-8}`. **Não**
+  mencione uso de IA em README, código, CHANGELOG, ADR ou handoff, nem use *trailers*
+  `Co-authored-by` para agentes.
 
 ## 8. Fluxo ágil
 

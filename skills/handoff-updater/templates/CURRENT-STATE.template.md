@@ -9,7 +9,7 @@
 - **Data:** AAAA-MM-DD
 - **Branch:** `feature/...`
 - **Commit:** `abcdef1`
-- **Autor do turno:** <humano + modelo/versão usados>
+- **Autor do turno:** <nome do responsável humano>
 
 ## Metas cumpridas neste turno
 
@@ -26,7 +26,7 @@
 
 ## Próximo passo sugerido
 
-<o que a próxima pessoa/agente deve fazer primeiro>
+<o que a próxima pessoa deve fazer primeiro>
 
 ---
 

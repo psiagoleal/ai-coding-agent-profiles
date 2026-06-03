@@ -4,7 +4,7 @@
 
 - **Status:** Proposed <!-- Proposed | Accepted | Deprecated | Superseded by ADR-MMMM -->
 - **Data:** AAAA-MM-DD
-- **Decisores:** <nomes ou papéis>
+- **Decisores:** <nomes ou papéis humanos>
 - **Tags:** <ex.: dependências, dados, segurança>
 
 ## Contexto
@@ -28,10 +28,10 @@ Em voz ativa, declare o que foi decidido. Exemplo:
 
 ## Diretriz de Conformidade de Código
 
-Liste o que o agente está **expressamente proibido** de fazer, e o que **deve** fazer:
+Liste o que é **expressamente proibido** e o que é **obrigatório** no código do projeto:
 
 - Proibido: <ex.: introduzir dependências proprietárias/licenciadas sem um ADR que as autorize>.
 - Obrigatório: <ex.: toda capacidade central passa pela biblioteca open-source escolhida>.
 
-> Qualquer tentativa de desvio desta regra viola as diretrizes de conformidade
-> arquitetural do projeto e deve ser reportada ao operador humano antes de prosseguir.
+> Qualquer desvio desta regra viola as diretrizes de conformidade arquitetural do projeto
+> e deve ser reportado para revisão antes de prosseguir.
