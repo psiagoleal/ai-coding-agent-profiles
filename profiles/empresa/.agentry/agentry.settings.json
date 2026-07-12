@@ -1,0 +1,21 @@
+{
+  "$schema": "https://agentry.dev/schema/agentry-settings-schema-1.json",
+  "_comentario": "Perfil EMPRESA — cautela em acoes que mutam o sistema; ajuste conforme aprovacoes corporativas. Ver ai-coding-agent-profiles/docs/adr/0006 e agentry/docs/adr/0018 (schema de propriedade do agentry).",
+  "schemaVersion": 1,
+  "permissions": {
+    "deny": [],
+    "ask": [
+      "shell_exec",
+      "fs_write",
+      "fs_edit"
+    ]
+  },
+  "context": {
+    "repoMap": { "enabled": true },
+    "semanticRag": { "enabled": true },
+    "lspGrounding": { "enabled": true }
+  },
+  "providers": {
+    "ollama": { "structuredOutput": true }
+  }
+}

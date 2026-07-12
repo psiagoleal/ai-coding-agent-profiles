@@ -37,8 +37,9 @@
 #     - REGRA/ponteiro (CLAUDE.md, .cursorrules, copilot-instructions, skills): sobrescritos.
 #     - HÍBRIDO de texto (AGENTS.md, .claudeignore, .env.example): merge por seção — o miolo
 #       entre marcadores `USER:BEGIN id=... / USER:END` é PRESERVADO; o resto é regenerado.
-#     - HÍBRIDO JSON (.claude/settings.json): deep-merge via `jq` (requer jq); regra vence
-#       em conflito, chaves extras do usuário são preservadas.
+#     - HÍBRIDO JSON (.claude/settings.json, .agentry/agentry.settings.json — ADR-0006/
+#       agentry-ADR-0018): deep-merge via `jq` (requer jq); regra vence em conflito, chaves
+#       extras do usuário são preservadas.
 #     - VIVO (docs/CURRENT-STATE.md, docs/adr/NNNN-*.md, .env): nunca tocados.
 #   Arquivos novos (ausentes no alvo) são sempre criados. Nada é apagado. Use com --dry-run
 #   para revisar o plano antes. Recomenda-se árvore git limpa no alvo (revise com `git diff`).
@@ -132,10 +133,10 @@ copy_one() {
 # Classifica um caminho relativo do perfil em: rule | hybrid_text | hybrid_json | live.
 bucket_for() {
   case "$1" in
-    docs/CURRENT-STATE.md|docs/adr/[0-9]*|.env) echo live ;;
-    AGENTS.md|.claudeignore|.env.example)       echo hybrid_text ;;
-    .claude/settings.json)                      echo hybrid_json ;;
-    *)                                          echo rule ;;
+    docs/CURRENT-STATE.md|docs/adr/[0-9]*|.env)             echo live ;;
+    AGENTS.md|.claudeignore|.env.example)                   echo hybrid_text ;;
+    .claude/settings.json|.agentry/agentry.settings.json)   echo hybrid_json ;;
+    *)                                                       echo rule ;;
   esac
 }
 
