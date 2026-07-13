@@ -136,6 +136,20 @@ scripts/
    — edite **dentro** dos marcadores `USER:BEGIN/END` para que `--update` preserve as mudanças.
 4. Confirme `.gitignore`/`.claudeignore` cobrindo `.env` e dados sensíveis.
 
+## Interoperabilidade
+
+Este framework (**camada de política**) faz par com o projeto irmão `agentry` (**motor de
+execução** agêntico em Rust), que lê estes artefatos e os **impõe** (controle de egresso,
+permissões, skills). O contrato entre os dois é versionado e canônico aqui:
+
+- **Contrato (fonte da verdade):** [`docs/interop/SPEC.md`](docs/interop/SPEC.md) — charter de
+  responsabilidades + esquema dos artefatos + taxonomia de privacidade (perfil → classe de egresso).
+- **Trocas entre os projetos:** registradas no `exchange-log` append-only do lado executor
+  (`agentry/docs/interop/exchange-log.md`); decisões vinculantes viram ADR no repo dono.
+
+Regra: este repo **define** política; `agentry` **executa**. Não duplicar execução aqui nem
+política lá.
+
 ## Procedência
 
 - Base conceitual: boas práticas consolidadas de uso de agentes de IA no desenvolvimento
