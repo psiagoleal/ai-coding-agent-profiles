@@ -9,7 +9,7 @@
 
 - **Data:** 2026-07-12
 - **Branch:** `main`
-- **Commit:** `(pendente — ver histórico abaixo após commit)`
+- **Commit:** `8a104c1` (seguido por `d3ed413`, README: seção "Interoperabilidade")
 - **Autor do turno:** Iago Leal (mantenedor), com Claude Code
 
 ## Metas cumpridas neste turno

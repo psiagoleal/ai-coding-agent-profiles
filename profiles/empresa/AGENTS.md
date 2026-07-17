@@ -19,8 +19,8 @@
 
 ## 1. Ambiente de desenvolvimento
 
-- SO: **WSL2 com Ubuntu 24** · Shell: **zsh**
-- Gerenciador de pacotes Python: **uv** · Controle de versão: **git** · IDE: **VSCode**
+- SO: **Ubuntu 26** · Shell: **zsh**
+- Gerenciador de pacotes Python: **uv** · Controle de versão: **git** · IDE: **Zed IDE**
 - Containerização: **Docker** (serviços e testes)
 
 ## 2. Comandos exatos (ajuste por projeto)

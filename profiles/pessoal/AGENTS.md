@@ -16,14 +16,14 @@
 
 ## 1. Ambiente de desenvolvimento
 
-- SO: **WSL2 com Ubuntu 24** · Shell: **zsh**
-- Python: **uv** · Versão: **git** · IDE: **VSCode** · Containerização: **Docker**
+- SO: **Ubuntu 26** · Shell: **zsh**
+- Python: **uv** · Versão: **git** · IDE: **Zed IDE** · Containerização: **Docker**
 
 ## 2. Linguagens e frameworks preferenciais
 
 - **C++** → performance, memória e cálculos.
 - **Python** ou **Rust** → integração e gestão de bibliotecas.
-- **SvelteKit / Svelte 4** → interfaces Web.
+- **SvelteKit / Svelte 5** → interfaces Web.
 - **PostgreSQL 16** → banco relacional (usar *prepared statements*; roles por serviço).
 - **Docker** → containerização de serviços e testes.
 
