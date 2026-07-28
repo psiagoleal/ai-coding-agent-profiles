@@ -15,3 +15,4 @@ reverter, crie um novo ADR e marque o antigo como `Superseded by ADR-NNNN`.
 | [0004](0004-skills-executaveis.md) | Skills executáveis com scripts anexos (declarativo → executável) | Proposed |
 | [0005](0005-config-de-servicos-e-skills-overlay.md) | Configuração de serviços locais e skills overlay do projeto | Proposed |
 | [0006](0006-artefato-agentry-settings-json-por-perfil.md) | Distribuição de `.agentry/agentry.settings.json` por perfil | Proposed |
+| [0007](0007-arquitetura-de-delegacao-por-perfil.md) | Arquitetura de delegação (nuvem planeja, local lê) distribuída por perfil | Accepted |

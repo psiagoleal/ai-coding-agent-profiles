@@ -22,6 +22,7 @@ reutilizáveis nos três perfis (empresa, externo-confidencial, pessoal).
 | [`micro-ticket-planner`](micro-ticket-planner/SKILL.md) | Quebrar trabalho em tickets de um ciclo de contexto | Planejar sprint; tarefa ampla/ambígua |
 | [`handoff-updater`](handoff-updater/SKILL.md) | Manter `docs/CURRENT-STATE.md` | Após commit/ticket; "onde paramos" |
 | [`pr-review-guard`](pr-review-guard/SKILL.md) | Checklist do "problema dos 80%" + OWASP | Antes de abrir/aprovar PR ou merge |
+| [`delegacao-a-subagentes`](delegacao-a-subagentes/SKILL.md) | O que fica no modelo local vs. o que vai para a nuvem, e como pedir | Tarefa toca dado sensível; roteamento por task-class; "delegar"/"modelo local" |
 
 ## Modelo de instalação (independente de agente)
 
