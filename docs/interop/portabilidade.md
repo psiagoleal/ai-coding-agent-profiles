@@ -11,7 +11,7 @@ trabalho**: o que já funciona em cada harness, o que falta e como medir.
 |---|---|---|---|
 | Instruções | `AGENTS.md` | Sim — padrão agents.md, lido por todos | Ponteiros `CLAUDE.md`/`GEMINI.md` por harness |
 | Skills | `skills/` → `.claude/skills`, `.agents/skills` | Sim, via `--agent` | `agentry` ler `.agents/skills` |
-| Subagents | `agents/` → `.claude/agents` | **Só Claude Code** | Gerar Codex, Gemini, OpenCode, Copilot |
+| Subagents | `agents/` → `.claude/agents`, `.codex/agents`, `.opencode/agents` | Claude Code, Codex e OpenCode | Gerar Gemini e Copilot |
 | Hooks | por skill (`limites-de-uso`) | **Só Claude Code** | Cada harness tem seu mecanismo; sem padrão comum |
 | Modelo | `model:` no frontmatter do agent | Só Claude Code/ZCode | Traduzir para nível de raciocínio |
 
@@ -52,8 +52,10 @@ não `CLAUDE.md`.
 
 ## Ordem sugerida da etapa posterior
 
-1. `agentry`: descobrir skills em `.agents/skills` (mudança no repositório dele).
-2. Gerador de subagents para Codex e OpenCode — os dois com formato documentado e verificável
-   por CLI (`codex debug prompt-input`, `opencode agent list`).
-3. Gemini e Copilot.
-4. Revisar os 23 `CLAUDE.md` e os 9 usos de tool de subagent nos corpos.
+1. ~~Gerador de subagents para Codex e OpenCode~~ — **feito** (`scripts/gerar-agent-adapter.py`,
+   ligado ao instalador). Verificado: TOML válido para todos os subagents, corpo idêntico ao
+   canônico, `sandbox_mode`/`permission` derivados das tools. Falta exercitar ao vivo nas CLIs
+   (`codex debug prompt-input`, `opencode agent list`).
+2. `agentry`: descobrir skills em `.agents/skills` (solicitado à sessão do projeto).
+3. Gemini e Copilot — mesmo gerador, novo ramo em `gerar-agent-adapter.py`.
+4. Revisar as menções a `CLAUDE.md` e os usos de tool de subagent nos corpos.

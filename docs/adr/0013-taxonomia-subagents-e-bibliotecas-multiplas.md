@@ -37,8 +37,9 @@ incorporados. Quatro fatos pesaram:
 ### 2. Subagents na fonte neutra, formato canônico do Claude Code
 - `agents/<nome>.md`, frontmatter `name`, `description`, `model`, `tools`.
 - `--agents auto` (padrão): só os subagents citados pelas skills selecionadas.
-- Adaptador hoje só para Claude Code (`.claude/agents/`); os demais harnesses recebem os arquivos
-  na pasta neutra e um aviso de adaptador pendente (seção 4).
+- Adaptadores: Claude Code por symlink (o formato canônico é o dele); Codex e OpenCode
+  **gerados** por `scripts/gerar-agent-adapter.py` (cabeçalho traduzido, corpo idêntico);
+  Gemini e Copilot recebem os arquivos na pasta neutra e um aviso de pendência (seção 4).
 
 ### 3. Bibliotecas múltiplas
 - O instalador lê o framework **e** bibliotecas extras com a mesma estrutura (`skills/`,
@@ -53,9 +54,9 @@ incorporados. Quatro fatos pesaram:
 | Harness | Instruções | Skills | Subagents | Estado |
 |---|---|---|---|---|
 | Claude Code | `CLAUDE.md` → `AGENTS.md` | `.claude/skills` | `.claude/agents` (mesmo formato) | **Pronto** |
-| Codex | `AGENTS.md` | `.agents/skills` | `.codex/agents/*.toml` — `developer_instructions`, `sandbox_mode`, `model_reasoning_effort` | Skills prontas; agents pendentes |
+| Codex | `AGENTS.md` | `.agents/skills` | `.codex/agents/*.toml` — `developer_instructions`, `sandbox_mode`, `model_reasoning_effort` | **Pronto** |
 | Gemini CLI | `GEMINI.md` → `AGENTS.md` | `.agents/skills` | `.gemini/agents/*.md` — tools próprias | Skills prontas; agents pendentes |
-| OpenCode | `AGENTS.md` | `.agents/skills` | `.opencode/agents/*.md` — `permission` | Skills prontas; agents pendentes |
+| OpenCode | `AGENTS.md` | `.agents/skills` | `.opencode/agents/*.md` — `permission` | **Pronto** |
 | GitHub Copilot | `AGENTS.md` + `.github/copilot-instructions.md` | `.agents/skills` | `.github/agents/*.agent.md` | Skills prontas; agents pendentes |
 | agentry | `AGENTS.md` (ADR-0023 dele) | **só `.claude/skills`** hoje | despacho por `task_class`, sem subagent nomeado | Depende do `agentry` (solicitado) |
 

@@ -698,12 +698,22 @@ if [[ "$AGENT" != "none" && "$SKILLS_MODE" != "none" ]]; then
     done
     echo
   done
-  # Subagents: só o Claude Code tem adaptador por ora (formato canônico = o dele).
-  # Os demais harnesses exigem tradução de frontmatter/tools — mapeada na ADR 0013.
+  # Subagents: Claude Code por symlink (formato canônico = o dele); Codex e OpenCode
+  # gerados por scripts/gerar-agent-adapter.py. Gemini e Copilot seguem pendentes (ADR 0013).
   if [[ ${#AGENTS[@]} -gt 0 ]]; then
     for ag in "${AGENTES[@]}"; do
       ag="${ag// /}"
-      if [[ "$ag" == claude ]]; then
+      if [[ "$ag" == codex || "$ag" == opencode ]]; then
+        # Gerados a partir do canônico (ADR 0013): cabeçalho traduzido, corpo idêntico.
+        ADIR="$TARGET/.$ag/agents"
+        info "3b) Subagents do $ag em .$ag/agents/ (gerados)"
+        for a in "${AGENTS[@]}"; do
+          if [[ $DRY_RUN -eq 1 ]]; then printf '  [dry-run] geraria %s/%s\n' "$ADIR" "$a"; continue; fi
+          "$FRAMEWORK_DIR/scripts/gerar-agent-adapter.py" "$ag" "${FONTE_AGENT[$a]}/$a.md" "$ADIR" >/dev/null \
+            || erro "falha ao gerar adaptador $ag do subagent '$a'"
+        done
+        printf '  %d subagent(s)\n\n' "${#AGENTS[@]}"
+      elif [[ "$ag" == claude ]]; then
         ADIR="$TARGET/.claude/agents"
         info "3b) Subagents do Claude Code em .claude/agents/ (modo: $SKILLS_MODE)"
         for a in "${AGENTS[@]}"; do
