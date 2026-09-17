@@ -17,11 +17,19 @@
   *on-premise*. **Proibido** colar dados sensíveis em interfaces de chat web não
   corporativas ou enviá-los a provedores externos sem aprovação formal.
 
+<!-- USER:BEGIN id=confidencialidade-projeto -->
+_(nenhuma — acrescente aqui restrições de confidencialidade próprias deste repositório,
+ex.: fronteira com projetos sob NDA, origem permitida de fixtures, o que nunca pode ser
+publicado.)_
+<!-- USER:END -->
+
 ## 1. Ambiente de desenvolvimento
 
+<!-- USER:BEGIN id=ambiente-desenvolvimento -->
 - SO: **Ubuntu 26** · Shell: **zsh**
 - Gerenciador de pacotes Python: **uv** · Controle de versão: **git** · IDE: **Zed IDE**
 - Containerização: **Docker** (serviços e testes)
+<!-- USER:END -->
 
 ## 2. Comandos exatos (ajuste por projeto)
 
@@ -66,6 +74,7 @@ data/reference/      # dados de referência versionados — NÃO MODIFICAR
 
 ## 4. Estilo de codificação
 
+<!-- USER:BEGIN id=estilo-codificacao -->
 - **Comentário de caminho** no topo de cada arquivo: `// Caminho relativo: src/...`.
 - **Doxygen** em C++ (`/// \file`, `/// \brief`, `/// \author`, `/// \date`).
 - **Type Hints** obrigatórios em Python para `pandas.DataFrame`, modelos `pydantic` etc.
@@ -78,6 +87,7 @@ data/reference/      # dados de referência versionados — NÃO MODIFICAR
 - **Evitar viés de confirmação:** propor alternativas, validar hipóteses, basear-se em
   documentação oficial e/ou artigos científicos. Apresentar alterações de código como
   *diff* estilo git.
+<!-- USER:END -->
 
 ## 5. Economia de tokens e higiene de sessão
 
@@ -99,6 +109,10 @@ data/reference/      # dados de referência versionados — NÃO MODIFICAR
 - `requirements.txt` / `pyproject.toml` só mudam **sob aprovação explícita em chat**.
 - Alterações em `.github/workflows/`, scripts de *bootstrap* e neste `AGENTS.md` exigem
   atenção redobrada na revisão (vetor de injeção indireta).
+
+<!-- USER:BEGIN id=adendos-fronteiras -->
+_(nenhum — acrescente aqui restrições de modificação próprias deste projeto.)_
+<!-- USER:END -->
 
 ## 7. Segurança e segredos (OBRIGATÓRIO)
 
@@ -127,9 +141,13 @@ Alinhado ao OWASP Top 10 para LLM e ao NIST AI RMF. Detalhes operacionais na ski
   `{agente: <nome>; modelo: <modelo/versão>}` — ex.: `{agente: Claude Code; modelo:
   claude-opus-4-8}`. **Nenhum outro artefato** (código, comentários, ADR, handoff,
   descrição/metadado de PR) deve mencionar uso de IA, nem atribuir autoria, coautoria ou
-  decisão a um agente. **Não** usar *trailers* `Co-authored-by`/`Assisted-by` para agentes.
+  decisão a um agente. **Não** usar *trailers* e `Co-authored-by`/`Assisted-by` para agentes.
 - **SBOM:** gerar SBOM (CycloneDX/SPDX) e rodar SAST/SCA e varredura de segredos
   (`gitleaks`) em CI antes da revisão humana.
+
+<!-- USER:BEGIN id=adendos-seguranca -->
+_(nenhum — acrescente aqui o cofre, caminhos de credencial e regras de segredo deste projeto.)_
+<!-- USER:END -->
 
 ## 8. Fluxo ágil
 
@@ -141,6 +159,10 @@ Alinhado ao OWASP Top 10 para LLM e ao NIST AI RMF. Detalhes operacionais na ski
 - **ADRs** em `docs/adr/` são leitura obrigatória antes de propor mudanças funcionais
   (skill `adr-writer`); conflitos com ADR `Accepted` devem ser reportados, não contornados.
 
+<!-- USER:BEGIN id=adendos-fluxo -->
+_(nenhum — acrescente aqui adaptações de DoD, convenção de commit e ritos deste projeto.)_
+<!-- USER:END -->
+
 ## 9. Skills disponíveis
 
 Fonte da verdade (independente de agente): pasta neutra `skills/` na raiz. O Claude Code as
@@ -151,3 +173,43 @@ descobre via adaptador `.claude/skills/` (ponteiros gerados por `scripts/setup-p
 - **`micro-ticket-planner`** — ao planejar/quebrar trabalho.
 - **`handoff-updater`** — após cada commit/ticket; atualizar `docs/CURRENT-STATE.md`.
 - **`pr-review-guard`** — antes de abrir/aprovar PR ou merge.
+- **`delegacao-a-subagentes`** — ao rotear tarefa entre modelo local e nuvem; dado sensível.
+- **`delegacao-openai-compat`** — ao delegar volume a um endpoint OpenAI-compatible (gateway
+  LiteLLM, vLLM, Ollama; via `oa-chat` ou `agentry`), para poupar cota da assinatura; exige
+  classe de egresso declarada — sob este perfil, só endpoint `local-only`.
+- **`meeting-minutes`** — ao produzir ATA/registro de reunião a partir de áudio ou notas.
+- **`novo-projeto`** — ao adotar o framework num repositório ainda não configurado.
+- **`limites-de-uso`** — ao planejar tarefa longa/paralela ou ao receber aviso de cota;
+  reservar orçamento para o handoff antes da virada da janela.
+- **`caveman`** — modo de comunicação comprimida em sessão longa ou com cota apertada;
+  vale na conversa, nunca em ADR, handoff, ATA, commit ou PR.
+- **`atribuicao-de-falha`** — quando o agente repetir um erro, **antes** de escrever mais
+  uma regra: localizar a camada (contexto / processo / autoridade / evidência).
+- **`gates-de-conclusao`** — ao abrir tarefa longa: gates antes do trabalho, orçamento
+  declarado, e parada por critério com o motivo entre os quatro abortos.
+- **`paralelizacao-em-grafo`** — antes de abrir trabalho em fatias paralelas; exige
+  contrato fechado e fatia vertical sem arquivo compartilhado.
+- **Bibliotecas extras** (`--fonte`/`fontes_extras`) podem acrescentar skills de governança,
+  categorias sob demanda e subagents em `agents/` — ver `skills/README.md`.
+
+O catálogo completo, incluindo as skills de **domínio** (instaladas só sob demanda) e as
+criadas para este repositório, está em [`skills/README.md`](./skills/README.md).
+
+<!-- USER:BEGIN id=adendos-skills -->
+_(nenhum — acrescente aqui skills próprias deste projeto e ressalvas de uso.)_
+<!-- USER:END -->
+
+## 10. Seções específicas do projeto
+
+> Espaço reservado ao projeto. O conteúdo **dentro** do marcador abaixo é preservado por
+> `setup-profile.sh --update`; o que está fora dele é regramento do framework e será
+> regenerado. Acrescente aqui as seções que só fazem sentido neste repositório — modo de
+> pesquisa, contratos de interoperabilidade, particularidades de domínio.
+>
+> Para criar um ponto de customização em outra seção, abra um par de marcadores próprio
+> no mesmo formato dos usados neste arquivo, com um id só seu. Ids que o framework não
+> conhece são preservados na atualização e reagrupados ao final do arquivo para revisão.
+
+<!-- USER:BEGIN id=secoes-adicionais -->
+_(nenhuma — remova esta linha ao acrescentar a primeira seção)_
+<!-- USER:END -->

@@ -14,18 +14,28 @@
   credenciais. Código aberto torna qualquer segredo vazado imediatamente público.
 - **Modelos permitidos:** APIs na nuvem livremente. Bom senso quanto a custo (ver seção 5).
 
+<!-- USER:BEGIN id=confidencialidade-projeto -->
+_(nenhuma — acrescente aqui restrições de confidencialidade próprias deste repositório,
+ex.: fronteira com projetos sob NDA, origem permitida de fixtures, o que nunca pode ser
+publicado.)_
+<!-- USER:END -->
+
 ## 1. Ambiente de desenvolvimento
 
+<!-- USER:BEGIN id=ambiente-desenvolvimento -->
 - SO: **Ubuntu 26** · Shell: **zsh**
 - Python: **uv** · Versão: **git** · IDE: **Zed IDE** · Containerização: **Docker**
+<!-- USER:END -->
 
 ## 2. Linguagens e frameworks preferenciais
 
+<!-- USER:BEGIN id=linguagens-frameworks -->
 - **C++** → performance, memória e cálculos.
 - **Python** ou **Rust** → integração e gestão de bibliotecas.
 - **SvelteKit / Svelte 5** → interfaces Web.
 - **PostgreSQL 16** → banco relacional (usar *prepared statements*; roles por serviço).
 - **Docker** → containerização de serviços e testes.
+<!-- USER:END -->
 
 ## 3. Comandos exatos (ajuste por projeto)
 
@@ -43,6 +53,7 @@ pytest -v --cov=src                       # Python (pytest)
 
 ## 4. Estilo de codificação
 
+<!-- USER:BEGIN id=estilo-codificacao -->
 - **Comentário de caminho relativo** no topo de cada arquivo: `// Caminho relativo: src/...`.
 - **Doxygen** em C++:
   ```cpp
@@ -59,6 +70,7 @@ pytest -v --cov=src                       # Python (pytest)
   **portabilidade** (Windows/Linux/Mac/Web/iOS/Android); compatibilidade com Docker.
 - **Evitar viés de confirmação:** propor alternativas, validar hipóteses, basear-se em
   documentação oficial e/ou artigos científicos; apresentar mudanças como *diff* estilo git.
+<!-- USER:END -->
 
 ## 5. Economia de tokens e higiene de sessão
 
@@ -80,6 +92,10 @@ Todo projeto deve conter:
   `changelog.md`).
 - Revisar a documentação a cada PR que altere funcionalidades.
 
+<!-- USER:BEGIN id=adendos-fronteiras -->
+_(nenhum — acrescente aqui restrições de modificação próprias deste projeto.)_
+<!-- USER:END -->
+
 ## 7. Segurança e segredos
 
 Postura relaxada de confidencialidade, mas **segredos continuam proibidos no repositório**:
@@ -93,8 +109,12 @@ Postura relaxada de confidencialidade, mas **segredos continuam proibidos no rep
 - **Proveniência de IA:** quando um agente produzir o commit, registre o uso **apenas na
   mensagem de commit**, ao final, **entre chaves**: `{agente: <nome>; modelo:
   <modelo/versão>}` — ex.: `{agente: Claude Code; modelo: claude-opus-4-8}`. **Não**
-  mencione uso de IA em README, código, CHANGELOG, ADR ou handoff, nem use *trailers*
+  mencione uso de IA em README, código, CHANGELOG, ADR ou handoff, nem use *trailers* e
   `Co-authored-by` para agentes.
+
+<!-- USER:BEGIN id=adendos-seguranca -->
+_(nenhum — acrescente aqui o cofre, caminhos de credencial e regras de segredo deste projeto.)_
+<!-- USER:END -->
 
 ## 8. Fluxo ágil
 
@@ -105,8 +125,37 @@ Postura relaxada de confidencialidade, mas **segredos continuam proibidos no rep
   `pr-review-guard`) antes do merge.
 - **ADRs** para decisões estruturais (skill `adr-writer`).
 
+<!-- USER:BEGIN id=adendos-fluxo -->
+_(nenhum — acrescente aqui adaptações de DoD, convenção de commit e ritos deste projeto.)_
+<!-- USER:END -->
+
 ## 9. Skills disponíveis
 
 - **`secrets-guard`** — sempre (segredos pessoais).
-- **`adr-writer`**, **`micro-ticket-planner`**, **`handoff-updater`**, **`pr-review-guard`**
-  — conforme a necessidade do projeto. Ver seção 9 do perfil empresa para os gatilhos.
+- **`adr-writer`**, **`micro-ticket-planner`**, **`handoff-updater`**, **`pr-review-guard`**,
+  **`delegacao-a-subagentes`**, **`delegacao-openai-compat`**, **`meeting-minutes`**,
+  **`novo-projeto`**, **`limites-de-uso`**,
+  **`caveman`**, **`atribuicao-de-falha`**,
+  **`gates-de-conclusao`**, **`paralelizacao-em-grafo`** — conforme a
+  necessidade do projeto. Ver seção 9 do perfil empresa para os gatilhos, e
+  [`skills/README.md`](./skills/README.md) para o catálogo completo (incluindo as skills de
+  domínio, instaladas só sob demanda).
+
+<!-- USER:BEGIN id=adendos-skills -->
+_(nenhum — acrescente aqui skills próprias deste projeto e ressalvas de uso.)_
+<!-- USER:END -->
+
+## 10. Seções específicas do projeto
+
+> Espaço reservado ao projeto. O conteúdo **dentro** do marcador abaixo é preservado por
+> `setup-profile.sh --update`; o que está fora dele é regramento do framework e será
+> regenerado. Acrescente aqui as seções que só fazem sentido neste repositório — modo de
+> pesquisa, contratos de interoperabilidade, particularidades de domínio.
+>
+> Para criar um ponto de customização em outra seção, abra um par de marcadores próprio
+> no mesmo formato dos usados neste arquivo, com um id só seu. Ids que o framework não
+> conhece são preservados na atualização e reagrupados ao final do arquivo para revisão.
+
+<!-- USER:BEGIN id=secoes-adicionais -->
+_(nenhuma — remova esta linha ao acrescentar a primeira seção)_
+<!-- USER:END -->

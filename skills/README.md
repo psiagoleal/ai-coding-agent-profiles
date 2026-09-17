@@ -10,10 +10,16 @@ quando a tarefa se enquadra nos gatilhos da `description`. Isso reduz o consumo 
 em sessões onde a capacidade não é necessária e permite manter uma biblioteca extensa sem
 inflar o contexto de cada interação.
 
-Esta biblioteca contém apenas skills **de governança/fluxo, independentes de setor** —
-reutilizáveis nos três perfis (empresa, externo-confidencial, pessoal).
+A biblioteca tem **dois níveis**, e a distinção é o que mantém o catálogo previsível:
 
-## Catálogo
+- **Governança/fluxo** (raiz de `skills/`) — independentes de setor, reutilizáveis nos três
+  perfis. É o conjunto **instalado por padrão** em qualquer projeto.
+- **Domínio** (agrupadas em categoria, ex.: `dominio/`) — presas a uma tecnologia ou
+  assunto. **Nunca** entram por padrão; exigem `--skills` explícito com o caminho da
+  categoria. Um projeto de linhas de transmissão não deve carregar uma skill de
+  prototipagem de UI só porque ela existe na biblioteca.
+
+## Catálogo — governança
 
 | Skill | Para quê | Aciona quando |
 |-------|----------|---------------|
@@ -22,7 +28,46 @@ reutilizáveis nos três perfis (empresa, externo-confidencial, pessoal).
 | [`micro-ticket-planner`](micro-ticket-planner/SKILL.md) | Quebrar trabalho em tickets de um ciclo de contexto | Planejar sprint; tarefa ampla/ambígua |
 | [`handoff-updater`](handoff-updater/SKILL.md) | Manter `docs/CURRENT-STATE.md` | Após commit/ticket; "onde paramos" |
 | [`pr-review-guard`](pr-review-guard/SKILL.md) | Checklist do "problema dos 80%" + OWASP | Antes de abrir/aprovar PR ou merge |
+| [`meeting-minutes`](meeting-minutes/SKILL.md) | ATA e registro de reunião a partir de áudio ou notas, respeitando o perímetro do dado (ASR local quando confidencial) | Produzir ATA; transcrever ou resumir reunião |
 | [`delegacao-a-subagentes`](delegacao-a-subagentes/SKILL.md) | O que fica no modelo local vs. o que vai para a nuvem, e como pedir | Tarefa toca dado sensível; roteamento por task-class; "delegar"/"modelo local" |
+| [`delegacao-openai-compat`](delegacao-openai-compat/SKILL.md) | Delegar volume a qualquer endpoint OpenAI-compatible (LiteLLM, vLLM, Ollama `/v1`): `oa-chat` para chamada direta sem chave em argv, `agentry` para modo agente — custo fora da cota, saída fora do contexto, com checagem de egresso | Varredura/revisão volumosa; "economizar cota"; "usar o LiteLLM"/"modelo OpenAI-compatible"; configurar `providers.litellm` |
+| [`novo-projeto`](novo-projeto/SKILL.md) | Adotar o framework num repo: escolher perfil, preservar conteúdo prévio, deixar pronto p/ `--update` | Projeto novo; "configurar o agente" / "aplicar o perfil" / "instalar as regras" |
+| [`limites-de-uso`](limites-de-uso/SKILL.md) | Ver a cota consumida da conta (5h/7d) e planejar em torno dela: reservar orçamento p/ o handoff, atravessar a virada da janela | Tarefa longa ou paralela; aviso `[limites]`; "quanto resta do limite?" |
+| [`caveman`](caveman/SKILL.md) | Modo de comunicação comprimida: corta forma (cortesia, preâmbulo, recapitulação) e preserva substância (caminho, número, erro, incerteza, ressalva) | "modo caveman"/"seja breve"/"economiza token"; sessão longa e repetitiva; cota apertada |
+| [`atribuicao-de-falha`](atribuicao-de-falha/SKILL.md) | Diagnosticar onde a falha do agente nasceu — contexto, processo, autoridade ou evidência — e corrigir a camada certa | Agente repete erro; "escrever no AGENTS.md p/ ele não fazer de novo"; escolher entre regra, permissão, hook e teste |
+| [`gates-de-conclusao`](gates-de-conclusao/SKILL.md) | Gates escritos antes do trabalho (`CHECK:`/`EXPECT:`, só vale com exit 0) e as quatro razões de aborto além da saída de aceite | Tarefa longa/repetitiva; decidir se está concluído; agente insiste sem progredir; checkbox sem evidência |
+| [`paralelizacao-em-grafo`](paralelizacao-em-grafo/SKILL.md) | Decidir se o trabalho vira grafo paralelo: contrato na fase 0, fatia vertical, worktree por fatia, fan-in de dono único | Onda com várias tarefas; "rodar em paralelo"; dividir trabalho entre agentes; merge paralelo virou negociação |
+
+## Bibliotecas extras
+
+O instalador aceita bibliotecas **adicionais** com a mesma estrutura desta (`skills/`,
+`agents/`) — por exemplo, um repositório privado com material que não pode ser publicado ou
+que é de uso pessoal. Aponte-as com `--fonte <dir>` ou `fontes_extras` no `config.toml`
+(ADR 0013). Elas podem trazer skills de governança (instaladas por padrão), categorias
+opt-in (`--skills 'categoria/*'`) e subagents (`--agents`). Nomes precisam ser únicos entre
+todas as fontes: colisão é erro, porque os adaptadores são planos.
+
+## Catálogo — domínio (sob demanda)
+
+| Skill | Para quê | Aciona quando |
+|-------|----------|---------------|
+| [`dominio/mockup-lab`](dominio/mockup-lab/SKILL.md) | Prototipar UI em HTML/CSS, comparar variantes por render headless, exportar a aprovada como SVG p/ Penpot | Prototipar/mockar tela; comparar variantes de layout; levar design ao Penpot |
+| [`dominio/docling-local`](dominio/docling-local/SKILL.md) | PDF em Markdown pelo docling local, preservando equações em LaTeX, com procedência declarada | Extrair/converter PDF; citar norma ou artigo; alimentar base de referências |
+
+Estas trazem *scripts* anexos e dependências próprias (Playwright, `curl_cffi`, `pikepdf`, um serviço docling local e um venv Piper para TTS), instaladas
+sob demanda — por isso `node_modules/`, `.venv/` e `__pycache__/` nunca são copiados para o
+alvo. Dado do usuário (listas de compra, mockups) mora no diretório de trabalho do projeto,
+**nunca dentro da skill**.
+
+## Catálogo — deste projeto
+
+<!-- USER:BEGIN id=catalogo-local -->
+_(nenhuma — acrescente aqui as skills criadas especificamente para este repositório)_
+<!-- USER:END -->
+
+> Skills próprias do projeto vivem na pasta neutra ao lado das demais e **não são tocadas**
+> pelo `setup-profile.sh`: ele só escreve as skills que instala. Registre-as no bloco acima
+> para que o catálogo continue completo depois de um `--update`.
 
 ## Modelo de instalação (independente de agente)
 
@@ -31,10 +76,17 @@ amarrar a biblioteca a um único agente, adotamos dois níveis:
 
 1. **Fonte da verdade neutra** — uma pasta `skills/` no repositório alvo, versionável e
    revisável por pares. É **independente de agente** e o único lugar onde o conteúdo vive.
-2. **Adaptadores por agente** — como cada ferramenta descobre skills em local próprio
-   (o Claude Code, por exemplo, lê de `.claude/skills/`), geramos ali apenas **ponteiros
-   (symlinks)** para a pasta neutra. Trocar de agente, ou usar vários, é só gerar outro
-   adaptador — sem duplicar conteúdo.
+2. **Adaptadores por agente** — cada harness descobre skills em local próprio, e
+   geramos ali apenas **ponteiros (symlinks)** para a pasta neutra. Na prática há só
+   dois destinos (ADR 0012):
+
+   | Harness | Diretório |
+   |---|---|
+   | `claude` | `.claude/skills/` |
+   | `codex`, `gemini`, `opencode`, `agentry`, `zcode` | `.agents/skills/` |
+
+   Usar vários é uma lista: `--agent claude,codex` ou `--agent all`. Sem duplicar
+   conteúdo — a fonte continua sendo uma só.
 
 ### Forma recomendada: o script
 
@@ -50,8 +102,15 @@ scripts/setup-profile.sh empresa ~/dev/meu-projeto --skills-mode none
 # cópias em vez de symlinks (recomendado p/ checkouts no Windows):
 scripts/setup-profile.sh empresa ~/dev/meu-projeto --skills-mode copy
 
+# adaptadores para vários harnesses (ou todos):
+scripts/setup-profile.sh empresa ~/dev/meu-projeto --agent claude,codex
+scripts/setup-profile.sh empresa ~/dev/meu-projeto --agent all
+
 # selecionar skills específicas:
 scripts/setup-profile.sh pessoal ~/dev/oss --skills secrets-guard,pr-review-guard
+
+# incluir uma skill de domínio (exige o caminho da categoria):
+scripts/setup-profile.sh pessoal ~/dev/meu-app --skills secrets-guard,dominio/mockup-lab
 ```
 
 ### Forma manual
@@ -65,7 +124,8 @@ mkdir -p /caminho/do/alvo/.claude/skills
 ln -s ../../skills/secrets-guard /caminho/do/alvo/.claude/skills/secrets-guard
 # repita para as demais
 
-# (alternativa: instalação pessoal, todas as sessões) ~/.claude/skills/
+# Não instale a biblioteca em ~/.claude/skills: o acervo é repo-local por
+# decisão de projeto (ver docs/adr/0011) — cada repositório carrega o seu.
 ```
 
 > Os perfis em `profiles/*/` referenciam estas skills na seção "Skills disponíveis" do seu

@@ -19,10 +19,18 @@
   contas gratuitas/pessoais sem garantia de não-retenção. Prefira projetos com *zero data
   retention* quando disponível.
 
+<!-- USER:BEGIN id=confidencialidade-projeto -->
+_(nenhuma — acrescente aqui restrições de confidencialidade próprias deste repositório,
+ex.: fronteira com projetos sob NDA, origem permitida de fixtures, o que nunca pode ser
+publicado.)_
+<!-- USER:END -->
+
 ## 1. Ambiente de desenvolvimento
 
+<!-- USER:BEGIN id=ambiente-desenvolvimento -->
 - SO: **Ubuntu 26** · Shell: **zsh**
 - Python: **uv** · Versão: **git** · IDE: **Zed IDE** · Containerização: **Docker**
+<!-- USER:END -->
 
 ## 2. Comandos exatos (ajuste por projeto)
 
@@ -52,6 +60,7 @@ data/                # dados do cliente — SENSÍVEIS, ver .claudeignore
 
 ## 4. Estilo de codificação
 
+<!-- USER:BEGIN id=estilo-codificacao -->
 Idêntico ao padrão pessoal do desenvolvedor:
 
 - Comentário de **caminho relativo** no topo de cada arquivo.
@@ -61,6 +70,7 @@ Idêntico ao padrão pessoal do desenvolvedor:
 - Documentação Markdown com Mermaid e LaTeX.
 - Evitar viés de confirmação; propor alternativas; basear-se em documentação oficial e
   apresentar mudanças como *diff* estilo git.
+<!-- USER:END -->
 
 ## 5. Economia de tokens e higiene de sessão
 
@@ -76,6 +86,10 @@ Idêntico ao padrão pessoal do desenvolvedor:
 - **Não** criar/reescrever migrações SQL manualmente sem aprovação.
 - Dependências (`pyproject.toml`/`requirements.txt`) só mudam **sob aprovação explícita**.
 - Respeitar integralmente as cláusulas do NDA quanto a bibliotecas/serviços permitidos.
+
+<!-- USER:BEGIN id=adendos-fronteiras -->
+_(nenhum — acrescente aqui restrições de modificação próprias deste projeto.)_
+<!-- USER:END -->
 
 ## 7. Segurança e segredos (OBRIGATÓRIO)
 
@@ -100,6 +114,10 @@ Os quatro princípios de não-exposição (ver skill `secrets-guard`) valem inte
   artefato** (código, ADR, handoff, descrição/metadado de PR) deve mencionar uso de IA nem
   atribuir autoria, coautoria ou decisão a um agente.
 
+<!-- USER:BEGIN id=adendos-seguranca -->
+_(nenhum — acrescente aqui o cofre, caminhos de credencial e regras de segredo deste projeto.)_
+<!-- USER:END -->
+
 ## 8. Fluxo ágil
 
 - **Micro-tickets** (skill `micro-ticket-planner`).
@@ -108,8 +126,35 @@ Os quatro princípios de não-exposição (ver skill `secrets-guard`) valem inte
   **validada por humano** antes do merge.
 - **ADRs** obrigatórios antes de mudanças funcionais (skill `adr-writer`).
 
+<!-- USER:BEGIN id=adendos-fluxo -->
+_(nenhum — acrescente aqui adaptações de DoD, convenção de commit e ritos deste projeto.)_
+<!-- USER:END -->
+
 ## 9. Skills disponíveis
 
-- **`secrets-guard`**, **`adr-writer`**, **`micro-ticket-planner`**,
-  **`handoff-updater`**, **`pr-review-guard`** — todas recomendadas. Ver seção 9 do perfil
-  empresa para os gatilhos de cada uma.
+- **`secrets-guard`**, **`adr-writer`**, **`micro-ticket-planner`**, **`handoff-updater`**,
+  **`pr-review-guard`**, **`delegacao-a-subagentes`**, **`delegacao-openai-compat`**,
+  **`meeting-minutes`**,
+  **`novo-projeto`**, **`limites-de-uso`**, **`caveman`**,
+  **`atribuicao-de-falha`**, **`gates-de-conclusao`**, **`paralelizacao-em-grafo`** — todas recomendadas. Ver seção 9 do perfil empresa para os gatilhos
+  de cada uma, e [`skills/README.md`](./skills/README.md) para o catálogo completo
+  (incluindo as skills de domínio, instaladas só sob demanda).
+
+<!-- USER:BEGIN id=adendos-skills -->
+_(nenhum — acrescente aqui skills próprias deste projeto e ressalvas de uso.)_
+<!-- USER:END -->
+
+## 10. Seções específicas do projeto
+
+> Espaço reservado ao projeto. O conteúdo **dentro** do marcador abaixo é preservado por
+> `setup-profile.sh --update`; o que está fora dele é regramento do framework e será
+> regenerado. Acrescente aqui as seções que só fazem sentido neste repositório — modo de
+> pesquisa, contratos de interoperabilidade, particularidades de domínio.
+>
+> Para criar um ponto de customização em outra seção, abra um par de marcadores próprio
+> no mesmo formato dos usados neste arquivo, com um id só seu. Ids que o framework não
+> conhece são preservados na atualização e reagrupados ao final do arquivo para revisão.
+
+<!-- USER:BEGIN id=secoes-adicionais -->
+_(nenhuma — remova esta linha ao acrescentar a primeira seção)_
+<!-- USER:END -->
