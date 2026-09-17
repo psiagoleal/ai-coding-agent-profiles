@@ -1,0 +1,9 @@
+{
+  "name": "mockup-lab-scripts",
+  "private": true,
+  "type": "module",
+  "description": "Scripts de apoio da skill mockup-lab (Fase 1: render de variantes; Fase 2: export SVG para Penpot)",
+  "devDependencies": {
+    "playwright": "^1.48.0"
+  }
+}

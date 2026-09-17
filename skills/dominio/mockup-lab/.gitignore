@@ -1,0 +1,4 @@
+# Caminho relativo: skills/dominio/mockup-lab/.gitignore
+# O Playwright é instalado sob demanda (npm install + npx playwright install chromium);
+# são ~18 MB que não devem entrar no controle de versão da biblioteca de skills.
+node_modules/
