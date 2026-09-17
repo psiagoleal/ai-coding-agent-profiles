@@ -33,6 +33,13 @@
    argv, `--no-think`, código 3 para resposta vazia/truncada.
 6. Regra de *trailers* uniformizada entre `pessoal` e `empresa`. Pedido ao `agentry` enviado
    para descobrir skills em `.agents/skills` (precedência sem merge).
+7. **Subagents portáveis para Codex e OpenCode** — `scripts/gerar-agent-adapter.py` gera o
+   cabeçalho de cada harness a partir do canônico, mantendo o corpo idêntico; `sandbox_mode`
+   e `permission` derivam das tools, e `model` vira **nível** de raciocínio. Ligado ao
+   `--agent`. Conferido em 44 subagents: TOML válido em todos, corpo byte a byte igual.
+8. **Publicado.** Sete commits temáticos enviados (`828c978..`), todos com o verificador de
+   vazamento limpo no índice. Biblioteca privada criada, commitada e enviada a remoto
+   **privado** (visibilidade confirmada após o push).
 
 ## Em andamento (herdado, inalterado)
 
@@ -52,12 +59,12 @@
 
 ## Próximo passo
 
-1. **Guarda de vazamento:** confirmar o hook local de pre-commit instalado neste clone, que
-   chama o verificador da biblioteca privada (a lista do que não pode vazar não mora aqui).
-2. Etapa de portabilidade (`docs/interop/portabilidade.md`, "Ordem sugerida"): gerador de
-   subagents para Codex e OpenCode.
-3. Reclassificar as skills de domínio antigas com migração para instalações existentes.
-4. Commits temáticos — nada commitado desde `828c978`.
+1. Exercitar os adaptadores gerados **ao vivo** nas CLIs (`codex debug prompt-input`,
+   `opencode agent list`) — hoje a prova é de gramática e parsing, não de carga real.
+2. Gerador para Gemini e Copilot — mesmo script, ramo novo.
+3. Revisar menções a `CLAUDE.md` e usos de tool de subagent nos corpos (portabilidade).
+4. Reclassificar as skills de domínio antigas com migração para instalações existentes.
+5. O hook de pre-commit é **local**: reinstalar em cada clone novo deste repositório.
 
 ## Ação pendente fora deste repositório
 
