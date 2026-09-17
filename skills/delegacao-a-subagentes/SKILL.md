@@ -15,6 +15,11 @@ Arquiteturas multi-modelo permitem que um agente forte (remoto, caro) planeje en
 modelo pequeno (local, gratuito) toca o que é sensível. O ganho só existe se a fronteira for
 respeitada — e **a fronteira não se defende sozinha**.
 
+> **Rota irmã.** Esta skill trata do que **não pode sair da máquina**. Quando o problema é
+> **cota da assinatura** — trabalho de volume sobre material já liberado para sair —, a rota é
+> a skill `delegacao-openai-compat` (gateway LiteLLM via `agentry`). Confidencialidade e consumo são
+> critérios diferentes e escolhem rotas diferentes.
+
 ## O princípio
 
 > O agente remoto recebe **o que ele precisa para decidir**, nunca **o dado bruto de onde
