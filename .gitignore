@@ -18,3 +18,6 @@ secrets.json
 .venv/
 node_modules/
 __pycache__/
+
+# Cache repo-local de skills (venvs, modelos baixados etc.) — ADR 0011
+.cache/

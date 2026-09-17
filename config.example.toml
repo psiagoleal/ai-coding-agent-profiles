@@ -24,3 +24,10 @@ copyright_year = "2026"
 # Seção "Apoie" do perfil pessoal (open-source). Ajuste para o seu canal de apoio.
 support_label = "Buy Me a Coffee"
 support_url = "https://buymeacoffee.com/seu-usuario"
+
+[fontes]
+# Bibliotecas EXTRAS de skills e subagents, com a mesma estrutura deste repositório
+# (skills/, agents/) — por exemplo, um repositório privado com material que não pode ser
+# publicado. Separadas por ":". Nomes precisam ser únicos entre todas as fontes.
+# Equivale a --fonte <dir> no setup-profile.sh.
+fontes_extras = ""
