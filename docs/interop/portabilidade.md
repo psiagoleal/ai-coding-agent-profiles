@@ -29,6 +29,17 @@ primário, `.claude/skills` como alternativa. Três consequências práticas:
   manter os dois adaptadores com a mesma seleção.
 - Apontando os dois para a mesma pasta neutra, como o instalador faz, nada muda e nada é dito.
 
+**Fronteira acordada com o `agentry` (2026-09-18).** Ele **não** vai tratar diretório primário
+vazio como ausente: a precedência é do diretório, por decisão registrada na ADR-0047 dele, e
+mudar isso exigiria ADR nova lá. O que ele garante é que ninguém fica sem entender — quando
+`.claude/skills` tem algo que o primário não tem, os nomes saem no aviso de inicialização.
+**Vazio dos dois lados continua vazio silencioso**, e é exatamente aí que a limpeza do nosso
+instalador faz o trabalho: a mitigação é nossa, por construção, não dele.
+
+Se aparecer **uso real** de seleções diferentes entre os dois adaptadores, esse é o dado que
+reabriria a alternativa que a ADR-0047 rejeitou (somar com deduplicação por `name`) — e seria
+ADR nova do lado deles, não emenda. Até lá, mantenha a mesma seleção nos dois.
+
 ## Tradução de tools dos subagents
 
 Os 44 subagents usam só estas seis:
@@ -86,4 +97,8 @@ duas travas que valem para o nosso formato canônico:
 - **`tools:` seria uma segunda fonte de verdade** ao lado da política de permissões dele. Lá,
   só poderia **restringir** o que a política já permite, nunca ampliar; divergência entre os
   dois seria erro ao carregar. Nosso gerador já deriva permissão a partir das tools — e essa
-  derivação precisa continuar sendo um piso, não um teto.
+  derivação precisa continuar sendo um piso, não um teto. **Trava em aberto do lado deles.**
+
+A primeira trava foi **fechada** na ADR-0048 do `agentry` (commit `b691b18`) citando a nossa
+tradução para nível: deixou de ser bloqueio externo e virou decisão interna deles, de mapear
+nível de raciocínio para classe de tarefa.
