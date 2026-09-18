@@ -675,6 +675,11 @@ if [[ "$AGENT" != "none" && "$SKILLS_MODE" != "none" ]]; then
     niveis="$(awk -F/ '{print NF}' <<< "$rel_dir")"
     subir=""; for ((i=0;i<niveis;i++)); do subir="../$subir"; done
     info "3) Adaptador $ag em $rel_dir/ (modo: $SKILLS_MODE)"
+    # Diretório de adaptador VAZIO é pior que ausente: harnesses que resolvem skills por
+    # precedência de diretório (agentry, ADR-0047 dele) deixam de ler o de menor precedência.
+    # Uma execução interrompida no meio pode deixá-lo assim — a limpeza abaixo evita isso.
+    limpar_adapter_vazio() { [[ -d "$1" ]] && [[ -z "$(ls -A "$1" 2>/dev/null)" ]] && rmdir "$1"; return 0; }
+    trap 'limpar_adapter_vazio "$ADAPTER_DIR"' EXIT
     for s in "${SKILLS[@]}"; do
       s="${s// /}"; [[ -z "$s" ]] && continue
       local_dst="$ADAPTER_DIR/$(basename "$s")"
@@ -696,6 +701,7 @@ if [[ "$AGENT" != "none" && "$SKILLS_MODE" != "none" ]]; then
         printf '  cópia:   %s\n' "$local_dst"
       fi
     done
+    limpar_adapter_vazio "$ADAPTER_DIR"; trap - EXIT
     echo
   done
   # Subagents: Claude Code por symlink (formato canônico = o dele); Codex e OpenCode
@@ -742,6 +748,16 @@ fi
 # ----------------------------------------------------------------------------
 # Conclusão e próximos passos
 # ----------------------------------------------------------------------------
+# Armadilha de precedência: harness que resolve skills por diretório (agentry, ADR-0047 dele)
+# usa '.agents/skills' quando ele EXISTE, mesmo vazio, e ignora '.claude/skills'.
+for _d in .agents/skills .claude/skills; do
+  if [[ -d "$TARGET/$_d" && -z "$(ls -A "$TARGET/$_d" 2>/dev/null)" ]]; then
+    printf '\033[33maviso:\033[0m %s existe e está VAZIO em %s.\n' "$_d" "$TARGET"
+    printf '  Harness que resolve por precedência de diretório pode deixar de ler o outro\n'
+    printf '  adaptador por causa dele. Remova-o (rmdir) ou popule com --agent.\n\n'
+  fi
+done
+
 if [[ ${#CONFLITOS[@]} -gt 0 ]]; then
   printf '\033[33mEdição local fora das ilhas em %d arquivo(s)\033[0m — originais preservados, versão nova em <arquivo>.new:\n' "${#CONFLITOS[@]}"
   printf '  - %s\n' "${CONFLITOS[@]}"

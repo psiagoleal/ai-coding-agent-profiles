@@ -58,7 +58,7 @@ incorporados. Quatro fatos pesaram:
 | Gemini CLI | `GEMINI.md` → `AGENTS.md` | `.agents/skills` | `.gemini/agents/*.md` — tools próprias | Skills prontas; agents pendentes |
 | OpenCode | `AGENTS.md` | `.agents/skills` | `.opencode/agents/*.md` — `permission` | **Pronto** |
 | GitHub Copilot | `AGENTS.md` + `.github/copilot-instructions.md` | `.agents/skills` | `.github/agents/*.agent.md` | Skills prontas; agents pendentes |
-| agentry | `AGENTS.md` (ADR-0023 dele) | **só `.claude/skills`** hoje | despacho por `task_class`, sem subagent nomeado | Depende do `agentry` (solicitado) |
+| agentry | `AGENTS.md` (ADR-0023 dele) | `.agents/skills` (precedência sem soma, ADR-0047 dele) | despacho por `task_class`; subagent nomeado avaliado e **não** adotado (ADR-0048 dele) | Skills **prontas** |
 
 `model` só tem efeito em Claude Code/ZCode; a tradução deve mapear para **nível** de raciocínio,
 não para nome. Tabela de tools e dívida medida: `docs/interop/portabilidade.md`.

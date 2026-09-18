@@ -10,10 +10,24 @@ trabalho**: o que já funciona em cada harness, o que falta e como medir.
 | Camada | Fonte neutra | Portável hoje? | Pendência |
 |---|---|---|---|
 | Instruções | `AGENTS.md` | Sim — padrão agents.md, lido por todos | Ponteiros `CLAUDE.md`/`GEMINI.md` por harness |
-| Skills | `skills/` → `.claude/skills`, `.agents/skills` | Sim, via `--agent` | `agentry` ler `.agents/skills` |
+| Skills | `skills/` → `.claude/skills`, `.agents/skills` | Sim, via `--agent` | — |
 | Subagents | `agents/` → `.claude/agents`, `.codex/agents`, `.opencode/agents` | Claude Code, Codex e OpenCode | Gerar Gemini e Copilot |
 | Hooks | por skill (`limites-de-uso`) | **Só Claude Code** | Cada harness tem seu mecanismo; sem padrão comum |
 | Modelo | `model:` no frontmatter do agent | Só Claude Code/ZCode | Traduzir para nível de raciocínio |
+
+## Precedência de diretório de skills (armadilha)
+
+O `agentry` resolve skills por **precedência de diretório, sem soma**: `.agents/skills`
+primário, `.claude/skills` como alternativa. Três consequências práticas:
+
+- **Diretório vazio vence diretório cheio.** Um `.agents/skills/` vazio faz o `.claude/skills/`
+  populado ser ignorado. O instalador remove o adaptador que ele próprio deixaria vazio e
+  **avisa** quando encontra um vazio que não foi ele que criou.
+- **Instalar um subconjunto em `.agents/skills` esconde o resto.** Se o projeto já tinha tudo
+  em `.claude/skills` e você instala só uma categoria com `--agent agentry`, o agentry passa a
+  ver só essa categoria. Ele avisa na inicialização o que ficou de fora — mas o padrão certo é
+  manter os dois adaptadores com a mesma seleção.
+- Apontando os dois para a mesma pasta neutra, como o instalador faz, nada muda e nada é dito.
 
 ## Tradução de tools dos subagents
 
@@ -56,6 +70,20 @@ não `CLAUDE.md`.
    ligado ao instalador). Verificado: TOML válido para todos os subagents, corpo idêntico ao
    canônico, `sandbox_mode`/`permission` derivados das tools. Falta exercitar ao vivo nas CLIs
    (`codex debug prompt-input`, `opencode agent list`).
-2. `agentry`: descobrir skills em `.agents/skills` (solicitado à sessão do projeto).
+2. ~~`agentry`: descobrir skills em `.agents/skills`~~ — **feito** pelo projeto (ADR-0047
+   dele, commit `a2192f0`).
 3. Gemini e Copilot — mesmo gerador, novo ramo em `gerar-agent-adapter.py`.
 4. Revisar as menções a `CLAUDE.md` e os usos de tool de subagent nos corpos.
+
+## Restrições de terceiros que condicionam o desenho
+
+O `agentry` avaliou subagents nomeados (ADR-0048 dele, **Proposed** — nada adotado) e registrou
+duas travas que valem para o nosso formato canônico:
+
+- **`model:` contornaria o roteador dele**, e com ele a verificação de egresso. Só entraria
+  como *preferência* traduzida para classe de tarefa — o que depende exatamente da tradução
+  para **nível** de raciocínio que já adotamos no gerador (`opus`→alto, `sonnet`→médio).
+- **`tools:` seria uma segunda fonte de verdade** ao lado da política de permissões dele. Lá,
+  só poderia **restringir** o que a política já permite, nunca ampliar; divergência entre os
+  dois seria erro ao carregar. Nosso gerador já deriva permissão a partir das tools — e essa
+  derivação precisa continuar sendo um piso, não um teto.
