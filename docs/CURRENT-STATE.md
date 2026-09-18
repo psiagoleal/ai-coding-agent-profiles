@@ -14,32 +14,24 @@
 
 ## Metas cumpridas neste turno
 
-1. **Separação público × privado.** Material não publicável (acervo de terceiros com
-   procedência pendente) e de uso pessoal (`pc-builder`, `aula-audio`) saiu deste repositório
-   para uma **biblioteca extra privada**, mantida pelo mesmo agente. Nada disso esteve em commit
-   aqui — a separação não exigiu reescrever histórico. Menções a esse material foram retiradas
-   das ADRs 0011/0012, do catálogo, dos perfis e da `caveman`.
-2. **ADR 0013** — taxonomia por categoria (governança na raiz; categorias opt-in), subagents na
-   fonte neutra `agents/` em formato Claude Code, **bibliotecas múltiplas** e mapa de
-   portabilidade (`docs/interop/portabilidade.md`).
-3. **Instalador.** `--fonte <dir>` / `fontes_extras` (config pessoal); colisão de nome entre
-   fontes é erro antes de escrever; `--agents auto|all|none|lista` (adaptador só Claude);
-   `--skills` com nome sem caminho, `'categoria/*'` e `@padrao`; aviso de dependência entre
-   skills. Corrigidos: nome inválido ignorado em silêncio; seleção inválida deixava
-   instalação pela metade.
-4. **`--update` não perde edição local fora das ilhas** — linha de base em
-   `.agent-profile/baseline.sha256`, desvio para `<arq>.new`. Oito cenários exercitados.
-5. **`delegacao-openai-compat`** (ex-`delegacao-litellm`) com `oa-chat`: chave e corpo fora de
-   argv, `--no-think`, código 3 para resposta vazia/truncada.
-6. Regra de *trailers* uniformizada entre `pessoal` e `empresa`. Pedido ao `agentry` enviado
-   para descobrir skills em `.agents/skills` (precedência sem merge).
-7. **Subagents portáveis para Codex e OpenCode** — `scripts/gerar-agent-adapter.py` gera o
-   cabeçalho de cada harness a partir do canônico, mantendo o corpo idêntico; `sandbox_mode`
-   e `permission` derivam das tools, e `model` vira **nível** de raciocínio. Ligado ao
-   `--agent`. Conferido em 44 subagents: TOML válido em todos, corpo byte a byte igual.
-8. **Publicado.** Sete commits temáticos enviados (`828c978..`), todos com o verificador de
-   vazamento limpo no índice. Biblioteca privada criada, commitada e enviada a remoto
-   **privado** (visibilidade confirmada após o push).
+1. **22 repositórios de `~/dev` atualizados** com `--update --agent claude,agentry
+   --agents auto`, perfil detectado do `AGENTS.md` de cada um. Todos com `exit=0`.
+   - **Repos públicos** (`agentry`, `atldp`, `docling_service`, `neocad`) receberam **só a
+     biblioteca pública** (14 skills, 0 subagents), via `--config` sem `fontes_extras` —
+     material de terceiros não entra em repositório público. Verificado com o verificador de
+     vazamento em cada um.
+   - Os demais receberam 17 skills + os subagents citados por elas (`--agents auto`).
+   - **7 repositórios não são git** (`CEPEL_meta_pandoc`, `general`, `mestrado`, `nbr5422`,
+     `orcamento_ia`, `siph`, `trit`): como não havia linha de base nem `git diff` para
+     reverter, cada um recebeu antes um `.backup-framework-<data>.tar.gz`.
+   - Todos passam a ter `.agent-profile/baseline.sha256`: da próxima vez, edição local fora
+     das ilhas para de ser sobrescrita em silêncio.
+2. **Gateway OpenAI-compatible configurado no nível da máquina**, não nos repositórios:
+   `~/.agentry/agentry.settings.json` (ADR-0038 do `agentry`) com `providers.litellm` e a
+   task-class `delegada`. O endereço do gateway **não** é versionado em repositório nenhum; a
+   chave continua vindo de variável de ambiente.
+3. **Fronteira de precedência acordada com o `agentry`** registrada em
+   `docs/interop/portabilidade.md`; instalador passou a remover adaptador vazio e avisar.
 
 ## Em andamento (herdado, inalterado)
 
@@ -55,7 +47,17 @@
 
 ## Impedimentos abertos
 
-- Nenhum neste repositório. Publicação do acervo de terceiros é tratada na biblioteca privada.
+- **Delegação ao gateway pelo `agentry` está bloqueada por desenho**, aguardando decisão do
+  mantenedor: declarei `egressClass: cloud-ok` porque o roteamento efetivo dos backends não
+  foi confirmado por quem opera o gateway. Sob esse valor, toda sessão com perfil restritivo
+  descarta o candidato e cai no Ollama — foi o que os testes mostraram. Se o gateway serve
+  modelos hospedados internamente, o valor correto é `local-only` em
+  `~/.agentry/agentry.settings.json`. A rota direta (`oa-chat`) **não** depende disso e já
+  funciona de dentro dos repositórios.
+- **Vazamento em repositório público de terceiro:** `agentry` (público) cita o nome do harness
+  corporativo em `docs/handoff-arquivo.md:109`, commit `cf9c268`, já publicado no branch
+  `origin/chore/build-linux-e-higiene-de-disco`. Não está em `main`. A sessão daquele projeto
+  foi avisada; a decisão sobre o histórico é do mantenedor.
 
 ## Próximo passo
 
