@@ -21,8 +21,7 @@
      material de terceiros não entra em repositório público. Verificado com o verificador de
      vazamento em cada um.
    - Os demais receberam 17 skills + os subagents citados por elas (`--agents auto`).
-   - **7 repositórios não são git** (`CEPEL_meta_pandoc`, `general`, `mestrado`, `nbr5422`,
-     `orcamento_ia`, `siph`, `trit`): como não havia linha de base nem `git diff` para
+   - **7 repositórios não são git**: como não havia linha de base nem `git diff` para
      reverter, cada um recebeu antes um `.backup-framework-<data>.tar.gz`.
    - Todos passam a ter `.agent-profile/baseline.sha256`: da próxima vez, edição local fora
      das ilhas para de ser sobrescrita em silêncio.
