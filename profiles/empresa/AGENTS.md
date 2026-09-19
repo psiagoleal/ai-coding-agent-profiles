@@ -151,6 +151,10 @@ _(nenhum — acrescente aqui o cofre, caminhos de credencial e regras de segredo
 
 ## 8. Fluxo ágil
 
+- **Contrato antes do código:** trabalho de risco começa por spec com critério de aceite
+  verificável (skill `spec-como-contrato`); trabalho leve, pelo critério de aceite direto.
+- **Teste antes da implementação:** comportamento novo e correção de bug começam por um
+  teste que falha pelo motivo certo, com a saída citada (skill `teste-primeiro`).
 - **Micro-tickets** autocontidos (skill `micro-ticket-planner`) — cada um cabe em um ciclo
   limpo de contexto.
 - **Handoff** mandatório em `docs/CURRENT-STATE.md` a cada commit (skill `handoff-updater`).
@@ -189,6 +193,10 @@ descobre via adaptador `.claude/skills/` (ponteiros gerados por `scripts/setup-p
   declarado, e parada por critério com o motivo entre os quatro abortos.
 - **`paralelizacao-em-grafo`** — antes de abrir trabalho em fatias paralelas; exige
   contrato fechado e fatia vertical sem arquivo compartilhado.
+- **`spec-como-contrato`** — feature ou projeto novo, pedido vago, antes de delegar trabalho.
+- **`teste-primeiro`** — ao implementar comportamento novo ou corrigir bug.
+- **`critico-independente`** — antes de aceitar saída de agente: critério antes, crítico em
+  contexto limpo, sinal externo.
 - **Bibliotecas extras** (`--fonte`/`fontes_extras`) podem acrescentar skills de governança,
   categorias sob demanda e subagents em `agents/` — ver `skills/README.md`.
 

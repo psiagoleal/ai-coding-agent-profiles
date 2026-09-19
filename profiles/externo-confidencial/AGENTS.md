@@ -120,6 +120,10 @@ _(nenhum — acrescente aqui o cofre, caminhos de credencial e regras de segredo
 
 ## 8. Fluxo ágil
 
+- **Contrato antes do código:** trabalho de risco começa por spec com critério de aceite
+  verificável (skill `spec-como-contrato`); trabalho leve, pelo critério de aceite direto.
+- **Teste antes da implementação:** comportamento novo e correção de bug começam por um
+  teste que falha pelo motivo certo, com a saída citada (skill `teste-primeiro`).
 - **Micro-tickets** (skill `micro-ticket-planner`).
 - **Handoff** em `docs/CURRENT-STATE.md` a cada commit (skill `handoff-updater`).
 - **DoD:** testes/linter/tipagem passam; revisão de PR (skill `pr-review-guard`)
@@ -136,7 +140,8 @@ _(nenhum — acrescente aqui adaptações de DoD, convenção de commit e ritos 
   **`pr-review-guard`**, **`delegacao-a-subagentes`**, **`delegacao-openai-compat`**,
   **`meeting-minutes`**,
   **`novo-projeto`**, **`limites-de-uso`**, **`caveman`**,
-  **`atribuicao-de-falha`**, **`gates-de-conclusao`**, **`paralelizacao-em-grafo`** — todas recomendadas. Ver seção 9 do perfil empresa para os gatilhos
+  **`atribuicao-de-falha`**, **`gates-de-conclusao`**, **`paralelizacao-em-grafo`**, **`spec-como-contrato`**,
+  **`teste-primeiro`**, **`critico-independente`** — todas recomendadas. Ver seção 9 do perfil empresa para os gatilhos
   de cada uma, e [`skills/README.md`](./skills/README.md) para o catálogo completo
   (incluindo as skills de domínio, instaladas só sob demanda).
 
