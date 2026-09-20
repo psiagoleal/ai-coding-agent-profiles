@@ -14,23 +14,19 @@
 
 ## Metas cumpridas neste turno
 
-1. **22 repositórios de `~/dev` atualizados** com `--update --agent claude,agentry
-   --agents auto`, perfil detectado do `AGENTS.md` de cada um. Todos com `exit=0`.
-   - **Repos públicos** (`agentry`, `atldp`, `docling_service`, `neocad`) receberam **só a
-     biblioteca pública** (14 skills, 0 subagents), via `--config` sem `fontes_extras` —
-     material de terceiros não entra em repositório público. Verificado com o verificador de
-     vazamento em cada um.
-   - Os demais receberam 17 skills + os subagents citados por elas (`--agents auto`).
-   - **7 repositórios não são git**: como não havia linha de base nem `git diff` para
-     reverter, cada um recebeu antes um `.backup-framework-<data>.tar.gz`.
-   - Todos passam a ter `.agent-profile/baseline.sha256`: da próxima vez, edição local fora
-     das ilhas para de ser sobrescrita em silêncio.
-2. **Gateway OpenAI-compatible configurado no nível da máquina**, não nos repositórios:
-   `~/.agentry/agentry.settings.json` (ADR-0038 do `agentry`) com `providers.litellm` e a
-   task-class `delegada`. O endereço do gateway **não** é versionado em repositório nenhum; a
-   chave continua vindo de variável de ambiente.
-3. **Fronteira de precedência acordada com o `agentry`** registrada em
-   `docs/interop/portabilidade.md`; instalador passou a remover adaptador vazio e avisar.
+1. **Quatro skills novas**, fechando a lacuna de SDD/TDD que a varredura confirmou (nenhum
+   perfil mencionava nenhum dos dois): `spec-como-contrato`, `teste-primeiro`,
+   `critico-independente` e `dominio/transcrever-video`. A seção 8 dos três perfis passa a
+   exigir contrato antes do código e teste antes da implementação, proporcionais ao risco.
+2. **22 repositórios de `~/dev` atualizados** — agora **com** linha de base: o aviso de
+   "sem linha de base" sumiu e o `--update` passou a poder distinguir template de edição local.
+   Zero conflitos. Públicos (`agentry`, `atldp`, `docling_service`, `neocad`) seguem só com a
+   biblioteca pública, conferido com o verificador de vazamento em cada um.
+3. **Dois `.claudeignore` legados migrados** (`btc_market`, `neocad`): os padrões próprios do
+   projeto passaram para dentro de uma ilha `USER`, então sobrevivem às próximas atualizações.
+   Conferido pelo git que nenhuma linha se perdeu; atualização seguinte roda sem conflito.
+4. Transcrição do vídeo de referência obtida **sem Whisper e sem ffmpeg**, pela legenda da
+   própria plataforma — caminho que virou a skill `dominio/transcrever-video`.
 
 ## Em andamento (herdado, inalterado)
 
@@ -46,26 +42,21 @@
 
 ## Impedimentos abertos
 
-- **Delegação ao gateway pelo `agentry` está bloqueada por desenho**, aguardando decisão do
-  mantenedor: declarei `egressClass: cloud-ok` porque o roteamento efetivo dos backends não
-  foi confirmado por quem opera o gateway. Sob esse valor, toda sessão com perfil restritivo
-  descarta o candidato e cai no Ollama — foi o que os testes mostraram. Se o gateway serve
-  modelos hospedados internamente, o valor correto é `local-only` em
-  `~/.agentry/agentry.settings.json`. A rota direta (`oa-chat`) **não** depende disso e já
-  funciona de dentro dos repositórios.
-- **Vazamento em repositório público de terceiro:** `agentry` (público) cita o nome do harness
-  corporativo em `docs/handoff-arquivo.md:109`, commit `cf9c268`, já publicado no branch
-  `origin/chore/build-linux-e-higiene-de-disco`. Não está em `main`. A sessão daquele projeto
-  foi avisada; a decisão sobre o histórico é do mantenedor.
+- **Sem VPN**, o gateway OpenAI-compatible fica inalcançável: as rotas `oa-chat` e `agentry
+  --task-class delegada` não funcionam até o acesso voltar. A configuração está pronta e
+  validada (`local-only`, `baseUrl` com `/v1`); falta só conectividade.
+- A variável `AGENTRY_LITELLM_BASE_URL` no `~/.zshrc` (linha 207) **não** termina em `/v1`, e
+  vence o arquivo global. Precisa da correção do mantenedor, senão o `agentry` monta a URL
+  errada mesmo com a VPN de volta.
 
 ## Próximo passo
 
-1. Exercitar os adaptadores gerados **ao vivo** nas CLIs (`codex debug prompt-input`,
+1. **Com a VPN de volta:** exercitar a `critico-independente` de ponta a ponta — submeter um
+   trabalho recente ao GLM como crítico e ver se ele acrescenta sinal ou só concorda.
+2. Exercitar os adaptadores de subagent ao vivo (`codex debug prompt-input`,
    `opencode agent list`) — hoje a prova é de gramática e parsing, não de carga real.
-2. Gerador para Gemini e Copilot — mesmo script, ramo novo.
-3. Revisar menções a `CLAUDE.md` e usos de tool de subagent nos corpos (portabilidade).
+3. Gerador de subagents para Gemini e Copilot.
 4. Reclassificar as skills de domínio antigas com migração para instalações existentes.
-5. O hook de pre-commit é **local**: reinstalar em cada clone novo deste repositório.
 
 ## Ação pendente fora deste repositório
 
