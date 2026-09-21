@@ -532,12 +532,13 @@ resolve_skill() {
   local item="$1" achado
   if [[ "$item" == "@padrao" ]]; then printf '%s\n' "${CORE_SKILLS[@]}"; return; fi
   if [[ "$item" == */\* ]]; then
-    achado="$(printf '%s\n' "${EXTRA_SKILLS[@]}" | grep "^${item%/\*}/" || true)"
+    achado="$(printf '%s\n' "${EXTRA_SKILLS[@]}" | awk -v c="${item%/\*}" 'index($0, c "/") == 1' || true)"
     [[ -n "$achado" ]] || erro "categoria vazia ou inexistente: '$item'"
     printf '%s\n' "$achado"; return
   fi
   if [[ -n "${FONTE_SKILL[$item]:-}" ]]; then printf '%s\n' "$item"; return; fi
-  achado="$(printf '%s\n' "${EXTRA_SKILLS[@]}" | grep "/${item}\$" || true)"
+  # comparação exata, não regex: '.' vindo do usuário não pode virar curinga (mockup.lab ≠ mockup-lab)
+  achado="$(printf '%s\n' "${EXTRA_SKILLS[@]}" | awk -F/ -v n="$item" '$NF == n' || true)"
   [[ -n "$achado" ]] || erro "skill inexistente: '$item'. Veja skills/README.md (ou use categoria/*)."
   printf '%s\n' "$achado"
 }
@@ -634,7 +635,7 @@ for s in "${SKILLS[@]}"; do
   while IFS= read -r dep; do
     ok=0; for t in "${SKILLS[@]}"; do [[ "$(basename "$t")" == "$dep" ]] && { ok=1; break; }; done
     [[ $ok -eq 1 ]] && continue
-    printf '%s\n' "${ALL_SKILLS[@]}" | grep -qE "(^|/)${dep}\$" && FALTANDO+=("$dep")
+    printf '%s\n' "${ALL_SKILLS[@]}" | awk -F/ -v n="$dep" '$NF == n {f=1} END {exit !f}' && FALTANDO+=("$dep")
   done < <(grep -rhoE 'skill `[a-z0-9-]+`' "$(skill_dir "$s")" 2>/dev/null | sed -E 's/skill `([a-z0-9-]+)`/\1/' | sort -u)
 done
 if [[ ${#FALTANDO[@]} -gt 0 ]]; then

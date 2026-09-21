@@ -26,7 +26,10 @@ from pathlib import Path
 
 
 def raiz_repo() -> Path:
-    r = subprocess.run(["git", "rev-parse", "--show-toplevel"], capture_output=True, text=True).stdout.strip()
+    try:
+        r = subprocess.run(["git", "rev-parse", "--show-toplevel"], capture_output=True, text=True).stdout.strip()
+    except FileNotFoundError:  # sem git instalado (contêiner mínimo): cai no diretório corrente
+        r = ""
     return Path(r) if r else Path(".")
 
 
@@ -73,29 +76,50 @@ def main() -> int:
     saida.mkdir(parents=True, exist_ok=True)
     yd = yt_dlp()
 
-    meta = subprocess.run(yd + ["--skip-download", "--print",
-                                "%(id)s\t%(title)s\t%(channel)s\t%(duration_string)s\t%(language)s", a.url],
-                          capture_output=True, text=True)
+    # JSON, não campos separados por tabulação: título com \t embaralharia todos os campos
+    meta = subprocess.run(yd + ["--skip-download", "--dump-json", a.url], capture_output=True, text=True)
     if meta.returncode != 0 or not meta.stdout.strip():
         # a última linha de ERROR importa; o yt-dlp enche o stderr de WARNING irrelevante
         erros = [l for l in meta.stderr.splitlines() if l.strip() and not l.startswith("WARNING")]
         print(f"não consegui ler o vídeo: {(erros[-1] if erros else meta.stderr.strip())[:300]}", file=sys.stderr)
         return 1
-    vid, titulo, canal, dur, idioma = (meta.stdout.strip().split("\t") + ["", "", "", "", ""])[:5]
+    info = json.loads(meta.stdout.splitlines()[-1])
+    vid, titulo = info.get("id", ""), info.get("title", "")
+    canal, dur = info.get("channel") or info.get("uploader", ""), info.get("duration_string", "")
+    idioma = info.get("language") or ""
 
-    prefs = [x for x in a.idiomas.split(",") if x] or []
-    langs = ",".join(prefs + [f"{p}-orig" for p in prefs] + [f"{idioma.split('-')[0]}-orig", idioma, "en-orig", "en"])
+    prefs = [x for x in a.idiomas.split(",") if x]
+    base = idioma.split("-")[0] if idioma else ""
+    # Ordem de preferência EXPLÍCITA — é ela que decide a escolha, não a ordem alfabética dos
+    # arquivos (com sorted(), "en" venceria "pt" num vídeo em português).
+    ordem = [x for x in dict.fromkeys(
+        [c for p in prefs for c in (f"{p}-orig", p)] + [f"{base}-orig", base, idioma, "en-orig", "en"]) if x]
+
+    def limpar():  # legenda de execução anterior contaminaria a escolha e seria apagada no fim
+        for v in saida.glob(f"{vid}.*.vtt"):
+            v.unlink()
+
+    limpar()
+    achados, origem, falhas = [], "", []
     # legenda manual primeiro: quando existe, é revisada por gente e vale mais que a automática
-    for flags, origem in ((["--write-subs"], "manual"), (["--write-subs", "--write-auto-subs"], "automática")):
-        subprocess.run(yd + ["--skip-download", *flags, "--sub-langs", langs, "--sub-format", "vtt",
-                             "-o", str(saida / "%(id)s.%(ext)s"), a.url], capture_output=True, text=True)
-        achados = sorted(saida.glob(f"{vid}*.vtt"))
-        if achados:
+    for flags, rotulo in ((["--write-subs"], "manual"), (["--write-subs", "--write-auto-subs"], "automática")):
+        r = subprocess.run(yd + ["--skip-download", *flags, "--sub-langs", ",".join(ordem), "--sub-format", "vtt",
+                                 "-o", str(saida / "%(id)s.%(ext)s"), a.url], capture_output=True, text=True)
+        if r.returncode != 0:
+            falhas.append(r.stderr)
+        baixados = {v.name[len(vid) + 1:-4]: v for v in saida.glob(f"{vid}.*.vtt")}
+        escolhido = next((baixados[l] for l in ordem if l in baixados), None) or \
+                    (sorted(baixados.values())[0] if baixados else None)
+        if escolhido:
+            achados, origem = [escolhido], rotulo
             break
-    else:
-        achados, origem = [], ""
 
     if not achados:
+        if falhas and all("ERROR" in f for f in falhas):
+            erro = [l for l in falhas[-1].splitlines() if l.startswith("ERROR")]
+            print(f"falha ao baixar legenda (não é ausência de legenda): {(erro or ['?'])[-1][:300]}",
+                  file=sys.stderr)
+            return 1  # rede ou bloqueio: NÃO mandar para o caminho caro de ASR por engano
         print(f"'{titulo}' não tem legenda disponível — use o caminho de ASR local (ver SKILL.md).", file=sys.stderr)
         return 3
 
@@ -107,8 +131,7 @@ def main() -> int:
          "legenda": escolhida.name, "origem": origem, "palavras": len(texto.split()), "url": a.url},
         ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
     if not a.manter_tempos:
-        for v in achados:
-            v.unlink()
+        limpar()
     print(f"{saida / (vid + '.txt')}  ({len(texto.split())} palavras, legenda {origem}: {titulo})")
     return 0
 
