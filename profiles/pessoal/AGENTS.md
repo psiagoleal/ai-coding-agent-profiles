@@ -111,6 +111,11 @@ Postura relaxada de confidencialidade, mas **segredos continuam proibidos no rep
   <modelo/versão>}` — ex.: `{agente: Claude Code; modelo: claude-opus-4-8}`. **Não**
   mencione uso de IA em README, código, CHANGELOG, ADR ou handoff, nem use *trailers* e
   `Co-authored-by` para agentes.
+  **Nenhuma outra entrada** em commit ou documentação: sem link ou ID de sessão de agente,
+  sem URL de conversa, sem rodapé do tipo "Generated with…", sem *trailers*
+  (`Co-authored-by`, `Assisted-by`, `Generated-by`, `*-Session`). O marcador entre chaves é o
+  único registro permitido — mesmo que a ferramenta ofereça outro por padrão.
+  Controle estrutural: hook `commit-msg` da skill `pr-review-guard`.
 
 <!-- USER:BEGIN id=adendos-seguranca -->
 _(nenhum — acrescente aqui o cofre, caminhos de credencial e regras de segredo deste projeto.)_
@@ -122,6 +127,9 @@ _(nenhum — acrescente aqui o cofre, caminhos de credencial e regras de segredo
   verificável (skill `spec-como-contrato`); trabalho leve, pelo critério de aceite direto.
 - **Teste antes da implementação:** comportamento novo e correção de bug começam por um
   teste que falha pelo motivo certo, com a saída citada (skill `teste-primeiro`).
+- **Painel de tickets** em `docs/TICKETS.md`, **sempre atualizado** ao criar, concluir ou
+  abandonar um ticket: uma linha por ticket, com link para o detalhe (skill
+  `micro-ticket-planner`).
 - **Micro-tickets** (skill `micro-ticket-planner`).
 - **Handoff** em `docs/CURRENT-STATE.md` (skill `handoff-updater`) — opcional em projetos
   solo, recomendado em colaborações.

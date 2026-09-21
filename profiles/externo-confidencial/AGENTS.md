@@ -120,10 +120,18 @@ _(nenhum — acrescente aqui o cofre, caminhos de credencial e regras de segredo
 
 ## 8. Fluxo ágil
 
+  **Nenhuma outra entrada** em commit ou documentação: sem link ou ID de sessão de agente,
+  sem URL de conversa, sem rodapé do tipo "Generated with…", sem *trailers*
+  (`Co-authored-by`, `Assisted-by`, `Generated-by`, `*-Session`). O marcador entre chaves é o
+  único registro permitido — mesmo que a ferramenta ofereça outro por padrão.
+  Controle estrutural: hook `commit-msg` da skill `pr-review-guard`.
 - **Contrato antes do código:** trabalho de risco começa por spec com critério de aceite
   verificável (skill `spec-como-contrato`); trabalho leve, pelo critério de aceite direto.
 - **Teste antes da implementação:** comportamento novo e correção de bug começam por um
   teste que falha pelo motivo certo, com a saída citada (skill `teste-primeiro`).
+- **Painel de tickets** em `docs/TICKETS.md`, **sempre atualizado** ao criar, concluir ou
+  abandonar um ticket: uma linha por ticket, com link para o detalhe (skill
+  `micro-ticket-planner`).
 - **Micro-tickets** (skill `micro-ticket-planner`).
 - **Handoff** em `docs/CURRENT-STATE.md` a cada commit (skill `handoff-updater`).
 - **DoD:** testes/linter/tipagem passam; revisão de PR (skill `pr-review-guard`)

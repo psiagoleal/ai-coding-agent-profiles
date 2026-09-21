@@ -37,11 +37,43 @@ aproximam dos limites da janela de contexto ("ansiedade de contexto"). A mitiga�
 - **Depende de:** MT-<m> | ADR-<NNNN> | nenhum
 ```
 
+## Painel de tickets — `docs/TICKETS.md`
+
+Todo ticket gerado entra num checklist único, para quem acompanha ver **de relance** o que foi
+feito e o que falta. É um índice, não um segundo lugar para o detalhe:
+
+```markdown
+## Em aberto
+- [ ] [MT-12](plano.md#mt-12) — Rejeitar reserva sobreposta com 409
+
+## Concluídos
+- [x] [MT-11](plano.md#mt-11) — Validar tamanho do corpo da requisição
+
+## Abandonados
+- [~] [MT-9](plano.md#mt-9) — Cache de sessão · motivo: substituído pelo MT-11
+```
+
+Regras, todas obrigatórias:
+
+- **Uma linha por ticket:** identificador com **link para o detalhe** e uma frase curta. Nada
+  de critério de aceite, arquivos ou discussão aqui — isso mora no destino do link.
+- **O link aponta para onde o ticket está detalhado:** âncora no plano (`plano.md#mt-12`) ou
+  arquivo próprio (`tickets/MT-12.md`). Link quebrado é painel mentindo.
+- **Atualize sempre, no mesmo trabalho:** ao **criar** (entra em aberto), ao **concluir**
+  (marca `[x]` e move), ao **abandonar** (marca `[~]` com o motivo em uma frase). Nunca apague
+  um ticket: o abandonado também é história.
+- **Sem duplicar o handoff.** `docs/CURRENT-STATE.md` diz o que está acontecendo agora; o
+  painel diz o que existe. O handoff aponta para o painel, não o copia.
+
+O modelo está em `templates/TICKETS.template.md`; o instalador já entrega `docs/TICKETS.md` em
+todo projeto novo, e nunca o sobrescreve.
+
 ## Conexão com os rituais ágeis (DoD)
 
 Um micro-ticket só é "Concluído" quando:
 - os scripts de teste/linter definidos no `AGENTS.md` passam;
 - o `docs/CURRENT-STATE.md` foi atualizado (ver skill `handoff-updater`);
+- o `docs/TICKETS.md` marca o ticket como concluído;
 - a revisão humana de PR foi feita (ver skill `pr-review-guard`).
 
 ## Definição de pronto da skill
@@ -49,3 +81,5 @@ Um micro-ticket só é "Concluído" quando:
 - [ ] Cada micro-ticket tem objetivo único, escopo de arquivos fechado e critério de aceite.
 - [ ] Dependências e itens fora de escopo estão explícitos.
 - [ ] Nenhum ticket exige decisão arquitetural não registrada em ADR.
+- [ ] Todo ticket criado, concluído ou abandonado está refletido em `docs/TICKETS.md`, com
+      link válido para o detalhe e uma frase curta.

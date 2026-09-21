@@ -79,7 +79,23 @@ tende a validá-lo.
 - [ ] Nenhum outro artefato (descrição/metadado de PR, código, comentários, ADR, handoff)
       menciona uso de IA nem atribui autoria/coautoria/decisão a um agente; sem *trailers*
       `Co-authored-by`/`Assisted-by` de agente.
+- [ ] A mensagem de commit **não** tem nenhuma outra entrada: nem link ou ID de sessão de
+      agente, nem URL de conversa, nem rodapé "Generated with…", nem *trailer* `*-Session` ou
+      `Generated-by` — mesmo quando a ferramenta os acrescenta por padrão.
+- [ ] `docs/TICKETS.md` reflete os tickets que este PR cria ou conclui.
 - [ ] SBOM (CycloneDX/SPDX) gerado/atualizado quando aplicável ao perfil.
+
+## Controle estrutural da mensagem de commit
+
+A regra de proveniência é texto, e texto é probabilístico: a ferramenta pode acrescentar link
+de sessão ou *trailer* por padrão, e o agente segue a ferramenta. Ative o hook, uma vez por
+clone (não é versionado):
+
+```bash
+ln -sf ../../skills/pr-review-guard/scripts/checar-mensagem-commit.sh .git/hooks/commit-msg
+```
+
+Ele recusa qualquer entrada de agente além do marcador entre chaves — antes do commit existir.
 
 ## Saída esperada
 
