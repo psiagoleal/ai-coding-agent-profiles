@@ -83,6 +83,8 @@ tende a validá-lo.
       agente, nem URL de conversa, nem rodapé "Generated with…", nem *trailer* `*-Session` ou
       `Generated-by` — mesmo quando a ferramenta os acrescenta por padrão.
 - [ ] `docs/TICKETS.md` reflete os tickets que este PR cria ou conclui.
+- [ ] Se o PR cria, remove ou renomeia módulo, ou acrescenta dependência entre módulos,
+      `docs/architecture.md` foi atualizado no mesmo PR (`mapa-de-arquitetura`).
 - [ ] SBOM (CycloneDX/SPDX) gerado/atualizado quando aplicável ao perfil.
 
 ## Controle estrutural da mensagem de commit

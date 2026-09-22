@@ -6,6 +6,22 @@
 > compulsória antes de editar. `CLAUDE.md`, `.cursorrules` e
 > `.github/copilot-instructions.md` apenas apontam para este documento.
 
+## Início — por onde começar
+
+> Para o agente e para o humano. Vale quando o projeto ainda não tem `docs/architecture.md`
+> e `docs/TICKETS.md`, ou quando alguém pergunta "por onde começo".
+
+- **Projeto novo:** entrevista sobre o objetivo → spec pequena (`spec-como-contrato`) → ADR
+  de stack (`adr-writer`) → tickets em `docs/TICKETS.md` (`micro-ticket-planner`) → teste
+  falhando antes do código (`teste-primeiro`) → revisão antes do merge (`pr-review-guard`).
+- **Projeto existente entrando agora no processo:** **levantar antes de mudar** — segredos
+  já versionados (`secrets-guard`), comandos reais de build e teste, `docs/architecture.md`
+  gerado do código (`mapa-de-arquitetura`), `docs/CURRENT-STATE.md` com o estado real
+  (`handoff-updater`). Só então tickets e código, com teste de caracterização onde não há
+  teste.
+- **Nos dois:** o humano escolhe o perfil e aprova spec, ADR e merge; o agente prepara.
+  Roteiro completo, com quem decide cada passo: skill `novo-projeto`, seção 7.
+
 ## 0. Perfil e postura de confidencialidade
 
 - **Perfil:** projetos pessoais voltados à **comunidade open-source**, fora da empresa.
@@ -88,8 +104,8 @@ Todo projeto deve conter:
   contribuir; licença; e a **seção "Apoie"** (ver `README.md` deste perfil como modelo).
 - **`LICENSE`** na raiz (preferencialmente MIT, Apache 2.0 ou GPL).
 - **`CHANGELOG.md`** seguindo [Keep a Changelog](https://keepachangelog.com/).
-- Documentação adicional em `docs/` (`architecture.md`, `api.md`, `development.md`,
-  `changelog.md`).
+- **`docs/architecture.md`** com a arquitetura efetiva (skill `mapa-de-arquitetura`, ver seção 8).
+- Documentação adicional em `docs/` (`api.md`, `development.md`) quando o projeto pedir.
 - Revisar a documentação a cada PR que altere funcionalidades.
 
 <!-- USER:BEGIN id=adendos-fronteiras -->
@@ -130,6 +146,9 @@ _(nenhum — acrescente aqui o cofre, caminhos de credencial e regras de segredo
 - **Painel de tickets** em `docs/TICKETS.md`, **sempre atualizado** ao criar, concluir ou
   abandonar um ticket: uma linha por ticket, com link para o detalhe (skill
   `micro-ticket-planner`).
+- **Mapa de arquitetura** em `docs/architecture.md`: a arquitetura **efetiva**, derivada das
+  dependências reais entre módulos, sem encaixe forçado em padrão; atualizado no mesmo
+  trabalho que mudar módulos ou dependências (skill `mapa-de-arquitetura`).
 - **Micro-tickets** (skill `micro-ticket-planner`).
 - **Handoff** em `docs/CURRENT-STATE.md` (skill `handoff-updater`) — opcional em projetos
   solo, recomendado em colaborações.
@@ -149,7 +168,7 @@ _(nenhum — acrescente aqui adaptações de DoD, convenção de commit e ritos 
   **`novo-projeto`**, **`limites-de-uso`**,
   **`caveman`**, **`atribuicao-de-falha`**,
   **`gates-de-conclusao`**, **`paralelizacao-em-grafo`**, **`spec-como-contrato`**,
-  **`teste-primeiro`**, **`critico-independente`** — conforme a
+  **`teste-primeiro`**, **`critico-independente`**, **`mapa-de-arquitetura`** — conforme a
   necessidade do projeto. Ver seção 9 do perfil empresa para os gatilhos, e
   [`skills/README.md`](./skills/README.md) para o catálogo completo (incluindo as skills de
   domínio, instaladas só sob demanda).

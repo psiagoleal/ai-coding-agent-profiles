@@ -166,7 +166,7 @@ bucket_for() {
   # O README da biblioteca de skills tem ilha para o catálogo local — híbrido, não regra.
   [[ "$1" == "$NEUTRAL_DIR/README.md" ]] && { echo hybrid_text; return; }
   case "$1" in
-    docs/CURRENT-STATE.md|docs/TICKETS.md|docs/adr/[0-9]*|.env) echo live ;;
+    docs/CURRENT-STATE.md|docs/TICKETS.md|docs/architecture.md|docs/adr/[0-9]*|.env) echo live ;;
     # docs/adr/README.md é o ÍNDICE dos ADRs do projeto — quem o mantém é o projeto, a cada
     # ADR novo. Regenerá-lo apagaria a lista inteira (o template traz só uma linha-exemplo).
     README.md|CHANGELOG.md|LICENSE|docs/adr/README.md)      echo scaffold ;;

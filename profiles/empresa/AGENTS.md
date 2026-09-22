@@ -7,6 +7,22 @@
 > específicos de fornecedor (`CLAUDE.md`, `.cursorrules`, `.github/copilot-instructions.md`)
 > apenas apontam para este documento.
 
+## Início — por onde começar
+
+> Para o agente e para o humano. Vale quando o projeto ainda não tem `docs/architecture.md`
+> e `docs/TICKETS.md`, ou quando alguém pergunta "por onde começo".
+
+- **Projeto novo:** entrevista sobre o objetivo → spec pequena (`spec-como-contrato`) → ADR
+  de stack (`adr-writer`) → tickets em `docs/TICKETS.md` (`micro-ticket-planner`) → teste
+  falhando antes do código (`teste-primeiro`) → revisão antes do merge (`pr-review-guard`).
+- **Projeto existente entrando agora no processo:** **levantar antes de mudar** — segredos
+  já versionados (`secrets-guard`), comandos reais de build e teste, `docs/architecture.md`
+  gerado do código (`mapa-de-arquitetura`), `docs/CURRENT-STATE.md` com o estado real
+  (`handoff-updater`). Só então tickets e código, com teste de caracterização onde não há
+  teste.
+- **Nos dois:** o humano escolhe o perfil e aprova spec, ADR e merge; o agente prepara.
+  Roteiro completo, com quem decide cada passo: skill `novo-projeto`, seção 7.
+
 ## 0. Perfil e postura de confidencialidade
 
 - **Perfil:** projetos internos da empresa.
@@ -163,6 +179,9 @@ _(nenhum — acrescente aqui o cofre, caminhos de credencial e regras de segredo
 - **Painel de tickets** em `docs/TICKETS.md`, **sempre atualizado** ao criar, concluir ou
   abandonar um ticket: uma linha por ticket, com link para o detalhe (skill
   `micro-ticket-planner`).
+- **Mapa de arquitetura** em `docs/architecture.md`: a arquitetura **efetiva**, derivada das
+  dependências reais entre módulos, sem encaixe forçado em padrão; atualizado no mesmo
+  trabalho que mudar módulos ou dependências (skill `mapa-de-arquitetura`).
 - **Micro-tickets** autocontidos (skill `micro-ticket-planner`) — cada um cabe em um ciclo
   limpo de contexto.
 - **Handoff** mandatório em `docs/CURRENT-STATE.md` a cada commit (skill `handoff-updater`).
@@ -205,6 +224,8 @@ descobre via adaptador `.claude/skills/` (ponteiros gerados por `scripts/setup-p
 - **`teste-primeiro`** — ao implementar comportamento novo ou corrigir bug.
 - **`critico-independente`** — antes de aceitar saída de agente: critério antes, crítico em
   contexto limpo, sinal externo.
+- **`mapa-de-arquitetura`** — ao adotar o framework em projeto existente, quando
+  `docs/architecture.md` falta ou envelheceu, ou quando a mudança altera dependências entre módulos.
 - **Bibliotecas extras** (`--fonte`/`fontes_extras`) podem acrescentar skills de governança,
   categorias sob demanda e subagents em `agents/` — ver `skills/README.md`.
 

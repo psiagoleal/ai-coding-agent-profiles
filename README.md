@@ -165,7 +165,7 @@ profiles/
   empresa/  externo-confidencial/  pessoal/
     AGENTS.md  CLAUDE.md  .cursorrules  .github/copilot-instructions.md
     .claudeignore  .env.example  .claude/{settings.json,skills/}
-    docs/{CURRENT-STATE.md, adr/}
+    docs/{CURRENT-STATE.md, TICKETS.md, adr/}
 skills/                        # biblioteca neutra (independente de agente)
   README.md                    # catálogo (com ilha p/ as skills do próprio projeto)
   secrets-guard/  adr-writer/  micro-ticket-planner/   # governança: instaladas por padrão
@@ -186,6 +186,10 @@ scripts/
    estilo) — edite **dentro** dos marcadores `USER:BEGIN/END` para que `--update` preserve
    as mudanças. Seções inteiras que só existem neste repositório vão na §10.
 4. Confirme `.gitignore`/`.claudeignore` cobrindo `.env` e dados sensíveis.
+5. Siga o **roteiro de entrada** — resumido na seção "Início" do `AGENTS.md` instalado e
+   detalhado na skill `novo-projeto` (seção 7). Projeto novo começa pela spec; projeto que já
+   existe começa **levantando antes de mudar**: comandos reais, `docs/architecture.md` gerado
+   do código (skill `mapa-de-arquitetura`) e `docs/CURRENT-STATE.md` com o estado real.
 
 ## Interoperabilidade
 
