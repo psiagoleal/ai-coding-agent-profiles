@@ -76,6 +76,15 @@ parar em vez de escrever código que não compila.
 | [`stack/contrato-de-design`](stack/contrato-de-design/SKILL.md) | `docs/DESIGN.md` como contrato visual, sobre tokens em três camadas (primitiva → semântica → componente), independente de framework | Começar a interface; cores/espaços divergindo entre telas; "design system", "tokens", "tema escuro" |
 | [`stack/criar-ui-sveltekit`](stack/criar-ui-sveltekit/SKILL.md) | Interface em SvelteKit 2 / Svelte 5 (runes), TS estrito, dado no `load`, formulário com action, estilo por token | Criar página, rota, componente ou formulário em projeto SvelteKit |
 
+## Catálogo — conhecimento (sob demanda)
+
+Acervo grande de documentos que precisa ser consultável. Opt-in: `--skills 'conhecimento/*'`.
+
+| Skill | Para quê | Aciona quando |
+|-------|----------|---------------|
+| [`conhecimento/indexar-acervo`](conhecimento/indexar-acervo/SKILL.md) | Inventário com proveniência, extração com método registrado e índice FTS5 local, retomável; o acervo não sai do lugar | Acervo grande de documentos; "indexar", "base de conhecimento"; agente varrendo com `find`/`grep` |
+| [`conhecimento/consultar-acervo`](conhecimento/consultar-acervo/SKILL.md) | Consultar antes de responder, ler o original, citar caminho e proveniência, separar "não achei" de "não existe" | Existe base indexada; pergunta sobre histórico, norma ou projeto anterior |
+
 ## Catálogo — deste projeto
 
 <!-- USER:BEGIN id=catalogo-local -->

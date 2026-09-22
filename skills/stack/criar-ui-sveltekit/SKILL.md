@@ -30,15 +30,19 @@ não compila, e num projeto React gera lixo. Não deduza a stack pelo nome das p
 | Camada | Tecnologia | Observação |
 |---|---|---|
 | Framework | SvelteKit 2 · Svelte 5 (runes) | `$state`, `$derived`, `$props`, `$effect` |
-| Linguagem | TypeScript estrito | `strict: true`; `any` só com comentário justificando |
-| Build | Vite 5 | `vite dev`, `vite build` |
+| Linguagem | TypeScript 5 ou 6, estrito | `strict: true`; `any` só com comentário justificando |
+| Build | Vite 6 a 8 | quem manda é o do projeto; o gate imprime a versão |
 | Estilo | CSS com os tokens do `DESIGN.md` | `<style>` com escopo; sem valor cru |
 | Teste unitário/componente | Vitest + `@testing-library/svelte` | |
 | Teste de ponta a ponta | Playwright | fluxo, não unidade |
 | Checagem | `svelte-check` | aviso de acessibilidade tratado como erro |
 
-> Versões conferidas em **2026-09-22**. Antes de seguir, confirme com o *lockfile* do projeto:
-> a skill não manda na versão instalada, o gate do passo 0 manda.
+> Versões conferidas em **2026-09-22** contra os projetos desta máquina (Svelte 5 em todos,
+> SvelteKit 2, Vite 6/7/8, TS 5/6). A skill não manda na versão instalada — o gate do passo 0
+> lê o *lockfile* e manda.
+>
+> **Aplicação desktop (Tauri 2):** a interface segue esta skill; o lado Rust, a ponte de
+> comandos e as permissões **não** estão cobertos aqui — ver o ticket do painel.
 
 ## Estrutura
 

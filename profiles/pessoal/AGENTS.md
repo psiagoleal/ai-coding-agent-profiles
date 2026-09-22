@@ -172,7 +172,7 @@ _(nenhum — acrescente aqui adaptações de DoD, convenção de commit e ritos 
   **`teste-primeiro`**, **`critico-independente`**, **`mapa-de-arquitetura`**,
   **`definir-stack`** — conforme a
   necessidade do projeto. Ver seção 9 do perfil empresa para os gatilhos, e
-  a categoria `stack/` (opt-in: `contrato-de-design`, `criar-ui-sveltekit`) e
+  as categorias `stack/` e `conhecimento/` (opt-in) e
   [`skills/README.md`](./skills/README.md) para o catálogo completo (incluindo as skills de
   domínio, instaladas só sob demanda).
 

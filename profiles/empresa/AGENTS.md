@@ -231,6 +231,8 @@ descobre via adaptador `.claude/skills/` (ponteiros gerados por `scripts/setup-p
   `docs/architecture.md` falta ou envelheceu, ou quando a mudança altera dependências entre módulos.
 - **Categoria `stack/`** (opt-in, `--skills 'stack/*'`) — `contrato-de-design` (o `docs/DESIGN.md`)
   e as skills de execução por stack, ex.: `criar-ui-sveltekit`.
+- **Categoria `conhecimento/`** (opt-in) — `indexar-acervo` e `consultar-acervo`, para acervo
+  grande de documentos que precisa ser consultável sem varredura.
 - **Bibliotecas extras** (`--fonte`/`fontes_extras`) podem acrescentar skills de governança,
   categorias sob demanda e subagents em `agents/` — ver `skills/README.md`.
 
