@@ -140,6 +140,7 @@ própria spec e não reescreve código existente para caber no processo.
 |---|---|---|---|
 | 1 | Instalar o perfil (seções 1–5) | `novo-projeto` | humano escolhe o perfil |
 | 2 | Agente **entrevista** o humano sobre o objetivo; spec **pequena** da primeira feature | `spec-como-contrato` | humano aprova a spec |
+| 2b | Questionário de stack pelo tipo de projeto; havendo interface, `docs/DESIGN.md` | `definir-stack`, `contrato-de-design` | humano responde e aprova |
 | 3 | ADR das decisões de stack que o agente precisará respeitar | `adr-writer` | humano aprova |
 | 4 | Fatiar em micro-tickets e abrir o `docs/TICKETS.md` | `micro-ticket-planner` | humano ordena |
 | 5 | Cada ticket: teste falhando → implementação → gate com evidência | `teste-primeiro`, `gates-de-conclusao` | comando decide |
@@ -156,7 +157,7 @@ gostaria que existisse.
 |---|---|---|---|
 | 1 | Commit base, redistribuir o `CLAUDE.md` antigo, instalar (seções 1–5) | `novo-projeto` | humano escolhe o perfil |
 | 2 | Varrer segredos já versionados e ajustar `.claudeignore`/`.gitignore` | `secrets-guard` | humano decide o que fazer com achados |
-| 3 | Rodar build e testes **de verdade** e registrar na ilha `comandos-exatos` o que funciona — e o que não | `gates-de-conclusao` | comando decide |
+| 3 | Rodar build e testes **de verdade** e registrar a stack e os comandos que funcionam nas ilhas — e o que não funciona, comentado | `definir-stack`, `gates-de-conclusao` | comando decide |
 | 4 | Gerar `docs/architecture.md` a partir do código | `mapa-de-arquitetura` | humano corrige responsabilidades |
 | 5 | `docs/CURRENT-STATE.md` com o estado real: dívidas, testes quebrados, trabalho em curso | `handoff-updater` | humano confirma |
 | 6 | ADR **retroativo** só para decisões vigentes que o agente precisa respeitar — não reconstituir a história | `adr-writer` | humano aprova |

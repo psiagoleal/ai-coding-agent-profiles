@@ -11,13 +11,14 @@
 > Para o agente e para o humano. Vale quando o projeto ainda não tem `docs/architecture.md`
 > e `docs/TICKETS.md`, ou quando alguém pergunta "por onde começo".
 
-- **Projeto novo:** entrevista sobre o objetivo → spec pequena (`spec-como-contrato`) → ADR
-  de stack (`adr-writer`) → tickets em `docs/TICKETS.md` (`micro-ticket-planner`) → teste
-  falhando antes do código (`teste-primeiro`) → revisão antes do merge (`pr-review-guard`).
+- **Projeto novo:** entrevista sobre o objetivo → spec pequena (`spec-como-contrato`) →
+  questionário de stack (`definir-stack`), que vira ilha do `AGENTS.md` e ADR → tickets em
+  `docs/TICKETS.md` (`micro-ticket-planner`) → teste falhando antes do código
+  (`teste-primeiro`) → revisão antes do merge (`pr-review-guard`).
 - **Projeto existente entrando agora no processo:** **levantar antes de mudar** — segredos
   já versionados (`secrets-guard`), comandos reais de build e teste, `docs/architecture.md`
-  gerado do código (`mapa-de-arquitetura`), `docs/CURRENT-STATE.md` com o estado real
-  (`handoff-updater`). Só então tickets e código, com teste de caracterização onde não há
+  gerado do código (`mapa-de-arquitetura`), stack escrita nas ilhas (`definir-stack`),
+  `docs/CURRENT-STATE.md` com o estado real (`handoff-updater`). Só então tickets e código, com teste de caracterização onde não há
   teste.
 - **Nos dois:** o humano escolhe o perfil e aprova spec, ADR e merge; o agente prepara.
   Roteiro completo, com quem decide cada passo: skill `novo-projeto`, seção 7.
@@ -168,8 +169,10 @@ _(nenhum — acrescente aqui adaptações de DoD, convenção de commit e ritos 
   **`meeting-minutes`**,
   **`novo-projeto`**, **`limites-de-uso`**, **`caveman`**,
   **`atribuicao-de-falha`**, **`gates-de-conclusao`**, **`paralelizacao-em-grafo`**, **`spec-como-contrato`**,
-  **`teste-primeiro`**, **`critico-independente`**, **`mapa-de-arquitetura`** — todas recomendadas. Ver seção 9 do perfil empresa para os gatilhos
-  de cada uma, e [`skills/README.md`](./skills/README.md) para o catálogo completo
+  **`teste-primeiro`**, **`critico-independente`**, **`mapa-de-arquitetura`**,
+  **`definir-stack`** — todas recomendadas. Ver seção 9 do perfil empresa para os gatilhos
+  de cada uma, e a categoria `stack/` (opt-in: `contrato-de-design`, `criar-ui-sveltekit`) e
+  [`skills/README.md`](./skills/README.md) para o catálogo completo
   (incluindo as skills de domínio, instaladas só sob demanda).
 
 <!-- USER:BEGIN id=adendos-skills -->

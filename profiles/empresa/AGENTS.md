@@ -12,13 +12,14 @@
 > Para o agente e para o humano. Vale quando o projeto ainda não tem `docs/architecture.md`
 > e `docs/TICKETS.md`, ou quando alguém pergunta "por onde começo".
 
-- **Projeto novo:** entrevista sobre o objetivo → spec pequena (`spec-como-contrato`) → ADR
-  de stack (`adr-writer`) → tickets em `docs/TICKETS.md` (`micro-ticket-planner`) → teste
-  falhando antes do código (`teste-primeiro`) → revisão antes do merge (`pr-review-guard`).
+- **Projeto novo:** entrevista sobre o objetivo → spec pequena (`spec-como-contrato`) →
+  questionário de stack (`definir-stack`), que vira ilha do `AGENTS.md` e ADR → tickets em
+  `docs/TICKETS.md` (`micro-ticket-planner`) → teste falhando antes do código
+  (`teste-primeiro`) → revisão antes do merge (`pr-review-guard`).
 - **Projeto existente entrando agora no processo:** **levantar antes de mudar** — segredos
   já versionados (`secrets-guard`), comandos reais de build e teste, `docs/architecture.md`
-  gerado do código (`mapa-de-arquitetura`), `docs/CURRENT-STATE.md` com o estado real
-  (`handoff-updater`). Só então tickets e código, com teste de caracterização onde não há
+  gerado do código (`mapa-de-arquitetura`), stack escrita nas ilhas (`definir-stack`),
+  `docs/CURRENT-STATE.md` com o estado real (`handoff-updater`). Só então tickets e código, com teste de caracterização onde não há
   teste.
 - **Nos dois:** o humano escolhe o perfil e aprova spec, ADR e merge; o agente prepara.
   Roteiro completo, com quem decide cada passo: skill `novo-projeto`, seção 7.
@@ -224,8 +225,12 @@ descobre via adaptador `.claude/skills/` (ponteiros gerados por `scripts/setup-p
 - **`teste-primeiro`** — ao implementar comportamento novo ou corrigir bug.
 - **`critico-independente`** — antes de aceitar saída de agente: critério antes, crítico em
   contexto limpo, sinal externo.
+- **`definir-stack`** — projeto novo ou stack não escrita: questionário por tipo de projeto;
+  a resposta vai para as ilhas do `AGENTS.md` e para ADR, nunca só para a conversa.
 - **`mapa-de-arquitetura`** — ao adotar o framework em projeto existente, quando
   `docs/architecture.md` falta ou envelheceu, ou quando a mudança altera dependências entre módulos.
+- **Categoria `stack/`** (opt-in, `--skills 'stack/*'`) — `contrato-de-design` (o `docs/DESIGN.md`)
+  e as skills de execução por stack, ex.: `criar-ui-sveltekit`.
 - **Bibliotecas extras** (`--fonte`/`fontes_extras`) podem acrescentar skills de governança,
   categorias sob demanda e subagents em `agents/` — ver `skills/README.md`.
 

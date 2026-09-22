@@ -40,6 +40,7 @@ A biblioteca tem **dois níveis**, e a distinção é o que mantém o catálogo 
 | [`atribuicao-de-falha`](atribuicao-de-falha/SKILL.md) | Diagnosticar onde a falha do agente nasceu — contexto, processo, autoridade ou evidência — e corrigir a camada certa | Agente repete erro; "escrever no AGENTS.md p/ ele não fazer de novo"; escolher entre regra, permissão, hook e teste |
 | [`gates-de-conclusao`](gates-de-conclusao/SKILL.md) | Gates escritos antes do trabalho (`CHECK:`/`EXPECT:`, só vale com exit 0) e as quatro razões de aborto além da saída de aceite | Tarefa longa/repetitiva; decidir se está concluído; agente insiste sem progredir; checkbox sem evidência |
 | [`paralelizacao-em-grafo`](paralelizacao-em-grafo/SKILL.md) | Decidir se o trabalho vira grafo paralelo: contrato na fase 0, fatia vertical, worktree por fatia, fan-in de dono único | Onda com várias tarefas; "rodar em paralelo"; dividir trabalho entre agentes; merge paralelo virou negociação |
+| [`definir-stack`](definir-stack/SKILL.md) | Questionário de stack por tipo de projeto; respostas vão para as ilhas do `AGENTS.md`, ADR e `DESIGN.md`, com todo comando executado antes de declarado | Projeto novo; stack não escrita; antes de escolher framework; agente adivinhando comando de build |
 | [`mapa-de-arquitetura`](mapa-de-arquitetura/SKILL.md) | Gera e mantém `docs/architecture.md` com a arquitetura efetiva — componentes, responsabilidades, dependências com evidência e Mermaid — sem encaixe forçado em padrão | Adoção em projeto existente; `docs/architecture.md` ausente ou velho; mudança altera dependências entre módulos |
 
 ## Bibliotecas extras
@@ -63,6 +64,17 @@ Estas trazem *scripts* anexos e dependências próprias (Playwright, `curl_cffi`
 sob demanda — por isso `node_modules/`, `.venv/` e `__pycache__/` nunca são copiados para o
 alvo. Dado do usuário (listas de compra, mockups) mora no diretório de trabalho do projeto,
 **nunca dentro da skill**.
+
+## Catálogo — stack (sob demanda)
+
+Tudo que depende de uma escolha de tecnologia. Opt-in: `--skills 'stack/*'` ou skill a skill.
+Cada uma começa por um **gate de detecção** — se o projeto não for daquela stack, ela manda
+parar em vez de escrever código que não compila.
+
+| Skill | Para quê | Aciona quando |
+|-------|----------|---------------|
+| [`stack/contrato-de-design`](stack/contrato-de-design/SKILL.md) | `docs/DESIGN.md` como contrato visual, sobre tokens em três camadas (primitiva → semântica → componente), independente de framework | Começar a interface; cores/espaços divergindo entre telas; "design system", "tokens", "tema escuro" |
+| [`stack/criar-ui-sveltekit`](stack/criar-ui-sveltekit/SKILL.md) | Interface em SvelteKit 2 / Svelte 5 (runes), TS estrito, dado no `load`, formulário com action, estilo por token | Criar página, rota, componente ou formulário em projeto SvelteKit |
 
 ## Catálogo — deste projeto
 
