@@ -30,24 +30,48 @@ Para escolher e comparar, veja [`docs/comparativo-perfis.md`](docs/comparativo-p
    pasta neutra `skills/` é a fonte da verdade; adaptadores por agente (ex.:
    `.claude/skills/`) são apenas ponteiros gerados pelo script.
 
-## Script de instalação
+## Instalação
 
-[`scripts/setup-profile.sh`](scripts/setup-profile.sh) copia um perfil para um repositório
-alvo e gerencia as skills (pasta neutra + adaptador de agente):
+Três passos, em qualquer sistema:
+
+```bash
+git clone <este repositório> ~/dev/ai-coding-agent-profiles
+cd ~/dev/ai-coding-agent-profiles
+scripts/setup-profile.sh --doctor        # confere pré-requisitos e diz como resolver
+scripts/setup-profile.sh                 # sem argumentos: instalação guiada
+```
+
+O **modo guiado** pergunta o perfil (com a árvore de decisão à vista), o diretório do
+projeto, oferece `git init` quando falta, escolhe o modo de skills conforme o sistema de
+arquivos, mostra a **prévia** do que seria escrito e só então pede confirmação. Nada é
+escrito antes do "sim".
+
+O **`--doctor`** verifica bash, git, jq, python3, suporte a symlink no alvo e se o alvo é
+repositório git — e imprime o comando de instalação **do seu sistema** para o que faltar.
+
+### Por sistema
+
+| Sistema | O que observar |
+|---|---|
+| **Linux** | Nada além de `git` e `jq`. |
+| **macOS** | O `/bin/bash` do sistema é a versão 3.2 (2007) e não serve. O script procura sozinho um bash moderno em `/opt/homebrew/bin` e `/usr/local/bin`; se não houver, peça `brew install bash`. Ferramentas BSD (`sed`, `shasum`, `find`) já são tratadas. |
+| **Windows** | Use **Git Bash** ou **WSL**. O modo guiado detecta e passa a `--skills-mode copy` sozinho, porque symlink exige Modo de Desenvolvedor. No WSL, tudo funciona como no Linux. |
+
+### Modo direto (script, CI, repetição)
 
 ```bash
 scripts/setup-profile.sh <perfil> <repo-alvo> [opções]
 
-# exemplos
 scripts/setup-profile.sh empresa ~/dev/meu-projeto                 # symlinks (padrão)
 scripts/setup-profile.sh pessoal ~/dev/oss --skills-mode copy      # cópias (Windows)
 scripts/setup-profile.sh empresa ./alvo --dry-run                  # simula, não escreve
 scripts/setup-profile.sh externo-confidencial ./x --skills secrets-guard,pr-review-guard
 ```
 
-Opções principais: `--skills-mode {symlink|copy|none}`, `--agent {claude|none}`,
-`--skills <lista>`, `--neutral-dir <nome>`, `--config <arquivo>`, `--update`, `--force`,
-`--dry-run`. Veja `--help`.
+Opções principais: `--doctor`, `--skills-mode {symlink|copy|none}`,
+`--agent {claude|codex|gemini|opencode|agentry|zcode|all|none}`, `--skills <lista>`,
+`--neutral-dir <nome>`, `--config <arquivo>`, `--update`, `--force`, `--dry-run`.
+Veja `--help`.
 
 ## Atualização não-destrutiva (`--update`)
 

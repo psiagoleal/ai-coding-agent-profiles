@@ -56,15 +56,20 @@ Fluxo correto:
 ## 3. Instalar — sempre com `--dry-run` primeiro
 
 ```bash
+scripts/setup-profile.sh --doctor                    # pré-requisitos, por sistema
 scripts/setup-profile.sh <perfil> <alvo> --dry-run   # revise o plano
 scripts/setup-profile.sh <perfil> <alvo>             # aplique
 ```
+
+Com o usuário presente e sem pressa, `scripts/setup-profile.sh` **sem argumentos** abre a
+instalação guiada: pergunta perfil e alvo, mostra a prévia e pede confirmação. Em script ou
+CI, use a forma direta acima — o modo guiado só liga com terminal interativo.
 
 Opções que costumam importar:
 
 | Situação | Opção |
 |---|---|
-| Checkout no Windows | `--skills-mode copy` (symlink não é portável) |
+| Checkout no Windows | `--skills-mode copy` (o modo guiado já detecta e troca sozinho) |
 | Só a pasta neutra, sem agente | `--skills-mode none` |
 | Subconjunto de skills | `--skills a,b,c` |
 | Repo já configurado | `--update` (ver seção 6) |

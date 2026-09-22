@@ -77,6 +77,51 @@
 set -euo pipefail
 
 # ----------------------------------------------------------------------------
+# Portabilidade (Linux, macOS, Git Bash/WSL no Windows)
+# ----------------------------------------------------------------------------
+# O script usa arrays associativos e 'mapfile', que exigem bash >= 4. O macOS ainda
+# entrega bash 3.2 em /bin/bash, então procuramos um bash moderno antes de desistir.
+if (( ${BASH_VERSINFO[0]} < 4 )); then
+  for _b in /opt/homebrew/bin/bash /usr/local/bin/bash /usr/bin/bash /bin/bash; do
+    [[ -x "$_b" ]] || continue
+    "$_b" -c '(( ${BASH_VERSINFO[0]} >= 4 ))' 2>/dev/null || continue
+    exec "$_b" "$0" "$@"
+  done
+  printf 'Erro: este instalador precisa de bash >= 4 (você tem %s).\n' "${BASH_VERSION:-?}" >&2
+  printf '  macOS:   brew install bash   (o /bin/bash do sistema é 3.2, de 2007)\n' >&2
+  printf '  Windows: use Git Bash ou WSL\n' >&2
+  exit 2
+fi
+
+# sha256: GNU coreutils (sha256sum) ou BSD/macOS (shasum -a 256).
+if command -v sha256sum >/dev/null 2>&1; then
+  sha256_de() { sha256sum; }
+elif command -v shasum >/dev/null 2>&1; then
+  sha256_de() { shasum -a 256; }
+else
+  sha256_de() { printf 'Erro: nem sha256sum nem shasum encontrados\n' >&2; exit 2; }
+fi
+
+# sed -i: GNU aceita '-i', BSD exige '-i ""'. Decidido uma vez, por teste real.
+_sed_i_bsd=0
+if ! sed --version >/dev/null 2>&1; then _sed_i_bsd=1; fi
+sed_inplace() {  # sed_inplace <arquivo> <expr...>
+  local arq="$1"; shift
+  local expr=(); local e; for e in "$@"; do expr+=(-e "$e"); done
+  if (( _sed_i_bsd )); then sed -i '' "${expr[@]}" "$arq"; else sed -i "${expr[@]}" "$arq"; fi
+}
+
+# find -printf é GNU. Estas duas funções substituem os usos com equivalente portátil.
+dirs_com_skill() {  # <raiz> -> diretórios (2 a 3 níveis) que contêm SKILL.md
+  find "$1" -mindepth 2 -maxdepth 3 -name SKILL.md 2>/dev/null |
+    while IFS= read -r f; do dirname "$f"; done | sort
+}
+nomes_de_agents() {  # <raiz> -> nomes dos .md de primeiro nível, sem extensão
+  find "$1" -maxdepth 1 -name '*.md' 2>/dev/null |
+    while IFS= read -r f; do b="$(basename "$f")"; printf '%s\n' "${b%.md}"; done | sort
+}
+
+# ----------------------------------------------------------------------------
 # Localização do framework (raiz = pasta-pai de scripts/)
 # ----------------------------------------------------------------------------
 FRAMEWORK_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -94,6 +139,7 @@ AGENTS_SELECTED="auto"
 AGENTS_NEUTRAL_DIR="agents"
 FORCE=0
 DRY_RUN=0
+DOCTOR=0
 UPDATE=0
 CONFIG_FILE=""
 FONTES_EXTRAS=()
@@ -129,12 +175,11 @@ sed_escape_repl() { printf '%s' "$1" | sed -e 's/[&|\\]/\\&/g'; }
 apply_substitutions() {
   local file="$1"
   [[ $HAVE_CONFIG -eq 1 && -f "$file" ]] || return 0
-  sed -i \
-    -e "s|{{AUTHOR_NAME}}|$(sed_escape_repl "$CFG_AUTHOR_NAME")|g" \
-    -e "s|{{COPYRIGHT_YEAR}}|$(sed_escape_repl "$CFG_COPYRIGHT_YEAR")|g" \
-    -e "s|{{SUPPORT_LABEL}}|$(sed_escape_repl "$CFG_SUPPORT_LABEL")|g" \
-    -e "s|{{SUPPORT_URL}}|$(sed_escape_repl "$CFG_SUPPORT_URL")|g" \
-    "$file"
+  sed_inplace "$file" \
+    "s|{{AUTHOR_NAME}}|$(sed_escape_repl "$CFG_AUTHOR_NAME")|g" \
+    "s|{{COPYRIGHT_YEAR}}|$(sed_escape_repl "$CFG_COPYRIGHT_YEAR")|g" \
+    "s|{{SUPPORT_LABEL}}|$(sed_escape_repl "$CFG_SUPPORT_LABEL")|g" \
+    "s|{{SUPPORT_URL}}|$(sed_escape_repl "$CFG_SUPPORT_URL")|g"
 }
 
 # Copia um arquivo respeitando --force / --dry-run; pula se já existir.
@@ -307,7 +352,7 @@ update_text_hybrid() {
 update_json_settings() {
   local src="$1" dst="$2"
   command -v jq >/dev/null 2>&1 || \
-    erro "jq é necessário para atualizar $dst (instale: 'sudo apt install jq'). Sem jq, edite o settings.json manualmente."
+    erro "jq é necessário para atualizar $dst (Debian/Ubuntu: sudo apt install jq · macOS: brew install jq · Windows: winget install jqlang.jq). Sem jq, edite o settings.json manualmente."
   if [[ $DRY_RUN -eq 1 ]]; then printf '  [dry-run] mesclaria (jq):       %s\n' "$dst"; return 0; fi
   local tmp; tmp="$(mktemp)"
   if jq -s '.[0] * .[1]' "$dst" "$src" > "$tmp"; then
@@ -363,7 +408,7 @@ frame_hash() {
   awk '
     /^[[:space:]]*(<!--|#)[[:space:]]*USER:(BEGIN|ORPHAN|RESCUE)/ { print; inblk=1; next }
     /^[[:space:]]*(<!--|#)[[:space:]]*USER:END/                 { print; inblk=0; next }
-    { if (!inblk) print }' "$1" | sha256sum | cut -c1-64
+    { if (!inblk) print }' "$1" | sha256_de | cut -c1-64
 }
 baseline_get() {
   local f="$TARGET/$BASELINE_REL"
@@ -405,12 +450,135 @@ desviar_para_new() {  # bucket src dst rel
   rm -rf "$tmpd"
 }
 
+
+# ----------------------------------------------------------------------------
+# Sistema, diagnóstico e modo guiado
+# ----------------------------------------------------------------------------
+sistema() {  # linux | macos | windows | outro
+  case "${OSTYPE:-$(uname -s)}" in
+    linux*|Linux*)                      echo linux ;;
+    darwin*|Darwin*)                    echo macos ;;
+    msys*|cygwin*|MINGW*|MSYS*|CYGWIN*) echo windows ;;
+    *)                                  echo outro ;;
+  esac
+}
+
+# Como instalar cada dependência, por sistema.
+como_instalar() {  # <programa>
+  case "$(sistema)-$1" in
+    linux-jq)      echo "sudo apt install jq   (ou: dnf install jq)" ;;
+    macos-jq)      echo "brew install jq" ;;
+    windows-jq)    echo "winget install jqlang.jq" ;;
+    linux-git)     echo "sudo apt install git" ;;
+    macos-git)     echo "xcode-select --install" ;;
+    windows-git)   echo "winget install Git.Git" ;;
+    *-python3)     echo "python.org/downloads (ou o gerenciador do sistema)" ;;
+    *)             echo "instale '$1' pelo gerenciador de pacotes do sistema" ;;
+  esac
+}
+
+# Testa se o sistema de arquivos do alvo aceita symlink (Windows sem modo dev, não).
+suporta_symlink() {  # <dir>
+  local d="${1:-.}" t; t="$d/.symlink-teste-$$"
+  ln -s . "$t" 2>/dev/null || return 1
+  rm -f "$t"; return 0
+}
+
+doctor() {
+  local so; so="$(sistema)"; local falhas=0 avisos=0
+  printf '\033[1mDiagnóstico\033[0m — sistema: %s · bash %s\n\n' "$so" "${BASH_VERSION%%(*}"
+  ok()    { printf '  \033[32m✓\033[0m %s\n' "$*"; }
+  falta() { printf '  \033[31m✗\033[0m %s\n      → %s\n' "$1" "$2"; falhas=$((falhas+1)); }
+  aviso() { printf '  \033[33m!\033[0m %s\n      → %s\n' "$1" "$2"; avisos=$((avisos+1)); }
+
+  ok "bash $( ((${BASH_VERSINFO[0]}>=4)) && echo '>= 4' )"
+  command -v git >/dev/null     && ok "git"     || falta "git ausente"     "$(como_instalar git)"
+  command -v jq >/dev/null      && ok "jq (merge de settings.json)" \
+                                || aviso "jq ausente — o merge de .claude/settings.json é pulado" "$(como_instalar jq)"
+  command -v python3 >/dev/null && ok "python3 (scripts de algumas skills)" \
+                                || aviso "python3 ausente — skills com script Python não rodam" "$(como_instalar python3)"
+
+  local alvo="${TARGET:-.}"
+  if suporta_symlink "$alvo"; then
+    ok "symlink suportado em '$alvo' (adaptador padrão funciona)"
+  else
+    aviso "o sistema de arquivos de '$alvo' não aceita symlink" \
+          "use --skills-mode copy (no Windows, ou ative o Modo de Desenvolvedor)"
+  fi
+  [[ "$so" == windows ]] && aviso "Windows detectado" \
+      "rode por Git Bash ou WSL; com Git Bash, prefira --skills-mode copy"
+
+  if [[ -d "$alvo/.git" ]]; then ok "'$alvo' é repositório git (o --update é revisável por git diff)"
+  else aviso "'$alvo' não é repositório git" "git init antes de instalar — sem baseline não há revisão"
+  fi
+
+  printf '\n'
+  if (( falhas )); then printf '\033[31m%d bloqueio(s)\033[0m' "$falhas"; else printf '\033[32mpronto para instalar\033[0m'; fi
+  (( avisos )) && printf ' · %d aviso(s)' "$avisos"
+  printf '\n'
+  return $(( falhas > 0 ))
+}
+
+# Modo guiado: sem argumentos e com terminal interativo.
+assistente() {
+  local so; so="$(sistema)"
+  printf '\033[1mInstalação guiada\033[0m — framework de regramento de agentes (sistema: %s)\n\n' "$so"
+
+  printf 'Perfil do repositório:\n'
+  printf '  1) empresa               — código da empresa, confidencialidade corporativa\n'
+  printf '  2) externo-confidencial  — cliente, NDA, dado sensível (padrão conservador)\n'
+  printf '  3) pessoal               — open-source, público por design\n'
+  local esc; read -r -p 'Escolha [1/2/3]: ' esc
+  case "$esc" in
+    1) PROFILE=empresa ;; 2) PROFILE=externo-confidencial ;; 3) PROFILE=pessoal ;;
+    *) erro "escolha inválida: '$esc'" ;;
+  esac
+
+  local alvo; read -r -p "Diretório do projeto [$PWD]: " alvo
+  TARGET="${alvo:-$PWD}"
+  [[ -d "$TARGET" ]] || erro "diretório não existe: $TARGET"
+  if [[ ! -d "$TARGET/.git" ]]; then
+    local r; read -r -p "'$TARGET' não é repositório git. Rodar 'git init' agora? [s/N]: " r
+    if [[ "$r" == [sSyY] ]]; then
+      (cd "$TARGET" && git init -q
+       if [[ -n "$(git status --porcelain)" ]]; then
+         git add -A && git commit -qm "estado inicial antes do framework"
+       else
+         printf '  repositório vazio: a instalação será o primeiro commit\n'
+       fi) || info "git init falhou — seguindo sem baseline"
+    else info "seguindo sem git — você não poderá revisar o resultado por git diff"; fi
+  fi
+
+  if [[ "$so" == windows ]] || ! suporta_symlink "$TARGET"; then
+    SKILLS_MODE=copy; info "modo de skills: copy (symlink indisponível aqui)"
+  fi
+
+  local ag; read -r -p "Agente [claude]: (claude/codex/gemini/opencode/agentry/zcode/all) " ag
+  AGENT="${ag:-claude}"
+
+  printf '\n\033[1mPrévia\033[0m (nada foi escrito ainda):\n'
+  local previa; previa="$("$0" "$PROFILE" "$TARGET" --agent "$AGENT" --skills-mode "$SKILLS_MODE" --dry-run 2>&1 || true)"
+  local n; n="$(printf '%s\n' "$previa" | grep -c '\[dry-run\]' || true)"
+  if (( n > 12 )); then
+    printf '%s\n' "$previa" | grep '\[dry-run\]' | head -8 | sed 's/^/  /'
+    printf '  … e mais %d ações. Detalhe completo:\n' "$(( n - 8 ))"
+    printf '    %s %s %s --agent %s --skills-mode %s --dry-run\n' "$0" "$PROFILE" "$TARGET" "$AGENT" "$SKILLS_MODE"
+  else
+    printf '%s\n' "$previa" | sed 's/^/  /'
+  fi
+
+  local c; printf '\n'; read -r -p 'Aplicar? [s/N]: ' c
+  [[ "$c" == [sSyY] ]] || { info "nada foi feito."; exit 0; }
+  printf '\n'
+}
+
 # ----------------------------------------------------------------------------
 # Parsing de argumentos
 # ----------------------------------------------------------------------------
 while [[ $# -gt 0 ]]; do
   case "$1" in
     -h|--help) usage; exit 0 ;;
+    --doctor)  DOCTOR=1; shift ;;
     --skills-mode) SKILLS_MODE="${2:-}"; shift 2 ;;
     --agent)       AGENT="${2:-}"; shift 2 ;;
     --skills)      SKILLS_SELECTED="${2:-}"; shift 2 ;;
@@ -432,8 +600,14 @@ while [[ $# -gt 0 ]]; do
 done
 
 # ----------------------------------------------------------------------------
-# Validação
+# Diagnóstico, modo guiado e validação
 # ----------------------------------------------------------------------------
+if (( DOCTOR )); then doctor; exit $?; fi
+
+# Sem argumentos e com terminal: pergunta em vez de imprimir o --help.
+if [[ -z "$PROFILE" && -z "$TARGET" ]]; then
+  if [[ -t 0 && -t 1 ]]; then assistente; else usage; exit 1; fi
+fi
 [[ -n "$PROFILE" && -n "$TARGET" ]] || { usage; exit 1; }
 
 PROFILE_SRC="$PROFILES_DIR/$PROFILE"
@@ -519,7 +693,7 @@ for _lib in "${LIBS[@]}"; do
     fi
     NOME_EM[$_base]="$_lib/skills/$_rel"; FONTE_SKILL[$_rel]="$_lib/skills"
     if [[ "$_rel" == */* ]]; then EXTRA_SKILLS+=("$_rel"); else CORE_SKILLS+=("$_rel"); fi
-  done < <(find "$_lib/skills" -mindepth 2 -maxdepth 3 -name SKILL.md -printf '%h\n' | sort)
+  done < <(dirs_com_skill "$_lib/skills")
 done
 mapfile -t CORE_SKILLS < <(printf '%s\n' "${CORE_SKILLS[@]}" | sort)
 mapfile -t EXTRA_SKILLS < <(printf '%s\n' "${EXTRA_SKILLS[@]}" | sort)
@@ -605,7 +779,7 @@ for _lib in "${LIBS[@]}"; do
     [[ -n "${FONTE_AGENT[$_a]:-}" ]] && erro "subagent '$_a' existe em duas fontes: ${FONTE_AGENT[$_a]} e $_lib/agents"
     [[ -n "${NOME_EM[$_a]:-}" ]] && erro "subagent '$_a' tem o mesmo nome de uma skill (${NOME_EM[$_a]})"
     FONTE_AGENT[$_a]="$_lib/agents"; TODOS_AGENTS+=("$_a")
-  done < <(find "$_lib/agents" -maxdepth 1 -name '*.md' -printf '%f\n' | sed 's/\.md$//')
+  done < <(nomes_de_agents "$_lib/agents")
 done
 mapfile -t TODOS_AGENTS < <(printf '%s\n' "${TODOS_AGENTS[@]}" | sed '/^$/d' | sort)
 if [[ ${#TODOS_AGENTS[@]} -gt 0 && "$AGENTS_SELECTED" != "none" ]]; then
