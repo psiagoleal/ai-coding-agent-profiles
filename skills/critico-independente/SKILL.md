@@ -60,7 +60,8 @@ Rotas, em ordem de custo:
 | Subagente em janela separada (`delegacao-a-subagentes`) | Quando o material não pode sair da máquina |
 | Outra CLI de agente instalada | Quando você quer também outro harness, não só outro modelo |
 
-Peça veredito **e** a maior lacuna, não uma nota:
+Peça veredito **e** a maior lacuna, **nunca uma nota** — ver `laco-de-correcao` para o porquê
+e para o formato completo quando a crítica vira laço de correção:
 
 > "Objetivo: <...>. Critério: <...>. Artefato em anexo. Responda em duas linhas:
 > `VEREDITO: passa|não passa` e `MAIOR_LACUNA: <uma frase>`. Não proponha código."

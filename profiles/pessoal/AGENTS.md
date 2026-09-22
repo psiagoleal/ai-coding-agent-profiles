@@ -140,10 +140,17 @@ _(nenhum — acrescente aqui o cofre, caminhos de credencial e regras de segredo
 
 ## 8. Fluxo ágil
 
+- **Perguntar antes de construir:** nenhum artefato antes de as lacunas estarem listadas —
+  o que o repositório responde se **detecta**, o que muda o resultado se **pergunta** em bloco
+  pequeno com opções concretas, e o que sobrar entra como **suposição declarada**, nunca
+  preenchida em silêncio (skill `perguntar-antes-de-construir`).
 - **Contrato antes do código:** trabalho de risco começa por spec com critério de aceite
   verificável (skill `spec-como-contrato`); trabalho leve, pelo critério de aceite direto.
 - **Teste antes da implementação:** comportamento novo e correção de bug começam por um
   teste que falha pelo motivo certo, com a saída citada (skill `teste-primeiro`).
+- **Laço de correção** em trabalho com prova executável: construir → provar → verificar →
+  corrigir, com tentativas contadas, hipótese nova a cada volta e **veredito binário** — sem
+  nota (skill `laco-de-correcao`).
 - **Painel de tickets** em `docs/TICKETS.md`, **sempre atualizado** ao criar, concluir ou
   abandonar um ticket: uma linha por ticket, com link para o detalhe (skill
   `micro-ticket-planner`).
@@ -170,7 +177,8 @@ _(nenhum — acrescente aqui adaptações de DoD, convenção de commit e ritos 
   **`caveman`**, **`atribuicao-de-falha`**,
   **`gates-de-conclusao`**, **`paralelizacao-em-grafo`**, **`spec-como-contrato`**,
   **`teste-primeiro`**, **`critico-independente`**, **`mapa-de-arquitetura`**,
-  **`definir-stack`** — conforme a
+  **`definir-stack`**,
+  **`perguntar-antes-de-construir`**, **`laco-de-correcao`** — conforme a
   necessidade do projeto. Ver seção 9 do perfil empresa para os gatilhos, e
   as categorias `stack/` e `conhecimento/` (opt-in) e
   [`skills/README.md`](./skills/README.md) para o catálogo completo (incluindo as skills de

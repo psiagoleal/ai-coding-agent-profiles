@@ -173,10 +173,17 @@ _(nenhum — acrescente aqui o cofre, caminhos de credencial e regras de segredo
 
 ## 8. Fluxo ágil
 
+- **Perguntar antes de construir:** nenhum artefato antes de as lacunas estarem listadas —
+  o que o repositório responde se **detecta**, o que muda o resultado se **pergunta** em bloco
+  pequeno com opções concretas, e o que sobrar entra como **suposição declarada**, nunca
+  preenchida em silêncio (skill `perguntar-antes-de-construir`).
 - **Contrato antes do código:** trabalho de risco começa por spec com critério de aceite
   verificável (skill `spec-como-contrato`); trabalho leve, pelo critério de aceite direto.
 - **Teste antes da implementação:** comportamento novo e correção de bug começam por um
   teste que falha pelo motivo certo, com a saída citada (skill `teste-primeiro`).
+- **Laço de correção** em trabalho com prova executável: construir → provar → verificar →
+  corrigir, com tentativas contadas, hipótese nova a cada volta e **veredito binário** — sem
+  nota (skill `laco-de-correcao`).
 - **Painel de tickets** em `docs/TICKETS.md`, **sempre atualizado** ao criar, concluir ou
   abandonar um ticket: uma linha por ticket, com link para o detalhe (skill
   `micro-ticket-planner`).
@@ -225,6 +232,10 @@ descobre via adaptador `.claude/skills/` (ponteiros gerados por `scripts/setup-p
 - **`teste-primeiro`** — ao implementar comportamento novo ou corrigir bug.
 - **`critico-independente`** — antes de aceitar saída de agente: critério antes, crítico em
   contexto limpo, sinal externo.
+- **`perguntar-antes-de-construir`** — em **todo** pedido que produz artefato, antes do
+  primeiro: listar lacuna, detectar o que o repo responde, perguntar o que muda o resultado.
+- **`laco-de-correcao`** — tarefa com prova executável que precisa de correção automática:
+  tentativas contadas, hipótese nova por volta, veredito binário e escalada formatada.
 - **`definir-stack`** — projeto novo ou stack não escrita: questionário por tipo de projeto;
   a resposta vai para as ilhas do `AGENTS.md` e para ADR, nunca só para a conversa.
 - **`mapa-de-arquitetura`** — ao adotar o framework em projeto existente, quando
