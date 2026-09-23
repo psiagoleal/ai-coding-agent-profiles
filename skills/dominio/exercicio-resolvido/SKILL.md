@@ -67,8 +67,10 @@ Regras que mantêm o notebook honesto:
 - **Encadeie o valor cheio, exiba o arredondado.** `mostrar` devolve precisão cheia e arredonda
   só na tela; passe adiante o **retorno**, nunca o número que você leu. Encadear o arredondado
   propaga o erro e faz a verificação final fechar "quase" — e aí o aluno conclui que o projeto
-  está impreciso quando o impreciso era o `print`. (Campo, 2026-09-23: resíduo de 3e-5 Ω num
-  projeto de rede L, contra erro nulo no script equivalente.)
+  está impreciso quando o impreciso era o `print`. Medido em campo (2026-09-23, projeto de
+  rede L): a verificação independente saía com resíduo de 3,15e-5 Ω e 4,09e-5 Ω nos dois ramos
+  da solução; com o retorno em precisão cheia, 5,18e-15 Ω e 4,87e-15 Ω — dez ordens de grandeza,
+  sem tocar no notebook. O `scripts/passo.py` traz o autoteste que segura isso.
 - **Texto entre as contas**, em Markdown: por que esta fórmula, o que se espera do resultado.
   Notebook só com código é script com mais passos.
 - **Verificação independente** ao menos uma vez por questão: limite conhecido, caso particular
