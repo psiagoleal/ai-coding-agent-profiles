@@ -60,6 +60,7 @@ todas as fontes: colisão é erro, porque os adaptadores são planos.
 |-------|----------|---------------|
 | [`dominio/mockup-lab`](dominio/mockup-lab/SKILL.md) | Prototipar UI em HTML/CSS, comparar variantes por render headless, exportar a aprovada como SVG p/ Penpot | Prototipar/mockar tela; comparar variantes de layout; levar design ao Penpot |
 | [`dominio/transcrever-video`](dominio/transcrever-video/SKILL.md) | Transcrição pelo caminho barato: a legenda que a plataforma já tem, sem ffmpeg nem modelo de fala; ASR local só quando não há legenda | "transcreva este vídeo"; vídeo como fonte de pesquisa; página do YouTube bloqueada |
+| [`dominio/exercicio-resolvido`](dominio/exercicio-resolvido/SKILL.md) | Exercício de engenharia em três artefatos: notebook sympy com fórmula → substituição → resultado, guia por questão com a derivação e o que ela ensina, e a fronteira do que fica com o aluno | Lista, prelab, prova antiga; "notebook com as contas"; "guia passo a passo" |
 | [`dominio/docling-local`](dominio/docling-local/SKILL.md) | PDF em Markdown pelo docling local, preservando equações em LaTeX, com procedência declarada | Extrair/converter PDF; citar norma ou artigo; alimentar base de referências |
 
 Estas trazem *scripts* anexos e dependências próprias (Playwright, `curl_cffi`, `pikepdf`, um serviço docling local e um venv Piper para TTS), instaladas
