@@ -241,7 +241,8 @@ descobre via adaptador `.claude/skills/` (ponteiros gerados por `scripts/setup-p
 - **`mapa-de-arquitetura`** — ao adotar o framework em projeto existente, quando
   `docs/architecture.md` falta ou envelheceu, ou quando a mudança altera dependências entre módulos.
 - **Categoria `stack/`** (opt-in, `--skills 'stack/*'`) — `contrato-de-design` (o `docs/DESIGN.md`)
-  e as skills de execução por stack: `criar-ui-sveltekit` (web) e `criar-app-tauri` (desktop).
+  e as skills de execução por stack: `criar-servico-fastapi` (serviço HTTP),
+  `criar-ui-sveltekit` (web) e `criar-app-tauri` (desktop).
 - **Categoria `conhecimento/`** (opt-in) — `indexar-acervo` e `consultar-acervo`, para acervo
   grande de documentos que precisa ser consultável sem varredura.
 - **Bibliotecas extras** (`--fonte`/`fontes_extras`) podem acrescentar skills de governança,

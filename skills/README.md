@@ -78,6 +78,7 @@ parar em vez de escrever código que não compila.
 |-------|----------|---------------|
 | [`stack/contrato-de-design`](stack/contrato-de-design/SKILL.md) | `docs/DESIGN.md` como contrato visual, sobre tokens em três camadas (primitiva → semântica → componente), independente de framework | Começar a interface; cores/espaços divergindo entre telas; "design system", "tokens", "tema escuro" |
 | [`stack/criar-app-tauri`](stack/criar-app-tauri/SKILL.md) | Lado nativo de app desktop Tauri 2: comando fino com validação na borda, estado, trabalho fora da thread principal e permissão por capability com menor privilégio | Criar ou alterar comando, plugin, permissão ou janela em projeto com `src-tauri` |
+| [`stack/criar-servico-fastapi`](stack/criar-servico-fastapi/SKILL.md) | Serviço HTTP em FastAPI + Pydantic v2: rota fina, domínio sem framework, erro traduzido na borda, consulta parametrizada e lista paginada | Criar ou alterar endpoint, roteador ou modelo de entrada/saída em projeto FastAPI |
 | [`stack/criar-ui-sveltekit`](stack/criar-ui-sveltekit/SKILL.md) | Interface em SvelteKit 2 / Svelte 5 (runes), TS estrito, dado no `load`, formulário com action, estilo por token | Criar página, rota, componente ou formulário em projeto SvelteKit |
 
 ## Catálogo — conhecimento (sob demanda)
