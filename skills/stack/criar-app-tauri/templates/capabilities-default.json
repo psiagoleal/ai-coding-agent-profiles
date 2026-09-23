@@ -1,0 +1,19 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "default",
+  "description": "Permissões da janela principal. Cada linha abaixo é uma decisão de segurança: comente o porquê, para que daqui a um ano alguém saiba se pode remover. O padrão do Tauri 2 é NEGAR — o que não está aqui não existe.",
+  "windows": ["main"],
+  "permissions": [
+    "core:default",
+    "dialog:allow-open",
+    "dialog:allow-save",
+    "fs:default",
+    "fs:read-files",
+    "fs:allow-write-file"
+  ],
+  "_notas": {
+    "escopo-de-arquivo": "fs:allow-write-file concede o COMANDO, não o caminho. O caminho é liberado em tempo de execução pelo diálogo de abrir/salvar, que registra o arquivo escolhido no escopo. Escopo amplo aqui daria ao app poder de sobrescrever qualquer arquivo do usuário — inclusive por bug.",
+    "shell": "shell:allow-execute e shell:allow-spawn ficam de fora de propósito. Se for preciso chamar um binário, escreva um comando Rust que monta os argumentos; nunca deixe a interface montar a linha de comando.",
+    "por-janela": "Uma capability por janela. Janela secundária raramente precisa do mesmo que a principal."
+  }
+}

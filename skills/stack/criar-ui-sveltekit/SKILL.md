@@ -42,7 +42,7 @@ não compila, e num projeto React gera lixo. Não deduza a stack pelo nome das p
 > lê o *lockfile* e manda.
 >
 > **Aplicação desktop (Tauri 2):** a interface segue esta skill; o lado Rust, a ponte de
-> comandos e as permissões **não** estão cobertos aqui — ver o ticket do painel.
+> comandos e as permissões estão em `criar-app-tauri`.
 
 ## Estrutura
 

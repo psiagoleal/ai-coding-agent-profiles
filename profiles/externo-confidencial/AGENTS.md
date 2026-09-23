@@ -179,7 +179,7 @@ _(nenhum — acrescente aqui adaptações de DoD, convenção de commit e ritos 
   **`teste-primeiro`**, **`critico-independente`**, **`mapa-de-arquitetura`**,
   **`definir-stack`**,
   **`perguntar-antes-de-construir`**, **`laco-de-correcao`** — todas recomendadas. Ver seção 9 do perfil empresa para os gatilhos
-  de cada uma, e as categorias `stack/` e `conhecimento/` (opt-in) e
+  de cada uma, e as categorias `stack/` (ex.: `criar-ui-sveltekit`, `criar-app-tauri`) e `conhecimento/` (opt-in) e
   [`skills/README.md`](./skills/README.md) para o catálogo completo
   (incluindo as skills de domínio, instaladas só sob demanda).
 
