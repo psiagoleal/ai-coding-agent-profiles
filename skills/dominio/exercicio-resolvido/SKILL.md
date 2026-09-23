@@ -64,6 +64,11 @@ Regras que mantêm o notebook honesto:
   nH onde a fórmula espera H.
 - **Prefira decimal a fração** nos valores substituídos: `sp.Rational` costuma cancelar sozinho
   e apaga justamente o passo (b).
+- **Encadeie o valor cheio, exiba o arredondado.** `mostrar` devolve precisão cheia e arredonda
+  só na tela; passe adiante o **retorno**, nunca o número que você leu. Encadear o arredondado
+  propaga o erro e faz a verificação final fechar "quase" — e aí o aluno conclui que o projeto
+  está impreciso quando o impreciso era o `print`. (Campo, 2026-09-23: resíduo de 3e-5 Ω num
+  projeto de rede L, contra erro nulo no script equivalente.)
 - **Texto entre as contas**, em Markdown: por que esta fórmula, o que se espera do resultado.
   Notebook só com código é script com mais passos.
 - **Verificação independente** ao menos uma vez por questão: limite conhecido, caso particular
@@ -108,6 +113,10 @@ A disciplina pode anular a atividade se o aluno não souber defendê-la. Então:
   qual inspeção.
 - **Toda seção que o aluno precisa assinar fica marcada** no texto — por exemplo
   `<!-- SEU TEXTO: comparar com o Lab 06 e concluir -->`.
+- **Exercício com solução dupla é onde a fronteira cai melhor.** Quando duas soluções são
+  matematicamente equivalentes e a escolha é de engenharia (qual topologia, qual ramo da
+  raiz), monte a tabela de trade-off completa e deixe **a decisão** marcada como do aluno: o
+  guia fica completo sem decidir por ele. Procure esse caso — ele costuma existir.
 - **Declaração de uso de IA** em todo entregável, no formato que a disciplina exige.
 - **Nada de material de terceiro versionado**: enunciado, PDF e figura do professor ficam fora
   do repositório público (`.gitignore`); cite pela referência, não pela cópia.
