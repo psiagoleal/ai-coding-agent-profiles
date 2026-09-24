@@ -181,7 +181,7 @@ _(nenhum — acrescente aqui adaptações de DoD, convenção de commit e ritos 
   **`perguntar-antes-de-construir`**, **`laco-de-correcao`** — conforme a
   necessidade do projeto. Ver seção 9 do perfil empresa para os gatilhos, e
   as categorias `stack/` (ex.: `criar-servico-fastapi`, `criar-ui-sveltekit`,
-  `criar-app-tauri`) e `conhecimento/` (opt-in) e
+  `criar-app-tauri`), `entrega/` (CI e deploy) e `conhecimento/` (opt-in) e
   [`skills/README.md`](./skills/README.md) para o catálogo completo (incluindo as skills de
   domínio, instaladas só sob demanda).
 

@@ -1,0 +1,39 @@
+# Caminho relativo: Dockerfile
+# Modelo da skill deploy-reproduzivel: versões fixadas, multi-estágio, sem segredo, sem root.
+
+# --- estágio de construção -------------------------------------------------
+FROM python:3.13-slim AS build
+# Versão fixada: 'latest' faz a imagem de hoje diferir da de ontem sem mudança no repositório.
+
+WORKDIR /app
+COPY --from=ghcr.io/astral-sh/uv:0.9.6 /uv /usr/local/bin/uv
+
+# Camada de dependências separada do código: só reconstrói quando o lock muda.
+COPY pyproject.toml uv.lock ./
+RUN uv sync --frozen --no-dev --no-install-project
+
+COPY src/ src/
+RUN uv sync --frozen --no-dev
+
+# --- estágio final ---------------------------------------------------------
+FROM python:3.13-slim
+
+# Usuário sem privilégio: contêiner comprometido não vira root da máquina.
+RUN useradd --system --create-home --uid 10001 app
+WORKDIR /app
+
+# Só o que roda. O compilador e o cache de build ficaram para trás.
+COPY --from=build --chown=app:app /app/.venv /app/.venv
+COPY --from=build --chown=app:app /app/src /app/src
+ENV PATH="/app/.venv/bin:$PATH" PYTHONUNBUFFERED=1
+
+USER app
+EXPOSE 8000
+
+# Health que consulta a dependência, não só o processo (ver criar-servico-fastapi).
+HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
+  CMD python -c "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://localhost:8000/health', timeout=4).status==200 else 1)"
+
+# NUNCA: ENV SENHA=..., ARG TOKEN=..., ou COPY .env — a camada fica na imagem,
+# mesmo que um RUN posterior apague o arquivo. Segredo entra em tempo de execução.
+CMD ["uvicorn", "pacote.main:app", "--host", "0.0.0.0", "--port", "8000"]

@@ -88,6 +88,7 @@ Gate que roda em servidor e o caminho até produção. Opt-in: `--skills 'entreg
 | Skill | Para quê | Aciona quando |
 |-------|----------|---------------|
 | [`entrega/pipeline-como-gate`](entrega/pipeline-como-gate/SKILL.md) | CI que pode reprovar: os mesmos comandos do `AGENTS.md`, ordem barato→caro, matriz só onde a plataforma muda, cache que invalida sozinho, segredo fora do alcance de fork | Criar ou alterar workflow; adotar CI; CI e máquina local discordam; passo que vive vermelho |
+| [`entrega/deploy-reproduzivel`](entrega/deploy-reproduzivel/SKILL.md) | Rollback escrito antes do deploy e sucesso confirmado por sinal externo: imagem com versão fixada e sem segredo, config por ambiente, migração como passo próprio, registro do que subiu | Criar Dockerfile ou compose; preparar ou executar deploy; migração que vai para produção; "como se volta atrás?" |
 
 ## Catálogo — conhecimento (sob demanda)
 

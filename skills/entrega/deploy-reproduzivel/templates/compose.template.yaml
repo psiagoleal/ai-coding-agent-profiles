@@ -1,0 +1,46 @@
+# Caminho relativo: compose.yaml
+# Modelo da skill deploy-reproduzivel. Este arquivo é de DESENVOLVIMENTO.
+# Se ele também rodar em produção, escreva isso aqui e trate reinício, limites e rede.
+services:
+  api:
+    build: .
+    ports: ["8000:8000"]
+    environment:
+      # Configuração por ambiente. Segredo vem do cofre em tempo de execução —
+      # aqui só a referência, e o .env fica no .gitignore e no .claudeignore.
+      APP_BANCO_URL: postgresql://app:${POSTGRES_PASSWORD:?defina no .env}@db:5432/app
+      APP_DEBUG: "true"          # desenvolvimento; em produção, o padrão seguro é false
+    depends_on:
+      db:
+        condition: service_healthy   # não sobe antes de o banco responder
+    develop:
+      watch:
+        - { action: sync, path: ./src, target: /app/src }
+
+  db:
+    image: postgres:16.10-alpine     # versão fixada, como na imagem da aplicação
+    environment:
+      POSTGRES_USER: app
+      POSTGRES_DB: app
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?defina no .env}
+    volumes:
+      - dados-postgres:/var/lib/postgresql/data   # volume nomeado: dado sobrevive ao contêiner
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U app -d app"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Migração é passo PRÓPRIO, nunca no arranque da api (duas réplicas migrariam juntas).
+  migracao:
+    build: .
+    command: ["alembic", "upgrade", "head"]
+    environment:
+      APP_BANCO_URL: postgresql://app:${POSTGRES_PASSWORD:?defina no .env}@db:5432/app
+    depends_on:
+      db:
+        condition: service_healthy
+    profiles: ["migrar"]          # roda sob demanda: docker compose --profile migrar up migracao
+
+volumes:
+  dados-postgres:

@@ -243,6 +243,8 @@ descobre via adaptador `.claude/skills/` (ponteiros gerados por `scripts/setup-p
 - **Categoria `stack/`** (opt-in, `--skills 'stack/*'`) — `contrato-de-design` (o `docs/DESIGN.md`)
   e as skills de execução por stack: `criar-servico-fastapi` (serviço HTTP),
   `criar-ui-sveltekit` (web) e `criar-app-tauri` (desktop).
+- **Categoria `entrega/`** (opt-in) — `pipeline-como-gate` (CI que pode reprovar) e
+  `deploy-reproduzivel` (rollback escrito antes, verificação por sinal externo).
 - **Categoria `conhecimento/`** (opt-in) — `indexar-acervo` e `consultar-acervo`, para acervo
   grande de documentos que precisa ser consultável sem varredura.
 - **Bibliotecas extras** (`--fonte`/`fontes_extras`) podem acrescentar skills de governança,
