@@ -703,6 +703,7 @@ skill_dir() { printf '%s/%s' "${FONTE_SKILL[$1]}" "$1"; }
 # um diretório de nome genérico que o .gitignore cobre inteiro. Proteger por nome escreveria
 # o nome no arquivo que deveria escondê-lo.
 TEM_PRIVADA=0
+ANTIGOS_PRIVADOS=()
 
 # ADR 0015: ignore por DIRETÓRIO, nunca por nome — listar skill a skill escreveria no
 # .gitignore justamente o nome que ele deveria esconder.
@@ -789,7 +790,15 @@ for s in "${SKILLS[@]}"; do
   [[ -n "${FONTE_SKILL[$s]:-}" ]] || \
     erro "skill inexistente: '$s' (não há '$s/SKILL.md'). Disponíveis: ${ALL_SKILLS[*]}"
   # Artefatos de build/ambiente das skills executáveis nunca são instalados.
-  [[ "${FONTE_SKILL[$s]}" != "$SKILLS_DIR" ]] && TEM_PRIVADA=1
+  if [[ "${FONTE_SKILL[$s]}" != "$SKILLS_DIR" ]]; then
+    TEM_PRIVADA=1
+    # Instalação anterior à ADR 0015 deixou a skill privada no caminho antigo, que NÃO é
+    # coberto pelo .gitignore. O instalador não apaga nada — mas avisa, com o comando.
+    _nome="$(basename "$s")"
+    for _velho in "$TARGET/$NEUTRAL_DIR/$_nome" "$TARGET/$NEUTRAL_DIR"/*/"$_nome"; do
+      [[ -d "$_velho" && "$_velho" != *"/privado/"* ]] && ANTIGOS_PRIVADOS+=("$_velho")
+    done
+  fi
   _dest="$(destino_de "$s")"
   while IFS= read -r -d '' f; do
     rel="${f#"$(skill_dir "$s")"/}"
@@ -963,6 +972,14 @@ _ign=()
 (( TEM_PRIVADA )) && _ign+=("$NEUTRAL_DIR/privado/")
 if (( ${#_ign[@]} )) && [[ -d "$TARGET/.git" ]]; then
   garantir_gitignore "${_ign[@]}"
+fi
+
+if (( ${#ANTIGOS_PRIVADOS[@]} )); then
+  printf '\033[33maviso:\033[0m %d skill(s) privada(s) em caminho anterior à ADR 0015, fora do .gitignore:\n' \
+    "${#ANTIGOS_PRIVADOS[@]}"
+  printf '  %s\n' "${ANTIGOS_PRIVADOS[@]}"
+  printf '  A cópia nova está em %s/privado/. Depois de conferir, remova a antiga:\n' "$NEUTRAL_DIR"
+  printf '    git -C %s rm -r --cached <caminho> && rm -rf <caminho>\n\n' "$TARGET"
 fi
 
 # ----------------------------------------------------------------------------
