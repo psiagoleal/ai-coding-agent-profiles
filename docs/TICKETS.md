@@ -10,7 +10,6 @@ destino do link (skill `micro-ticket-planner`).
 - [ ] [MT-2](tickets/MT-2.md) — Skill de núcleo de cálculo C++/CMake: 5 repositórios, nenhum coberto
 - [ ] [MT-3](tickets/MT-3.md) — Skill de biblioteca/CLI em Rust: 8 repositórios com `Cargo.toml`
 - [>] [MT-6](tickets/MT-6.md) — Propagar às instalações de `~/dev` · falta rodar sem `--dry-run` nos repositórios de árvore limpa
-- [ ] [MT-19](tickets/MT-19.md) — Skill de craft de interface, independente de stack
 - [ ] [MT-15](tickets/MT-15.md) — Provas adversariais executáveis nas skills de segurança e serviço
 - [ ] [MT-16](tickets/MT-16.md) — Ledger de evidência com impressão digital e validade
 - [ ] [MT-17](tickets/MT-17.md) — Skill `exercitar-skill`: derivar as racionalizações de observação
@@ -23,6 +22,7 @@ destino do link (skill `micro-ticket-planner`).
 
 - [x] [MT-0](../skills/pr-review-guard/scripts/checar-mensagem-commit.sh) — Painel de tickets e proibição de entrada extra em commit e documentação
 - [x] MT-5 — [Regra transversal de comportamento questionador](../skills/perguntar-antes-de-construir/SKILL.md)
+- [x] [MT-19](tickets/MT-19.md) — Craft de interface em quatro operações, com playbooks e piso separados
 - [x] [MT-13](tickets/MT-13.md) — Verificador de links de Markdown, com máscara de código em linha e âncora do GitHub
 - [x] [MT-10](../skills/entrega/pipeline-como-gate/SKILL.md) — CI como gate, com verificador de coerência com o `AGENTS.md`
 - [x] [MT-11](../skills/entrega/deploy-reproduzivel/SKILL.md) — Deploy reproduzível: rollback escrito antes, verificação por sinal externo

@@ -259,7 +259,8 @@ descobre via adaptador `.claude/skills/` (ponteiros gerados por `scripts/setup-p
 - **`mapa-de-arquitetura`** — ao adotar o framework em projeto existente, quando
   `docs/architecture.md` falta ou envelheceu, ou quando a mudança altera dependências entre módulos.
 - **Categoria `stack/`** (opt-in, `--skills 'stack/*'`) — `contrato-de-design` (o `docs/DESIGN.md`)
-  e as skills de execução por stack: `criar-servico-fastapi` (serviço HTTP),
+  `craft-de-interface` (craft visual em quatro operações) e as skills de execução por
+  stack: `criar-servico-fastapi` (serviço HTTP),
   `criar-ui-sveltekit` (web) e `criar-app-tauri` (desktop).
 - **Categoria `entrega/`** (opt-in) — `pipeline-como-gate` (CI que pode reprovar) e
   `deploy-reproduzivel` (rollback escrito antes, verificação por sinal externo).
