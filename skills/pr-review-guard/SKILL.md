@@ -85,7 +85,24 @@ tende a validá-lo.
 - [ ] `docs/TICKETS.md` reflete os tickets que este PR cria ou conclui.
 - [ ] Se o PR cria, remove ou renomeia módulo, ou acrescenta dependência entre módulos,
       `docs/architecture.md` foi atualizado no mesmo PR (`mapa-de-arquitetura`).
+- [ ] Os links de Markdown tocados pelo PR resolvem — arquivo e âncora:
+      `python3 skills/pr-review-guard/scripts/checar-links.py docs README.md`
 - [ ] SBOM (CycloneDX/SPDX) gerado/atualizado quando aplicável ao perfil.
+
+## Links que o PR toca
+
+Documentação com link quebrado envelhece mais rápido do que se corrige: o leitor conclui que
+a referência sumiu e para de confiar no resto. `scripts/checar-links.py` confere arquivo e
+âncora dos links relativos, sem ir à rede:
+
+```bash
+python3 skills/pr-review-guard/scripts/checar-links.py docs skills README.md
+# repositório que guarda templates: link de template resolve no projeto instalado, não aqui
+python3 skills/pr-review-guard/scripts/checar-links.py . --excluir '*/templates/*'
+```
+
+A regra de âncora é a do GitHub; num repositório publicado por outro renderizador (mdBook,
+por exemplo), o resultado precisa ser lido com essa ressalva.
 
 ## Controle estrutural da mensagem de commit
 

@@ -35,6 +35,9 @@ jobs:
       - run: uv run ruff check .
       - run: uv run mypy src/
 
+      # Links de documentação: arquivo e âncora, sem ir à rede.
+      - run: python3 skills/pr-review-guard/scripts/checar-links.py docs README.md
+
       # --- Rust ---
       # - uses: dtolnay/rust-toolchain@stable
       #   with: { components: rustfmt, clippy }

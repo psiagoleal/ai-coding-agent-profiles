@@ -110,7 +110,8 @@ Regras, todas obrigatórias:
 - **Uma linha por ticket:** identificador com **link para o detalhe** e uma frase curta. Nada
   de critério de aceite, arquivos ou discussão aqui — isso mora no destino do link.
 - **O link aponta para onde o ticket está detalhado:** âncora no plano (`plano.md#mt-12`) ou
-  arquivo próprio (`tickets/MT-12.md`). Link quebrado é painel mentindo.
+  arquivo próprio (`tickets/MT-12.md`). Link quebrado é painel mentindo — confira com
+  `skills/pr-review-guard/scripts/checar-links.py docs/TICKETS.md`.
 - **Link que resolve não é o mesmo que detalhe que serve.** Apontar para a seção de um
   inventário ou para o handoff descreve o assunto, não o ticket — falta critério de aceite e
   escopo de arquivos. Nenhum verificador pega isso; é julgamento. A regra prática: enquanto o
