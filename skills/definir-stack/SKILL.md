@@ -57,7 +57,18 @@ blocos a todo projeto é o modo mais rápido de tornar o questionário um ritual
 Se o objetivo não estiver claro aqui, pare: isso é spec, não stack (`spec-como-contrato`).
 
 **Bloco B — Núcleo.** Linguagem principal e versão mínima; gerenciador de dependência e
-lockfile; layout de diretórios; formatador, linter e checagem de tipo; framework de teste.
+lockfile; formatador, linter e checagem de tipo; framework de teste. E o **layout**: qual é a
+raiz única do código do sistema.
+
+| Forma do sistema | Raiz recomendada |
+|---|---|
+| Mais de um componente (serviço + interface, ou serviço + contrato) | `app/`, com `app/backend/`, `app/frontend/`, `app/contract/` |
+| Um componente, stack com convenção forte | a raiz idiomática: `src/` (Python), `src/` + `Cargo.toml` (Rust), `src-tauri/` + `src/` (Tauri) |
+| Monorepo de várias aplicações | uma raiz por aplicação, todas irmãs, nomeadas pelo produto |
+
+O que a resposta precisa produzir é **uma fronteira declarada**, não um nome bonito:
+documentação, insumos e scripts do processo ficam fora da raiz do código, e a ilha
+`estrutura-diretorios` do `AGENTS.md` diz qual é qual.
 
 **Bloco C — Dados e integração.** Banco e versão; camada de acesso (SQL direto com
 *prepared statements*, ORM, driver); migrações; filas e processamento assíncrono; APIs de

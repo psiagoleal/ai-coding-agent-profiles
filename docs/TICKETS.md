@@ -9,7 +9,8 @@ destino do link (skill `micro-ticket-planner`).
 
 - [ ] [MT-2](tickets/MT-2.md) — Skill de núcleo de cálculo C++/CMake: 5 repositórios, nenhum coberto
 - [ ] [MT-3](tickets/MT-3.md) — Skill de biblioteca/CLI em Rust: 8 repositórios com `Cargo.toml`
-- [ ] [MT-6](tickets/MT-6.md) — Propagar painel, hook e skills novas aos repositórios de `~/dev`
+- [>] [MT-6](tickets/MT-6.md) — Propagar às instalações de `~/dev` · falta rodar sem `--dry-run` nos repositórios de árvore limpa
+- [ ] [MT-14](../docs/adr/0015-biblioteca-privada-em-repositorio-publico.md) — Decidir a ADR 0015: biblioteca privada em repositório público
 - [ ] [MT-7](tickets/MT-7.md) — Medir a nossa verificação contra o laço com score, em gabarito comum
 - [ ] [MT-13](tickets/MT-13.md) — Verificador de links de Markdown, versionado e com passo no CI
 - [ ] [MT-12](tickets/MT-12.md) — UI React: só se a empresa fechar React em vez de Svelte (decisão pendente)

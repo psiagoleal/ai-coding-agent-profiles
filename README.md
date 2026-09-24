@@ -68,6 +68,17 @@ scripts/setup-profile.sh empresa ./alvo --dry-run                  # simula, nã
 scripts/setup-profile.sh externo-confidencial ./x --skills secrets-guard,pr-review-guard
 ```
 
+Para atualizar **todas** as instalações de uma vez:
+
+```bash
+scripts/atualizar-repos.sh ~/dev --dry-run   # revise o plano, repositório a repositório
+scripts/atualizar-repos.sh ~/dev             # aplique
+```
+
+Ele descobre o perfil pelo `AGENTS.md` de cada repositório, **pula árvore suja** (o `--update`
+é revisado por `git diff`), dá aos repositórios de perfil `pessoal` um config **sem** fontes
+extras — público recebe só a biblioteca pública — e instala o hook `commit-msg` que faltar.
+
 Opções principais: `--doctor`, `--skills-mode {symlink|copy|none}`,
 `--agent {claude|codex|gemini|opencode|agentry|zcode|all|none}`, `--skills <lista>`,
 `--neutral-dir <nome>`, `--config <arquivo>`, `--update`, `--force`, `--dry-run`.

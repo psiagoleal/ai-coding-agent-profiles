@@ -68,6 +68,34 @@ pytest -v --cov=src                       # Python (pytest)
 ```
 <!-- USER:END -->
 
+## 3-bis. Estrutura de diretórios
+
+> **Uma raiz única para o código do sistema.** Todo o código da aplicação mora sob **uma**
+> raiz declarada — `app/` por padrão quando o sistema tem mais de um componente (ex.:
+> `app/backend/`, `app/frontend/`, `app/contract/`). Documentação, insumos, planos e scripts
+> do processo ficam **fora** dela. Projeto de um componente só pode manter a raiz idiomática
+> da stack (`src/`, `crates/`, `src-tauri/`); o que **não** é opcional é declarar qual é, na
+> ilha abaixo. O ganho é a fronteira: o agente sabe o que é sistema e o que é processo, e
+> "não mexa fora de X" passa a ser verificável.
+>
+> **Insumos em `docs/insumos/`** — briefing, requisitos recebidos, referências, dados de
+> entrada. É o primeiro lugar a ler antes de perguntar (`perguntar-antes-de-construir`) e o
+> que evita o agente inventar o que já foi dito. Material de terceiro não vai para
+> repositório público.
+>
+> **Diretório novo na raiz é decisão**, não hábito: registre o porquê antes de criar.
+
+<!-- USER:BEGIN id=estrutura-diretorios -->
+```
+src/                 # código do sistema (ou app/, quando houver mais de um componente)
+tests/               # testes
+docs/adr/            # Registros de Decisão de Arquitetura — LEITURA OBRIGATÓRIA
+docs/insumos/        # material recebido: briefing, requisitos, referências
+docs/CURRENT-STATE.md# handoff entre turnos (skill handoff-updater)
+docs/TICKETS.md      # painel de tickets (skill micro-ticket-planner)
+```
+<!-- USER:END -->
+
 ## 4. Estilo de codificação
 
 <!-- USER:BEGIN id=estilo-codificacao -->
