@@ -45,6 +45,9 @@ feito e o que falta. É um índice, não um segundo lugar para o detalhe:
 ```markdown
 ## Em aberto
 - [ ] [MT-12](plano.md#mt-12) — Rejeitar reserva sobreposta com 409
+- [>] [MT-14](plano.md#mt-14) — Migrar sessões para Redis · falta o caminho de erro
+- [!] [MT-15](plano.md#mt-15) — Corrigir vazamento de token no log
+- [ ] [MT-16](plano.md#mt-16) — Exportar relatório mensal — bloqueado por credencial do SAP
 
 ## Concluídos
 - [x] [MT-11](plano.md#mt-11) — Validar tamanho do corpo da requisição
@@ -53,15 +56,58 @@ feito e o que falta. É um índice, não um segundo lugar para o detalhe:
 - [~] [MT-9](plano.md#mt-9) — Cache de sessão · motivo: substituído pelo MT-11
 ```
 
+### Os marcadores são um conjunto fechado
+
+**Não invente marcador fora desta lista.** O painel serve à varredura visual; símbolo que cada
+sessão inventa destrói exatamente isso.
+
+| Marcador | Seção | Significa |
+|---|---|---|
+| `[ ]` | Em aberto | em aberto, nada a destacar — **o caso comum** |
+| `[>]` | Em aberto | em andamento: começou e não terminou |
+| `[!]` | Em aberto | **crítico ou urgente** — exige atenção agora |
+| `[x]` | Concluídos | entregue |
+| `[~]` | Abandonados | abandonado, **com motivo** |
+
+**O estado é a seção; o marcador é a situação dentro dela.** `[x]` e `[~]` são redundantes com
+a seção de propósito: ajudam a ler a linha fora de contexto.
+
+Quatro regras que fecham as ambiguidades:
+
+1. **Prioridade vence o marcador.** Só há um caractere e duas dimensões (progresso e
+   prioridade). Quando as duas valem, o marcador é `[!]` e o progresso vai para o texto
+   (`· em andamento`). O marcador responde "isto exige atenção agora?"; o texto responde "onde
+   está".
+2. **`[!]` é raro por definição.** Se mais de **três** tickets estão `[!]`, nada está — e a
+   resposta é repriorizar, não acrescentar. Quem marca é quem prioriza, por decisão explícita;
+   o agente não promove ticket a urgente sozinho.
+3. **`[>]` diz o que falta.** "Em andamento" sem o que falta é `[ ]` com enfeite. Se você não
+   consegue escrever o que resta em meia linha, o ticket é grande demais — fatie.
+4. **Bloqueio é texto, não marcador.** Bloqueio é uma **dependência**, e o que importa é *de
+   quê*: `— bloqueado por <o quê>: <frase>`. Não cabe em um caractere. Se o bloqueio também é
+   urgente, aí sim `[!]` — pela regra 1.
+
+**Sobre a renderização:** o GitHub transforma em caixa de seleção apenas `[ ]` e `[x]`; `[>]`,
+`[!]` e `[~]` aparecem como texto e desalinham a linha. É consciente: como `[!]` e `[>]` são
+raros e `[~]` vive numa seção separada, a maior parte do painel continua uma lista de tarefas
+normal — e o desalinhamento do que é raro **ajuda** a varredura em vez de atrapalhar.
+
+O verificador `scripts/checar-painel.py` confere formato, marcador fora do conjunto, limite de
+`[!]`, link ausente e `[~]` sem motivo:
+
+```bash
+python3 skills/micro-ticket-planner/scripts/checar-painel.py docs/TICKETS.md
+```
+
 Regras, todas obrigatórias:
 
 - **Uma linha por ticket:** identificador com **link para o detalhe** e uma frase curta. Nada
   de critério de aceite, arquivos ou discussão aqui — isso mora no destino do link.
 - **O link aponta para onde o ticket está detalhado:** âncora no plano (`plano.md#mt-12`) ou
   arquivo próprio (`tickets/MT-12.md`). Link quebrado é painel mentindo.
-- **Atualize sempre, no mesmo trabalho:** ao **criar** (entra em aberto), ao **concluir**
-  (marca `[x]` e move), ao **abandonar** (marca `[~]` com o motivo em uma frase). Nunca apague
-  um ticket: o abandonado também é história.
+- **Atualize sempre, no mesmo trabalho:** ao **criar** (entra em aberto), ao **começar**
+  (marca `[>]` com o que falta), ao **concluir** (marca `[x]` e move), ao **abandonar** (marca
+  `[~]` com o motivo em uma frase). Nunca apague um ticket: o abandonado também é história.
 - **Sem duplicar o handoff.** `docs/CURRENT-STATE.md` diz o que está acontecendo agora; o
   painel diz o que existe. O handoff aponta para o painel, não o copia.
 
@@ -83,3 +129,8 @@ Um micro-ticket só é "Concluído" quando:
 - [ ] Nenhum ticket exige decisão arquitetural não registrada em ADR.
 - [ ] Todo ticket criado, concluído ou abandonado está refletido em `docs/TICKETS.md`, com
       link válido para o detalhe e uma frase curta.
+- [ ] Todo marcador está no conjunto fechado (`[ ]`, `[>]`, `[!]`, `[x]`, `[~]`); nenhum foi
+      inventado.
+- [ ] No máximo três `[!]`, e cada um por decisão de quem prioriza.
+- [ ] Todo `[>]` diz o que falta; todo `[~]` diz o motivo; todo bloqueio diz de que depende.
+- [ ] `checar-painel.py` passou, com a saída lida.
