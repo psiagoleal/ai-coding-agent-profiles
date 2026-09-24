@@ -87,6 +87,12 @@ Quatro regras que fecham as ambiguidades:
    quê*: `— bloqueado por <o quê>: <frase>`. Não cabe em um caractere. Se o bloqueio também é
    urgente, aí sim `[!]` — pela regra 1.
 
+   Esta regra faz mais do que informar quem lê: **desmascara bloqueio que é só trabalho
+   parado**. Medido em campo (2026-09-24, painel de 63 tickets): de **9** rotulados como
+   bloqueados, **2 não tinham dependência nenhuma** — eram trabalho em aberto que ninguém
+   começou, herdados da lista de "impedimentos" do handoff. Ao ser obrigado a escrever de que
+   dependiam, não havia o que escrever.
+
 **Sobre a renderização:** o GitHub transforma em caixa de seleção apenas `[ ]` e `[x]`; `[>]`,
 `[!]` e `[~]` aparecem como texto e desalinham a linha. É consciente: como `[!]` e `[>]` são
 raros e `[~]` vive numa seção separada, a maior parte do painel continua uma lista de tarefas
@@ -105,6 +111,12 @@ Regras, todas obrigatórias:
   de critério de aceite, arquivos ou discussão aqui — isso mora no destino do link.
 - **O link aponta para onde o ticket está detalhado:** âncora no plano (`plano.md#mt-12`) ou
   arquivo próprio (`tickets/MT-12.md`). Link quebrado é painel mentindo.
+- **Link que resolve não é o mesmo que detalhe que serve.** Apontar para a seção de um
+  inventário ou para o handoff descreve o assunto, não o ticket — falta critério de aceite e
+  escopo de arquivos. Nenhum verificador pega isso; é julgamento. A regra prática: enquanto o
+  ticket está `[ ]`, o link pode apontar para a **origem** (spec, inventário, discussão); ao
+  passar para `[>]`, ele precisa de **detalhe próprio**, com objetivo, escopo e critério de
+  aceite. Assim ninguém gera trinta arquivos de uma vez para um painel que mal começou.
 - **Atualize sempre, no mesmo trabalho:** ao **criar** (entra em aberto), ao **começar**
   (marca `[>]` com o que falta), ao **concluir** (marca `[x]` e move), ao **abandonar** (marca
   `[~]` com o motivo em uma frase). Nunca apague um ticket: o abandonado também é história.
@@ -133,4 +145,5 @@ Um micro-ticket só é "Concluído" quando:
       inventado.
 - [ ] No máximo três `[!]`, e cada um por decisão de quem prioriza.
 - [ ] Todo `[>]` diz o que falta; todo `[~]` diz o motivo; todo bloqueio diz de que depende.
+- [ ] Todo ticket em `[>]` tem detalhe próprio com objetivo, escopo e critério de aceite.
 - [ ] `checar-painel.py` passou, com a saída lida.
