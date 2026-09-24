@@ -11,6 +11,7 @@ destino do link (skill `micro-ticket-planner`).
 - [ ] [MT-3](tickets/MT-3.md) — Skill de biblioteca/CLI em Rust: 8 repositórios com `Cargo.toml`
 - [ ] [MT-6](tickets/MT-6.md) — Propagar painel, hook e skills novas aos repositórios de `~/dev`
 - [ ] [MT-7](tickets/MT-7.md) — Medir a nossa verificação contra o laço com score, em gabarito comum
+- [ ] [MT-13](tickets/MT-13.md) — Verificador de links de Markdown, versionado e com passo no CI
 - [ ] [MT-12](tickets/MT-12.md) — UI React: só se a empresa fechar React em vez de Svelte (decisão pendente)
 
 ## Concluídos

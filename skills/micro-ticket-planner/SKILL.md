@@ -117,6 +117,18 @@ Regras, todas obrigatórias:
   ticket está `[ ]`, o link pode apontar para a **origem** (spec, inventário, discussão); ao
   passar para `[>]`, ele precisa de **detalhe próprio**, com objetivo, escopo e critério de
   aceite. Assim ninguém gera trinta arquivos de uma vez para um painel que mal começou.
+
+  **Escrever o critério de aceite é um teste de tamanho do ticket.** Se ele não é
+  especificável, são dois. Campo (2026-09-24): um ticket de "grampeamento deslocado" parecia
+  um só até o detalhe ser escrito — não havia como aceitar a implementação contra uma
+  tolerância que ninguém tinha estabelecido. Virou *estabelecer o método* (entrega texto) e
+  *implementar* (bloqueado pelo primeiro).
+
+  O discriminador é o **objetivo**, não o tamanho aparente: metades com objetivos diferentes
+  (descobrir × construir) são dois tickets; um objetivo com várias entregas — quatro formatos
+  de entrada, por exemplo — é um ticket só, com as quatro enumeradas no detalhe. Note que este
+  teste pega o que a regra do `[>]` não pega: lá o "o que falta" cabia em meia linha; o que
+  não existia era o **aceite**.
 - **Atualize sempre, no mesmo trabalho:** ao **criar** (entra em aberto), ao **começar**
   (marca `[>]` com o que falta), ao **concluir** (marca `[x]` e move), ao **abandonar** (marca
   `[~]` com o motivo em uma frase). Nunca apague um ticket: o abandonado também é história.
