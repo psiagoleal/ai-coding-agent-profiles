@@ -163,6 +163,9 @@ _(nenhum — acrescente aqui o cofre, caminhos de credencial e regras de segredo
 - **DoD:** testes/linter passam em CI (GitHub Actions); revisão de PR (skill
   `pr-review-guard`) antes do merge.
 - **ADRs** para decisões estruturais (skill `adr-writer`).
+- **Lição vira artefato:** ao terminar trabalho não trivial ou na segunda vez do mesmo erro,
+  a lição desce a escada de destinos até o nível mais alto viável — comando, teste ou hook
+  antes de regra escrita (skill `licoes-aprendidas`).
 
 <!-- USER:BEGIN id=adendos-fluxo -->
 _(nenhum — acrescente aqui adaptações de DoD, convenção de commit e ritos deste projeto.)_
@@ -174,7 +177,7 @@ _(nenhum — acrescente aqui adaptações de DoD, convenção de commit e ritos 
 - **`adr-writer`**, **`micro-ticket-planner`**, **`handoff-updater`**, **`pr-review-guard`**,
   **`delegacao-a-subagentes`**, **`delegacao-openai-compat`**, **`meeting-minutes`**,
   **`novo-projeto`**, **`limites-de-uso`**,
-  **`caveman`**, **`atribuicao-de-falha`**,
+  **`caveman`**, **`atribuicao-de-falha`**, **`licoes-aprendidas`**,
   **`gates-de-conclusao`**, **`paralelizacao-em-grafo`**, **`spec-como-contrato`**,
   **`teste-primeiro`**, **`critico-independente`**, **`mapa-de-arquitetura`**,
   **`definir-stack`**,

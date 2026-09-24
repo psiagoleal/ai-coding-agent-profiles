@@ -222,6 +222,9 @@ descobre via adaptador `.claude/skills/` (ponteiros gerados por `scripts/setup-p
   reservar orçamento para o handoff antes da virada da janela.
 - **`caveman`** — modo de comunicação comprimida em sessão longa ou com cota apertada;
   vale na conversa, nunca em ADR, handoff, ATA, commit ou PR.
+- **`licoes-aprendidas`** — ao terminar trabalho não trivial, depois de incidente, ou na
+  segunda vez do mesmo erro: a lição vira comando, teste ou hook — regra escrita é o último
+  recurso, não o primeiro.
 - **`atribuicao-de-falha`** — quando o agente repetir um erro, **antes** de escrever mais
   uma regra: localizar a camada (contexto / processo / autoridade / evidência).
 - **`gates-de-conclusao`** — ao abrir tarefa longa: gates antes do trabalho, orçamento

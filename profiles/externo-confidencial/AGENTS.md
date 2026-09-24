@@ -175,7 +175,7 @@ _(nenhum — acrescente aqui adaptações de DoD, convenção de commit e ritos 
   **`pr-review-guard`**, **`delegacao-a-subagentes`**, **`delegacao-openai-compat`**,
   **`meeting-minutes`**,
   **`novo-projeto`**, **`limites-de-uso`**, **`caveman`**,
-  **`atribuicao-de-falha`**, **`gates-de-conclusao`**, **`paralelizacao-em-grafo`**, **`spec-como-contrato`**,
+  **`atribuicao-de-falha`**, **`licoes-aprendidas`**, **`gates-de-conclusao`**, **`paralelizacao-em-grafo`**, **`spec-como-contrato`**,
   **`teste-primeiro`**, **`critico-independente`**, **`mapa-de-arquitetura`**,
   **`definir-stack`**,
   **`perguntar-antes-de-construir`**, **`laco-de-correcao`** — todas recomendadas. Ver seção 9 do perfil empresa para os gatilhos
