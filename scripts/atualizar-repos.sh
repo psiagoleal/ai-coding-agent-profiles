@@ -12,6 +12,10 @@
 #   3. roda setup-profile.sh --update com o config certo;
 #   4. instala o hook commit-msg, se ainda não houver.
 #
+# Com --migrar-adaptadores, também tira os adaptadores do rastreamento do git (ADR 0015):
+# eles passam a ser artefato gerado, e é o que impede o NOME de uma skill privada de entrar
+# num repositório público. Nada é apagado do disco — só deixa de ser versionado.
+#
 # Perfil PESSOAL é público por definição: recebe apenas a biblioteca pública, com um
 # config sem `fontes_extras`. Os demais recebem o config padrão.
 #
@@ -22,6 +26,7 @@ FRAMEWORK_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 RAIZ="$HOME/dev"
 DRY=0
 SEM_HOOK=0
+MIGRAR=0
 CONFIG=""
 CONFIG_PUBLICO=""
 INCLUIR=""
@@ -33,6 +38,7 @@ while [[ $# -gt 0 ]]; do
     --config)          CONFIG="${2:?}"; shift 2 ;;
     --config-publico)  CONFIG_PUBLICO="${2:?}"; shift 2 ;;
     --sem-hook)        SEM_HOOK=1; shift ;;
+    --migrar-adaptadores) MIGRAR=1; shift ;;
     --incluir)         INCLUIR="${2:?}"; shift 2 ;;
     --excluir)         EXCLUIR="${2:?}"; shift 2 ;;
     -h|--help)         sed -n '3,20p' "$0" | sed 's/^# \?//'; exit 0 ;;
@@ -100,6 +106,20 @@ for dir in "$RAIZ"/*/; do
   else
     falhos+=("$repo (ver ${TMPDIR:-/tmp}/atualizar-$repo.log)")
     continue
+  fi
+
+  # ADR 0015: adaptadores deixam de ser versionados. git rm --cached não toca no disco.
+  if (( MIGRAR )); then
+    for adap in .claude/skills .agents/skills; do
+      if git -C "${dir%/}" ls-files --error-unmatch "$adap" >/dev/null 2>&1; then
+        if (( DRY )); then
+          printf '    [dry-run] deixaria de rastrear %s\n' "$adap"
+        else
+          git -C "${dir%/}" rm -r --cached -q "$adap"
+          printf '    %s deixou de ser rastreado (arquivos intactos)\n' "$adap"
+        fi
+      fi
+    done
   fi
 
   # Hook commit-msg: barra link de sessão e afins na mensagem (skill pr-review-guard).

@@ -698,6 +698,38 @@ done
 mapfile -t CORE_SKILLS < <(printf '%s\n' "${CORE_SKILLS[@]}" | sort)
 mapfile -t EXTRA_SKILLS < <(printf '%s\n' "${EXTRA_SKILLS[@]}" | sort)
 skill_dir() { printf '%s/%s' "${FONTE_SKILL[$1]}" "$1"; }
+
+# ADR 0015: skill vinda de fonte extra (privada) é instalada sob '<neutra>/privado/<nome>',
+# um diretório de nome genérico que o .gitignore cobre inteiro. Proteger por nome escreveria
+# o nome no arquivo que deveria escondê-lo.
+TEM_PRIVADA=0
+
+# ADR 0015: ignore por DIRETÓRIO, nunca por nome — listar skill a skill escreveria no
+# .gitignore justamente o nome que ele deveria esconder.
+garantir_gitignore() {  # <linha>...
+  local gi="$TARGET/.gitignore" faltando=() l
+  for l in "$@"; do
+    grep -qxF -- "$l" "$gi" 2>/dev/null || faltando+=("$l")
+  done
+  (( ${#faltando[@]} )) || return 0
+  if [[ $DRY_RUN -eq 1 ]]; then
+    printf '  [dry-run] .gitignore receberia: %s\n' "${faltando[*]}"; return 0
+  fi
+  {
+    [[ -s "$gi" ]] && printf '\n'
+    printf '# Adaptadores são gerados pelo setup-profile.sh; biblioteca privada é local (ADR 0015)\n'
+    printf '%s\n' "${faltando[@]}"
+  } >> "$gi"
+  printf '  .gitignore: %s\n' "${faltando[*]}"
+}
+
+destino_de() {  # <skill> -> caminho relativo dentro da pasta neutra
+  if [[ "${FONTE_SKILL[$1]}" != "$SKILLS_DIR" ]]; then
+    TEM_PRIVADA=1; printf 'privado/%s' "$(basename "$1")"
+  else
+    printf '%s' "$1"
+  fi
+}
 ALL_SKILLS=("${CORE_SKILLS[@]}" "${EXTRA_SKILLS[@]}")
 
 # Resolve a seleção (padrão: só as de governança). Expande categoria/* e @padrao, e
@@ -757,9 +789,11 @@ for s in "${SKILLS[@]}"; do
   [[ -n "${FONTE_SKILL[$s]:-}" ]] || \
     erro "skill inexistente: '$s' (não há '$s/SKILL.md'). Disponíveis: ${ALL_SKILLS[*]}"
   # Artefatos de build/ambiente das skills executáveis nunca são instalados.
+  [[ "${FONTE_SKILL[$s]}" != "$SKILLS_DIR" ]] && TEM_PRIVADA=1
+  _dest="$(destino_de "$s")"
   while IFS= read -r -d '' f; do
-    rel="${f#"${FONTE_SKILL[$s]}"/}"
-    install_file "$NEUTRAL_DIR/$rel" "$f" "$TARGET/$NEUTRAL_DIR/$rel"
+    rel="${f#"$(skill_dir "$s")"/}"
+    install_file "$NEUTRAL_DIR/$_dest/$rel" "$f" "$TARGET/$NEUTRAL_DIR/$_dest/$rel"
   done < <(find "$(skill_dir "$s")" -type f \
              -not -path '*/node_modules/*' -not -path '*/__pycache__/*' \
              -not -path '*/.venv/*' -not -name '*.pyc' -print0)
@@ -869,8 +903,9 @@ if [[ "$AGENT" != "none" && "$SKILLS_MODE" != "none" ]]; then
       if [[ "$SKILLS_MODE" == "symlink" ]]; then
         # O adaptador é sempre PLANO (harnesses descobrem skills em um só nível), então o
         # alvo pode ser aninhado ('dominio/mockup-lab') enquanto o link mantém só o basename.
-        ln -s "${subir}$NEUTRAL_DIR/$s" "$local_dst"
-        printf '  symlink: %s -> %s%s/%s\n' "$local_dst" "$subir" "$NEUTRAL_DIR" "$s"
+        _alvo="$(destino_de "$s")"
+        ln -s "${subir}$NEUTRAL_DIR/$_alvo" "$local_dst"
+        printf '  symlink: %s -> %s%s/%s\n' "$local_dst" "$subir" "$NEUTRAL_DIR" "$_alvo"
       else
         cp -r "$(skill_dir "$s")" "$local_dst"
         printf '  cópia:   %s\n' "$local_dst"
@@ -918,6 +953,16 @@ if [[ "$AGENT" != "none" && "$SKILLS_MODE" != "none" ]]; then
 else
   info "3) Adaptador de agente desabilitado (skills disponíveis apenas na pasta neutra '$NEUTRAL_DIR/')."
   echo
+fi
+
+# ----------------------------------------------------------------------------
+# Proteção do que não deve ir para o remoto (ADR 0015)
+# ----------------------------------------------------------------------------
+_ign=()
+[[ "$AGENT" != "none" ]] && _ign+=(".claude/skills/" ".agents/skills/")
+(( TEM_PRIVADA )) && _ign+=("$NEUTRAL_DIR/privado/")
+if (( ${#_ign[@]} )) && [[ -d "$TARGET/.git" ]]; then
+  garantir_gitignore "${_ign[@]}"
 fi
 
 # ----------------------------------------------------------------------------

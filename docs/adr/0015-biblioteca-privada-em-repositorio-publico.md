@@ -2,8 +2,8 @@
 
 # ADR 0015 — Biblioteca privada em repositório público ou compartilhado
 
-- **Status:** **proposto** — depende de decisão, porque muda todos os repositórios instalados
-- **Data:** 2026-09-24
+- **Status:** **aceito**
+- **Data:** 2026-09-24 · aceito em 2026-09-24
 
 ## Contexto
 
@@ -53,7 +53,7 @@ As skills privadas ficam em `~/.claude/skills` e valem para todas as sessões.
 - *Contra:* depende de lista de nomes atualizada e de o hook estar instalado no clone. Um
   clone novo sem hook publica o nome no primeiro commit.
 
-## Decisão proposta
+## Decisão
 
 **Opção A**, com três detalhes:
 
@@ -75,8 +75,11 @@ que passa a constar no README. Migração única em ~20 repositórios, com diff 
 
 **Neutras.** A fonte pública continua versionada; só o adaptador deixa de ser.
 
-## Em aberto até a decisão
+## Detalhes fechados na aceitação
 
-- Se o passo extra no clone é aceitável para os repositórios públicos com colaboradores
-  externos.
-- Se `skills/privado/` deve ser o nome, ou algo ainda mais neutro (`skills/local/`).
+- **O nome é `skills/privado/`.** Genérico o bastante: diz que há algo local, não o que é.
+- **O passo extra no clone é aceitável**, e passa a constar no README do projeto alvo: uma
+  linha de instalação, que já era necessária para quem quisesse o framework atualizado.
+- **A migração não é automática.** `scripts/atualizar-repos.sh --migrar-adaptadores` faz o
+  `git rm --cached` dos adaptadores, repositório a repositório, com `--dry-run` antes. Nada é
+  apagado do disco: só deixa de ser rastreado.
