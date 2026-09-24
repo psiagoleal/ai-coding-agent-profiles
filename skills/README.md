@@ -81,6 +81,14 @@ parar em vez de escrever código que não compila.
 | [`stack/criar-servico-fastapi`](stack/criar-servico-fastapi/SKILL.md) | Serviço HTTP em FastAPI + Pydantic v2: rota fina, domínio sem framework, erro traduzido na borda, consulta parametrizada e lista paginada | Criar ou alterar endpoint, roteador ou modelo de entrada/saída em projeto FastAPI |
 | [`stack/criar-ui-sveltekit`](stack/criar-ui-sveltekit/SKILL.md) | Interface em SvelteKit 2 / Svelte 5 (runes), TS estrito, dado no `load`, formulário com action, estilo por token | Criar página, rota, componente ou formulário em projeto SvelteKit |
 
+## Catálogo — entrega (sob demanda)
+
+Gate que roda em servidor e o caminho até produção. Opt-in: `--skills 'entrega/*'`.
+
+| Skill | Para quê | Aciona quando |
+|-------|----------|---------------|
+| [`entrega/pipeline-como-gate`](entrega/pipeline-como-gate/SKILL.md) | CI que pode reprovar: os mesmos comandos do `AGENTS.md`, ordem barato→caro, matriz só onde a plataforma muda, cache que invalida sozinho, segredo fora do alcance de fork | Criar ou alterar workflow; adotar CI; CI e máquina local discordam; passo que vive vermelho |
+
 ## Catálogo — conhecimento (sob demanda)
 
 Acervo grande de documentos que precisa ser consultável. Opt-in: `--skills 'conhecimento/*'`.

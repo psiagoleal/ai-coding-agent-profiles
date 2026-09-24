@@ -1,0 +1,96 @@
+# Caminho relativo: .github/workflows/ci.yml
+# Modelo da skill pipeline-como-gate. Apague os blocos das stacks que o projeto não usa.
+# Os comandos DEVEM ser os mesmos da ilha `comandos-exatos` do AGENTS.md — confira com
+#   python3 skills/entrega/pipeline-como-gate/scripts/checar-gate-ci.py
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# Permissão mínima: amplie apenas no job que precisar.
+permissions:
+  contents: read
+
+# Push novo no mesmo ramo cancela a execução anterior — economia sem perda de cobertura.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # Barato primeiro: formatação e lint rodam UMA vez, num único sistema.
+  lint:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      # --- Python (uv) ---
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+          cache-dependency-glob: uv.lock      # a chave inclui o lockfile
+      - run: uv sync --frozen                 # --frozen: falha se o lock estiver desatualizado
+      - run: uv run ruff check .
+      - run: uv run mypy src/
+
+      # --- Rust ---
+      # - uses: dtolnay/rust-toolchain@stable
+      #   with: { components: rustfmt, clippy }
+      # - run: cargo fmt --all -- --check
+      # - run: cargo clippy --all-targets --all-features -- -D warnings
+
+      # --- Node / Svelte ---
+      # - uses: actions/setup-node@v4
+      #   with: { node-version: '22', cache: npm }
+      # - run: npm ci
+      # - run: npm run check        # svelte-check: tipos e acessibilidade
+
+  teste:
+    needs: lint                                # não gaste minuto de teste se o lint reprovou
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false                         # ver TODAS as plataformas que quebraram
+      matrix:
+        # Matriz só onde a plataforma muda o resultado. Em serviço/contêiner, deixe só ubuntu.
+        os: [ubuntu-latest]
+        # os: [ubuntu-latest, macos-latest, windows-latest]   # código nativo, desktop
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+          cache-dependency-glob: uv.lock
+      - run: uv sync --frozen
+      - run: uv run pytest -v --cov=src
+
+      # --- C++ / CMake ---
+      # - run: cmake -B build -DCMAKE_BUILD_TYPE=Release
+      # - run: cmake --build build --parallel
+      # - run: ctest --test-dir build --output-on-failure
+
+      # Saída longa vira artefato — o log do job não é lugar de relatório.
+      - if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: relatorio-teste-${{ matrix.os }}
+          path: |
+            .coverage
+            junit.xml
+          if-no-files-found: ignore
+
+  # Build só depois que lint e teste passaram: é o passo mais caro.
+  build:
+    needs: teste
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - run: uv build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pacote
+          path: dist/

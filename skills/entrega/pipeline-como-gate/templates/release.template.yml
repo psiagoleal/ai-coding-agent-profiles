@@ -1,0 +1,41 @@
+# Caminho relativo: .github/workflows/release.yml
+# Modelo da skill pipeline-como-gate: publicação disparada por TAG, com a versão vinda da tag.
+# Segredo de publicação existe aqui e NÃO em PR — é o que impede código de fork de usá-lo.
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write        # criar a release; nada além disso
+
+jobs:
+  publicar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    # Ambiente com aprovação manual: o deploy não acontece só porque a tag existe.
+    environment: producao
+    steps:
+      - uses: actions/checkout@v4
+
+      # A versão vem da tag — não de um número digitado duas vezes, que diverge.
+      - name: Versão a partir da tag
+        run: echo "VERSAO=${GITHUB_REF_NAME#v}" >> "$GITHUB_ENV"
+
+      - uses: astral-sh/setup-uv@v5
+      - run: uv build
+      - name: Checksums
+        run: (cd dist && sha256sum * > SHA256SUMS)
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/*
+            dist/SHA256SUMS
+          generate_release_notes: true
+
+      # Publicação em registro usa segredo do ambiente, nunca variável de repositório.
+      # - run: uv publish
+      #   env:
+      #     UV_PUBLISH_TOKEN: ${{ secrets.PUBLISH_TOKEN }}
