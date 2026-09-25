@@ -70,6 +70,11 @@ modelo direto. O ganho é estrutural: o roteador continua sendo o único ponto q
 provedor, modelo e egresso, e o invariante de que um subagente nunca afrouxa a classe da mãe
 permanece **mecânico** em vez de virar convenção.
 
+**O critério de aceite implícito do roteador** vem daí, e vale escrito: o pior caso de uma
+decisão ruim tem de ser **uma task-class errada dentro do conjunto declarado**. Se deixar de
+ser — se uma decisão puder produzir destino, provedor ou classe de egresso não previstos —, o
+desenho saiu do contrato e a peça deve ser removida, não ajustada.
+
 O provedor é **endpoint HTTP**, reaproveitando a fronteira de rede única que já existe lá.
 Execução em processo foi descartada com um argumento que vale anotar: ela **escaparia da
 fronteira auditável**, e com ela do registro de egresso.
@@ -84,6 +89,16 @@ destino da conexão.
 Medimos aqui: com `ALL_PROXY` para uma porta fechada, `curl` a loopback devolve 000; com
 `--noproxy '*'`, 200. O `oa-chat` passou a usar `--noproxy` para loopback e rede privada
 (`delegacao-openai-compat`). Do lado do runtime, é lacuna conhecida e já tem ticket lá.
+
+**O teste que fecha isso tem duas asserções, não uma** — e a segunda é a que costuma faltar:
+
+1. Chamada a loopback **com proxy falso definido** chega ao servidor local (o destino não foi
+   desviado).
+2. Host que **resolve para fora** é recusado, mesmo com a URL parecendo local (a validação
+   olha o destino resolvido, não o texto do host).
+
+Provar só a primeira deixa passar exatamente o caso em que alguém aponta um nome que resolve
+para outro lugar. Combinei de rodar esse par contra o runtime quando a lacuna for tratada.
 
 ## Divisão de responsabilidades
 

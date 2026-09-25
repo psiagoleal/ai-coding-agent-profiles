@@ -55,6 +55,24 @@ Quem põe o build primeiro paga cinco minutos para descobrir um espaço a mais.
 Formatação e lint rodam **uma vez**, num único sistema: eles não dependem de plataforma, e
 triplicar isso só gasta minuto de execução e atrasa o retorno.
 
+### Mas não estreite a matriz por previsão
+
+Medido em campo (2026-09, projeto público em Rust, matriz de três sistemas): a decisão de
+arquitetura registrada **previu** que a fragilidade multiplataforma estaria em subir processo
+e abrir socket, e autorizava de antemão restringir o teste de ponta a ponta a um só sistema
+caso a matriz se mostrasse instável.
+
+**Essa saída nunca foi usada.** Os casos de ponta a ponta passaram nos três sistemas desde a
+primeira execução. O que reprovou — **cinco vezes, com cinco causas distintas** — foi outra
+coisa a cada rodada: `PATH` sem o binário, resolução de relógio no Windows, separador de
+caminho em saída de ferramenta, a isenção das próprias guardas estáticas comparando caminho
+como texto, e um `file://` inválido. **Duas eram defeito de produção, não de teste.**
+
+A lição não é "matriz sempre". É que **previsão sobre onde a coisa quebra não sobrevive ao
+contato com medição**: estreitar a matriz pelo palpite teria escondido dois defeitos reais — e
+teria parecido prudente. Estreite pelo que a execução mostrou instável, com o registro do que
+foi observado, nunca pelo que se imagina que vai falhar.
+
 ## Cache que invalida sozinho
 
 A chave inclui o *lockfile*: `hashFiles('**/Cargo.lock')`, `hashFiles('**/uv.lock')`,
