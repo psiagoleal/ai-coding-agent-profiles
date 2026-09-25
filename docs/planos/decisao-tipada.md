@@ -100,6 +100,12 @@ Medimos aqui: com `ALL_PROXY` para uma porta fechada, `curl` a loopback devolve 
 Provar só a primeira deixa passar exatamente o caso em que alguém aponta um nome que resolve
 para outro lugar. Combinei de rodar esse par contra o runtime quando a lacuna for tratada.
 
+**Estado real hoje, para não ficar implícito:** a segunda asserção é hipótese de desenho, não
+fato — do lado do runtime depende de decisão do mantenedor, e o cliente HTTP de lá adota proxy
+do ambiente, então nem a primeira está coberta. Deste lado, só o `oa-chat` cobre a primeira.
+Enquanto isso, `local-only` significa **"declarado local-only"**, não "verificado que não
+sai" — e material sensível merece essa distinção explícita.
+
 ## Divisão de responsabilidades
 
 ### Deste lado (framework)

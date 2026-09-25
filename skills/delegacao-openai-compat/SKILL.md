@@ -210,12 +210,19 @@ devolve 000; com `--noproxy '*'`, devolve 200. A diferença entre vazar e não v
 opção de linha de comando.
 
 O `oa-chat` já passa `--noproxy '*'` quando o endpoint é loopback ou rede privada
-(`127.*`, `::1`, `10.*`, `192.168.*`, `172.16-31.*`). Em qualquer outra ferramenta que você
-use para falar com endpoint declarado `local-only`, confira antes:
+(`127.*`, `::1`, `10.*`, `192.168.*`, `172.16-31.*`) — e é o **único** caminho daqui em que
+isso está verificado. Cliente HTTP que adota proxy do ambiente por padrão (o caso comum em
+várias bibliotecas) não tem essa proteção, e o modo agente de outro programa é um deles até
+que se prove o contrário. Em qualquer ferramenta que não seja o `oa-chat`, confira antes:
 
 ```bash
 env | grep -iE '^(http|https|all)_proxy=' || echo 'sem proxy no ambiente'
 ```
+
+**Desligar proxy é metade.** A outra metade é **validar o destino resolvido**, não o texto do
+host: um nome que parece local e resolve para fora passa por qualquer checagem feita sobre a
+URL. Não conheço implementação aqui nem no runtime vizinho que faça as duas hoje — então, com
+material sensível, a garantia atual é "proxy desligado", e não "não sai da máquina".
 
 > **Classe de egresso descreve fronteira de confiança, não distância de rede.** Um gateway
 > interno remoto pode ser mais confiável que um proxy local desconhecido — e é por isso que a
