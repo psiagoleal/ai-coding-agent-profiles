@@ -58,6 +58,33 @@ decisão tipada  →  confiança ≥ limiar ?  →  sim: roteia para o modelo ba
 O limiar sai da medição de calibração, não de palpite. E a escalada é sempre para o **mais
 capaz**, nunca o contrário.
 
+## Correção de arquitetura (vinda do `agentry`, 2026-09-25)
+
+**A decisão tipada não substitui o roteador do runtime; ela escolhe a *task-class* que entra
+nele.** Lá a escolha de modelo é **declarada**, não computada: cada task-class tem uma lista
+ordenada de candidatos `{provider, model, egressClass}`, e o roteador pega o primeiro que o
+teto de egresso da sessão permite.
+
+Então o modelo tipado devolve **o nome de uma task-class já declarada** — nunca um provedor ou
+modelo direto. O ganho é estrutural: o roteador continua sendo o único ponto que resolve
+provedor, modelo e egresso, e o invariante de que um subagente nunca afrouxa a classe da mãe
+permanece **mecânico** em vez de virar convenção.
+
+O provedor é **endpoint HTTP**, reaproveitando a fronteira de rede única que já existe lá.
+Execução em processo foi descartada com um argumento que vale anotar: ela **escaparia da
+fronteira auditável**, e com ela do registro de egresso.
+
+### O buraco do proxy — vale para nós também
+
+A classe `local-only` é uma afirmação sobre **fronteira de confiança**, e um proxy no ambiente
+a quebra em silêncio: com `HTTP_PROXY` definido, uma chamada a `127.0.0.1` atravessa o proxy, e
+o registro diz "permitido para 127.0.0.1" porque validou o host **escrito na URL**, não o
+destino da conexão.
+
+Medimos aqui: com `ALL_PROXY` para uma porta fechada, `curl` a loopback devolve 000; com
+`--noproxy '*'`, 200. O `oa-chat` passou a usar `--noproxy` para loopback e rede privada
+(`delegacao-openai-compat`). Do lado do runtime, é lacuna conhecida e já tem ticket lá.
+
 ## Divisão de responsabilidades
 
 ### Deste lado (framework)
@@ -85,16 +112,22 @@ O que só o runtime pode fazer — e o desenho é de quem conhece o código:
 O mesmo esquema de decisão dos dois lados, para que **um único gabarito** meça os dois:
 
 ```json
-{"pergunta": "<texto>", "opcoes": ["a", "b"], "entrada": "<conteúdo>"}
-{"escolha": "a", "probabilidade": 0.83, "modelo": "<id>", "ms": 34}
+{"pergunta": "<texto>", "opcoes": ["rapida", "pesada"], "entrada": "<conteúdo>"}
+{"escolha": "rapida", "probabilidade": 0.83, "task_class": "rapida",
+ "egress_permitido": "local-only", "modelo": "<id>", "ms": 34}
 ```
+
+Os dois últimos campos vieram do `agentry` e protegem a medição: sem eles, o gabarito não
+distingue **"o roteador escolheu o modelo barato"** de **"escolheu o barato, o egresso recusou
+e caiu para o padrão"** — e aí a métrica de custo mede a camada que falha fechado, não o
+roteador. Hoje essa queda é silenciosa lá, e tem ticket próprio.
 
 ## Ordem sugerida
 
 | # | Passo | Quem | Por que primeiro |
 |---|---|---|---|
-| 1 | Definir o contrato comum e o formato do gabarito | os dois | Sem ele, cada lado mede coisa diferente |
-| 2 | Registrar decisões reais de roteamento (mesmo que heurísticas) | `agentry` | O gabarito precisa de dados reais, não sintéticos |
+| 1 | **Trilha de decisão** (registrar escolha, classe e desfecho) | `agentry` | Não depende do contrato final e já produz gabarito do roteamento **atual**. Depende de decisão do mantenedor de lá |
+| 2 | Fechar o contrato comum e o formato do gabarito | os dois | Pode correr em paralelo ao passo 1 |
 | 3 | Medir o baseline trivial | os dois | É o número que qualquer roteador precisa bater |
 | 4 | Provar com um provedor só (Laya, Apache 2.0, local) | `agentry` | Licença livre e custo zero para experimentar |
 | 5 | Skill `decisao-tipada` com o que a medição mostrar | framework | Escrever a regra **depois** do número, não antes |

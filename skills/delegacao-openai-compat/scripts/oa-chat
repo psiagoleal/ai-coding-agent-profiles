@@ -75,7 +75,15 @@ curl_cfg() {
 }
 chamar() {  # $1 método/url, $2 corpo opcional (arquivo) → grava $tmp/resp, ecoa http_code
   local url="$1" corpo="${2:-}"
-  curl_cfg | curl -sS -K - --max-time "$TIMEOUT" ${corpo:+--data-binary "@$corpo"} \
+  # Endpoint em loopback ou rede privada NÃO pode sair por proxy do ambiente: com
+  # HTTP_PROXY definido, uma chamada a 127.0.0.1 atravessa o proxy e o que parecia
+  # local-only vira egresso para terceiro — sem aviso, e com o log dizendo "local".
+  local sem_proxy=()
+  case "$(printf '%s' "$BASE" | sed -E 's#^[a-z]+://([^/:]+).*#\1#')" in
+    localhost|127.*|::1|10.*|192.168.*|172.1[6-9].*|172.2[0-9].*|172.3[01].*)
+      sem_proxy=(--noproxy '*') ;;
+  esac
+  curl_cfg | curl -sS -K - --max-time "$TIMEOUT" "${sem_proxy[@]}" ${corpo:+--data-binary "@$corpo"} \
     -o "$tmp/resp" -w '%{http_code}' "$url" 2>"$tmp/curl.err" || {
       die 1 "falha de conexão com $BASE: $(tr -d '\n' < "$tmp/curl.err")"; }
 }

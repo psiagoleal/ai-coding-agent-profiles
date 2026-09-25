@@ -198,6 +198,29 @@ com três agravantes:
   `--no-think` — nunca entra como dado.
 - **Registre o custo** (`uso.txt`) quando estiver comparando rotas.
 
+## Endpoint local não é local se houver proxy no ambiente
+
+`HTTP_PROXY`, `HTTPS_PROXY` e `ALL_PROXY` no ambiente valem também para `127.0.0.1`. Com um
+deles definido, a chamada que você acha que fica na máquina **sai para um terceiro** — e o
+registro continua dizendo "local", porque o que se anotou foi o host da URL, não o destino
+real da conexão.
+
+Medido: com `ALL_PROXY` apontando para uma porta fechada, `curl http://127.0.0.1:8765/`
+devolve 000; com `--noproxy '*'`, devolve 200. A diferença entre vazar e não vazar é uma
+opção de linha de comando.
+
+O `oa-chat` já passa `--noproxy '*'` quando o endpoint é loopback ou rede privada
+(`127.*`, `::1`, `10.*`, `192.168.*`, `172.16-31.*`). Em qualquer outra ferramenta que você
+use para falar com endpoint declarado `local-only`, confira antes:
+
+```bash
+env | grep -iE '^(http|https|all)_proxy=' || echo 'sem proxy no ambiente'
+```
+
+> **Classe de egresso descreve fronteira de confiança, não distância de rede.** Um gateway
+> interno remoto pode ser mais confiável que um proxy local desconhecido — e é por isso que a
+> classe se declara por endpoint, em vez de deduzir do IP.
+
 ## Definição de pronto da skill
 
 - [ ] O egresso do endpoint era conhecido **antes** do envio, e compatível com o material.
@@ -207,3 +230,5 @@ com três agravantes:
 - [ ] A saída foi para arquivo; só um recorte entrou no contexto.
 - [ ] Nenhuma resposta com código `3` foi usada como resultado.
 - [ ] O resultado foi amostrado na fonte antes de ser usado.
+
+- [ ] Nenhum proxy do ambiente intercepta endpoint declarado `local-only`.
