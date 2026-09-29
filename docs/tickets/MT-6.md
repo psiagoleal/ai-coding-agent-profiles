@@ -10,6 +10,11 @@
 - Ativar o hook `commit-msg` em cada clone.
 - Repositórios públicos recebem só a biblioteca pública.
 
+**Estado (2026-09-29).** Adiado por decisão do autor: a limpeza das árvores acontece conforme
+ele entrar em cada projeto, sem data. O `scripts/atualizar-repos.sh` já está pronto e recusa
+árvore suja de propósito — então o ticket **não** está bloqueado por ferramenta, e sim
+aguardando o pré-requisito que só quem trabalha em cada repositório pode cumprir.
+
 **Critério de aceite.** Todo repositório com framework tem `docs/TICKETS.md`, hook ativo, e `git diff` revisado.
 
 **Fora de escopo.** O que não estiver acima. Mudança de escopo vira ticket novo, não
