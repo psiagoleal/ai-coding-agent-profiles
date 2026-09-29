@@ -10,6 +10,7 @@ destino do link (skill `micro-ticket-planner`).
 - [ ] [MT-2](tickets/MT-2.md) — Skill de núcleo de cálculo C++/CMake: 5 repositórios, nenhum coberto
 - [ ] [MT-3](tickets/MT-3.md) — Skill de biblioteca/CLI em Rust: 8 repositórios com `Cargo.toml`
 - [ ] [MT-6](tickets/MT-6.md) — Propagar às instalações de `~/dev` — adiado pelo autor: cada repositório é atualizado quando a árvore estiver limpa
+- [ ] [MT-21](tickets/MT-21.md) — Contraparte da adoção de papéis: declarar dependência de harness e verificar
 - [ ] [MT-20](tickets/MT-20.md) — Decisão tipada como camada de roteamento — bloqueado por medição no `agentry`
 - [ ] [MT-15](tickets/MT-15.md) — Provas adversariais executáveis nas skills de segurança e serviço
 - [ ] [MT-16](tickets/MT-16.md) — Ledger de evidência com impressão digital e validade
