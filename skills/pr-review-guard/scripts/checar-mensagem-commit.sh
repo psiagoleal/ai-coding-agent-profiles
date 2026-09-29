@@ -11,7 +11,43 @@
 # Instalação no clone (local, não versionada):
 #   ln -sf ../../skills/pr-review-guard/scripts/checar-mensagem-commit.sh .git/hooks/commit-msg
 # Uso avulso: skills/pr-review-guard/scripts/checar-mensagem-commit.sh <arquivo-com-a-mensagem>
+# Autoteste:   skills/pr-review-guard/scripts/checar-mensagem-commit.sh --autoteste
+#
+# ⚠️ Instalado como symlink, este arquivo É o hook: redirecionamento de shell
+# (`cat > .git/hooks/commit-msg`) segue o link e sobrescreve ESTE script. Use `rm -f` no link
+# antes de pôr outra coisa no lugar.
 set -u
+
+# Guarda que não prova que detecta é decoração. O autoteste roda os casos proibidos e um
+# limpo, e é o que entra no CI.
+if [[ "${1:-}" == "--autoteste" ]]; then
+  t="$(mktemp -d)"; trap 'rm -rf "$t"' EXIT
+  falhas=0
+  esperado_recusa=(
+    "Claude-Session: https://exemplo.invalid/code/session_AbC123"
+    "Co-authored-by: Fulano <f@exemplo.invalid>"
+    "Generated with [Ferramenta](https://claude.ai/code)"
+    "Assisted-by: Gemini"
+    "veja https://chatgpt.com/share/xyz"
+  )
+  for linha in "${esperado_recusa[@]}"; do
+    printf 'feat: algo\n\ncorpo\n\n%s\n' "$linha" > "$t/m"
+    if "$0" "$t/m" >/dev/null 2>&1; then
+      printf '  \033[31mNÃO detectou:\033[0m %s\n' "$linha" >&2; falhas=$((falhas+1))
+    fi
+  done
+  # Limpo, incluindo o marcador permitido e a palavra "sessão" em prosa.
+  printf 'feat: algo\n\nRevisado na sessão de hoje.\n\n{agente: X; modelo: y}\n' > "$t/m"
+  if ! "$0" "$t/m" >/dev/null 2>&1; then
+    printf '  \033[31mfalso positivo\033[0m em mensagem limpa\n' >&2; falhas=$((falhas+1))
+  fi
+  if (( falhas )); then
+    printf 'autoteste: %d falha(s)\n' "$falhas" >&2; exit 1
+  fi
+  printf 'autoteste: %d caso(s) de recusa e 1 limpo, todos corretos\n' "${#esperado_recusa[@]}"
+  exit 0
+fi
+
 msg="${1:?uso: checar-mensagem-commit.sh <arquivo-da-mensagem>}"
 # ignora comentários do editor (linhas iniciadas por #)
 corpo="$(grep -v '^#' "$msg")"

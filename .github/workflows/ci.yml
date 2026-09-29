@@ -1,0 +1,54 @@
+# Caminho relativo: .github/workflows/ci.yml
+# O gate deste repositório. Segue a própria skill `entrega/pipeline-como-gate`: os mesmos
+# comandos que rodam na máquina, ordem barato→caro, nenhum passo que não possa reprovar.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  guardas:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      # Sintaxe primeiro: é o mais barato e reprova o erro mais bobo.
+      - name: Sintaxe dos scripts shell
+        run: |
+          set -e
+          find . -name '*.sh' -not -path './.git/*' -print0 | xargs -0 -r -n1 bash -n
+      - name: Sintaxe dos scripts Python
+        run: |
+          set -e
+          find . -name '*.py' -not -path './.git/*' -print0 \
+            | xargs -0 -r -n1 python3 -m py_compile
+
+      # Guarda que não prova que detecta é decoração — por isso o autoteste é gate.
+      - name: Autoteste da guarda de mensagem de commit
+        run: skills/pr-review-guard/scripts/checar-mensagem-commit.sh --autoteste
+
+      - name: Painel de tickets segue a convenção
+        run: python3 skills/micro-ticket-planner/scripts/checar-painel.py docs/TICKETS.md
+
+      - name: Links de Markdown resolvem
+        run: |
+          python3 skills/pr-review-guard/scripts/checar-links.py . \
+            --excluir '*/templates/*' --excluir 'profiles/*'
+
+      # O gate de detecção das skills de stack precisa recusar o que não é da stack.
+      - name: Gates de detecção recusam projeto alheio
+        run: |
+          set -e
+          ! skills/stack/criar-ui-sveltekit/scripts/checar-stack.sh --raiz . 2>/dev/null
+          ! skills/stack/criar-app-tauri/scripts/checar-tauri.sh --raiz . 2>/dev/null
+          echo "os dois gates recusaram este repositório, como devem"

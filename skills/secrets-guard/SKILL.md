@@ -138,7 +138,17 @@ Duas consequências práticas:
   ao hook `commit-msg`.
 
 Exemplo de teste que não vaza: use um termo **inventado** que case com o mesmo padrão, nunca
-o termo real.
+o termo real. Num projeto vizinho, escrever esse autoteste **reprovou de primeira** e expôs
+uma limitação real: termo que contém separador (`.`, `:`, `-`, `_`) só casa como *token*
+inteiro — colado a outro texto, a segmentação o desmonta e nenhum pedaço bate com o hash do
+todo. É a tensão entre as duas técnicas: **hash casa exato; segmentação é o que pega termo
+sufixado.** As duas não se acumulam de graça — hash para os literais, expressão regular para
+as famílias.
+
+**E a guarda prova que detecta, ou é decoração.** Um autoteste que roda no gate: um caso que
+*deve* ser recusado e um limpo que *não* pode ser. Sem ele, uma guarda pode passar meses
+"verificando" coisa nenhuma — foi o que aconteceu no projeto vizinho, cujo modo de índice lia
+o arquivo de mensagem do commit quando ele ainda continha a mensagem **anterior**.
 
 ## Definição de pronto da skill
 
