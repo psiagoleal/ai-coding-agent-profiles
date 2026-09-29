@@ -147,12 +147,19 @@ roteador. Hoje essa queda é silenciosa lá, e tem ticket próprio.
 
 | # | Passo | Quem | Por que primeiro |
 |---|---|---|---|
-| 1 | **Trilha de decisão** (registrar escolha, classe e desfecho) | `agentry` | Não depende do contrato final e já produz gabarito do roteamento **atual**. Depende de decisão do mantenedor de lá |
+| 1 | **Trilha de decisão** (registrar escolha, classe e desfecho) | `agentry` | ADR **escrita e proposta** lá: linhas JSONL no mesmo log de auditoria, com campo de tipo (`route`, `tool`, `stop`, `escalation`) e **identificador e classe, nunca conteúdo**. O tipo `route` traz task-class escolhida, candidato escolhido e **candidatos descartados com motivo** — que é o par do contrato mais o que hoje é queda silenciosa. Implementação depende de ratificação, sem data |
 | 2 | Fechar o contrato comum e o formato do gabarito | os dois | Pode correr em paralelo ao passo 1 |
 | 3 | Medir o baseline trivial | os dois | É o número que qualquer roteador precisa bater |
 | 4 | Provar com um provedor só (Laya, Apache 2.0, local) | `agentry` | Licença livre e custo zero para experimentar |
 | 5 | Skill `decisao-tipada` com o que a medição mostrar | framework | Escrever a regra **depois** do número, não antes |
 | 6 | Jev hospedado, se e quando a conta sair | os dois | Comparação contra o mesmo gabarito |
+
+### O que a trilha **não** resolve
+
+A decisão de lá fixa **o que** é registrado e **onde**; formato de consulta, rotação e
+exportação ficaram fora de escopo. Então ler o gabarito será `grep` em JSONL, não interface —
+e a agregação (acerto, calibração, custo) é script **nosso**, não deles. Melhor assim: o
+formato bruto é estável e a conta muda com o que a medição ensinar.
 
 ## O que **não** fazer
 

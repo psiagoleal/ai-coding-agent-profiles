@@ -120,6 +120,26 @@ varredura pré-commit (`gitleaks`, `trufflehog`, `detect-secrets`) e *hook*
 Quando o agente errar mesmo assim, a correção é de autoridade, não de texto — ver
 `atribuicao-de-falha`.
 
+## Quem escreve a guarda é o primeiro a vazar pelo exemplo
+
+Padrão observado em campo (2026-09), em dois projetos independentes: ao escrever um
+verificador de vazamento, o autor usa **os termos reais** como exemplo — no comentário que
+explica o padrão, no caso de teste e na mensagem do commit que anuncia a guarda. A guarda
+nasce vazando exatamente o que veio impedir.
+
+Duas consequências práticas:
+
+- **A lista de termos não se escreve em claro** num repositório que possa ser publicado.
+  Ou ela é derivada em tempo de execução da fonte privada, ou entra como *hash* com rótulo
+  de categoria. Lista em claro num repositório público **é** o vazamento.
+- **A mensagem do commit é ponto cego** do verificador que olha arquivos: ela não está na
+  árvore nem no índice, e vai para o histórico publicado como qualquer arquivo. Se o seu
+  verificador tem modo de árvore e de índice, ele precisa de um modo de **mensagem**, ligado
+  ao hook `commit-msg`.
+
+Exemplo de teste que não vaza: use um termo **inventado** que case com o mesmo padrão, nunca
+o termo real.
+
 ## Definição de pronto da skill
 
 - [ ] Nenhum comando da lista proibida foi executado na sessão.

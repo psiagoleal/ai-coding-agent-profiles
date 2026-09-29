@@ -140,6 +140,11 @@ zero. O resultado não é erro: é **dado errado gravado**.
 > detectável. Procure `?? 0`, `or 0`, `|| ''` e `get(chave, 0)` no diff — cada um é um
 > candidato a esconder exatamente o defeito que o PR introduziu.
 
+> ⚠️ O hook instalado como symlink aponta para o script **versionado**. Redirecionamento de
+> shell (`cat > .git/hooks/commit-msg`) **segue o link** e sobrescreve o original — aconteceu
+> aqui, e o resultado foi um script que chamava a si mesmo. Para encadear outra guarda local,
+> `rm -f` o link **antes** de escrever o arquivo novo.
+
 ## Links que o PR toca
 
 Documentação com link quebrado envelhece mais rápido do que se corrige: o leitor conclui que
