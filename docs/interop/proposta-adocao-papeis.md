@@ -44,10 +44,22 @@ Nível ausente herda a task-class da sessão-mãe. Nível que não esteja na tab
 carga**, não o padrão — porque "cair no padrão" é como um papel caro silenciosamente vira
 barato, e ninguém percebe.
 
-**3. `tools:` só restringe.** O conjunto efetivo é a **interseção** com a política de
-permissão de subagente. Pedido que amplie é **erro ao carregar**, com o nome do papel e a
-ferramenta em excesso — nunca precedência silenciosa. Assim a política continua fonte única
-de verdade, e o papel expressa apenas "preciso de menos que isto".
+**3. `tools:` só restringe — e "restringe" não é "interseção".** A redação original desta
+proposta dizia interseção, e estava **errada**: interseção só está definida entre conjuntos
+do mesmo sinal. `tools:` é lista **positiva** (o que o papel usa); a política de subagente do
+outro lado é **negativa** (`deny` e `ask`, com tudo o mais permitido, mais uma lista fechada
+de caminhos de leitura). A tradução correta, que ficou na ADR de lá, tem três partes:
+
+1. `tools:` produz **negação de tudo o que não está na lista**, para aquele subagente —
+   sempre mais restritivo, nunca menos.
+2. Ferramenta pedida em `tools:` que a política **nega** é erro ao carregar, com papel e
+   ferramenta nomeados.
+3. **Ferramenta que a política marca como "perguntar" continua perguntando.** Este é o ponto
+   onde o desenho vazaria: se `tools:` fosse lido como concessão, um papel poderia promover
+   "perguntar" para "permitido" e **contornar a confirmação humana**. O papel só sabe negar.
+
+A palavra certa é **restrição adicional**. Em política de sinal negativo, é isso que
+"restringir" precisa significar.
 
 **4. Egresso não se toca.** O papel não tem campo de egresso e não pode ganhar um. A classe
 continua vindo do teto da sessão-mãe, com o invariante intacto: subagente iguala ou restringe,
@@ -86,6 +98,10 @@ problema que a não-adoção evitou: suporte parcial que parece completo.
 ## A contraparte deste repositório
 
 Nada disso é possível sem que o acervo diga o que cada papel exige. Três entregas nossas:
+
+> **Enquanto a declaração não existir, a adoção é inerte por desenho:** todo papel é tratado
+> como dependência `desconhecida` e recusado. Adoção inerte em vez de perigosa — e dito na
+> ADR, para que ninguém implemente "parcialmente" e ache que adotou.
 
 **a) Declarar dependência de harness no frontmatter.** Um campo novo, preenchido a partir da
 medição que já fizemos, com três valores possíveis: `nenhuma` (o corpo só usa as seis
