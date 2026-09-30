@@ -677,10 +677,20 @@ echo
 _cfg_fontes="$(toml_get fontes_extras 2>/dev/null || true)"
 if [[ -n "$_cfg_fontes" ]]; then IFS=':' read -r -a _cf <<< "$_cfg_fontes"; FONTES_EXTRAS+=("${_cf[@]}"); fi
 LIBS=("$FRAMEWORK_DIR")
+# A mesma biblioteca pode chegar duas vezes — por --fonte e pelo config.toml. Sem deduplicar
+# por caminho resolvido, a varredura acha cada skill duas vezes e a checagem de unicidade
+# acusa colisão da skill COM ELA MESMA, com os dois lados da mensagem idênticos.
 for _f in "${FONTES_EXTRAS[@]}"; do
   _f="${_f/#\~/$HOME}"; [[ -z "$_f" ]] && continue
   [[ -d "$_f/skills" || -d "$_f/agents" ]] || erro "fonte extra sem skills/ nem agents/: '$_f'"
-  LIBS+=("$(cd "$_f" && pwd)")
+  _abs="$(cd "$_f" && pwd)"
+  _repetida=0
+  for _ja in "${LIBS[@]}"; do [[ "$_ja" == "$_abs" ]] && { _repetida=1; break; }; done
+  if (( _repetida )); then
+    printf '\033[33maviso:\033[0m fonte informada mais de uma vez, ignorando a repetição: %s\n' "$_abs"
+    continue
+  fi
+  LIBS+=("$_abs")
 done
 declare -A FONTE_SKILL=() NOME_EM=()
 CORE_SKILLS=(); EXTRA_SKILLS=()
