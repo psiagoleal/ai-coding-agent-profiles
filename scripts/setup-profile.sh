@@ -402,7 +402,8 @@ install_file() {
 # esqueleto atual diferente da linha de base = edição local: o resultado vai para <arq>.new
 # e o original fica intacto. --force sobrescreve assim mesmo.
 BASELINE_REL=".agent-profile/baseline.sha256"
-CONFLITOS=(); SEM_BASELINE=(); PEND_AGENT_HARNESS=()
+CONFLITOS=(); SEM_BASELINE=(); PEND_AGENT_HARNESS=(); PROJETO_PRESERVADO=()
+MOTIVO_DESVIO=""
 
 frame_hash() {
   awk '
@@ -426,7 +427,18 @@ baseline_set() {  # rel dst
 sem_edicao_local() {  # rel dst
   [[ $FORCE -eq 1 ]] && return 0
   local base; base="$(baseline_get "$1")"
-  if [[ -z "$base" ]]; then SEM_BASELINE+=("$1"); return 0; fi
+  if [[ -z "$base" ]]; then
+    # Ausência de linha de base NÃO significa "instalação antiga, adote a nossa versão".
+    # Arquivo RASTREADO pelo git e fora da linha de base é conteúdo do projeto: ninguém o
+    # escreveu por aqui. Foi exatamente assim que um CLAUDE.md de equipe, de 66 linhas e
+    # versionado, foi substituído pelo ponteiro de 10 — com aviso de "sem linha de base" e
+    # tudo, porque o aviso não impedia a escrita (observado em uso real, 2026-10-01).
+    if git -C "$TARGET" ls-files --error-unmatch -- "$1" >/dev/null 2>&1; then
+      MOTIVO_DESVIO="projeto"; return 1
+    fi
+    SEM_BASELINE+=("$1"); return 0
+  fi
+  MOTIVO_DESVIO="edicao"
   [[ "$(frame_hash "$2")" == "$base" ]]
 }
 # Roda a regeneração numa cópia e entrega o resultado como <dst>.new, sem tocar no original.
@@ -440,12 +452,18 @@ desviar_para_new() {  # bucket src dst rel
     update_text_hybrid "$src" "$tmpd/arq" "$rel" >/dev/null
     DRY_RUN=$salva
   fi
-  CONFLITOS+=("$rel")
+  local rotulo="edição local fora das ilhas"
+  if [[ "${MOTIVO_DESVIO:-}" == projeto ]]; then
+    rotulo="arquivo do PROJETO, versionado e fora da linha de base"
+    PROJETO_PRESERVADO+=("$rel")
+  else
+    CONFLITOS+=("$rel")
+  fi
   if [[ $DRY_RUN -eq 1 ]]; then
-    printf '  [dry-run] \033[33medição local fora das ilhas\033[0m: geraria %s.new\n' "$dst"
+    printf '  [dry-run] \033[33m%s\033[0m: geraria %s.new\n' "$rotulo" "$dst"
   else
     mv "$tmpd/arq" "$dst.new"
-    printf '  \033[33medição local fora das ilhas\033[0m: %s preservado; versão nova em %s.new\n' "$dst" "$dst"
+    printf '  \033[33m%s\033[0m: %s intacto; versão do framework em %s.new\n' "$rotulo" "$dst" "$dst"
   fi
   rm -rf "$tmpd"
 }
@@ -977,6 +995,23 @@ fi
 # ----------------------------------------------------------------------------
 # Proteção do que não deve ir para o remoto (ADR 0015)
 # ----------------------------------------------------------------------------
+# Hook commit-msg: a regra de proveniência (só o marcador entre chaves) era texto, e o hook
+# era instalação manual que ninguém fazia — então o controle estrutural não existia onde mais
+# importava. Observado em uso real (2026-10-01): o harness injeta trailer de sessão a cada
+# sessão, e só a regra escrita se opunha a isso.
+_hook_origem="$TARGET/$NEUTRAL_DIR/pr-review-guard/scripts/checar-mensagem-commit.sh"
+_hook_dst="$TARGET/.git/hooks/commit-msg"
+if [[ -d "$TARGET/.git/hooks" && -f "$_hook_origem" ]]; then
+  if [[ -e "$_hook_dst" ]]; then
+    printf '  hook commit-msg: já existe, preservado (%s)\n' "$_hook_dst"
+  elif [[ $DRY_RUN -eq 1 ]]; then
+    printf '  [dry-run] instalaria o hook commit-msg\n'
+  else
+    ln -s "../../$NEUTRAL_DIR/pr-review-guard/scripts/checar-mensagem-commit.sh" "$_hook_dst"
+    printf '  hook commit-msg instalado (recusa trailer e link de sessão na mensagem)\n'
+  fi
+fi
+
 _ign=()
 [[ "$AGENT" != "none" ]] && _ign+=(".claude/skills/" ".agents/skills/")
 (( TEM_PRIVADA )) && _ign+=("$NEUTRAL_DIR/privado/")
@@ -1010,6 +1045,14 @@ if [[ ${#CONFLITOS[@]} -gt 0 ]]; then
   printf '  - %s\n' "${CONFLITOS[@]}"
   printf '  Compare (diff -u arq arq.new), mova o que for do projeto para uma ilha USER, substitua\n'
   printf '  o arquivo pelo .new e rode --update de novo. Para descartar as edições locais: --force.\n\n'
+fi
+if [[ ${#PROJETO_PRESERVADO[@]} -gt 0 ]]; then
+  printf '\033[31m%d arquivo(s) do projeto preservado(s)\033[0m — versionados e fora da linha de base:\n' \
+    "${#PROJETO_PRESERVADO[@]}"
+  printf '  - %s\n' "${PROJETO_PRESERVADO[@]}"
+  printf '  Nada foi sobrescrito; a versão do framework ficou em <arquivo>.new.\n'
+  printf '  Decida o que fazer com o conteúdo do projeto ANTES de adotar o .new: o que for regra\n'
+  printf '  da equipe vai para uma ilha USER:BEGIN/END ou para docs/, nunca para o descarte.\n\n'
 fi
 if [[ ${#SEM_BASELINE[@]} -gt 0 && $UPDATE -eq 1 ]]; then
   printf '\033[33mSem linha de base em %d arquivo(s)\033[0m (instalação anterior a este mecanismo):\n' "${#SEM_BASELINE[@]}"
