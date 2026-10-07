@@ -199,6 +199,26 @@ _(nenhum — acrescente aqui o cofre, caminhos de credencial e regras de segredo
 _(nenhum — acrescente aqui adaptações de DoD, convenção de commit e ritos deste projeto.)_
 <!-- USER:END -->
 
+### git: o agente propõe, a pessoa executa
+
+O agente **não roda** git que altere estado local ou remoto. Leitura é livre (`status`, `log`,
+`diff`, `show`, `ls-files`, `branch --show-current`, `remote -v`).
+
+Ao terminar trabalho que pede commit, devolver três coisas e parar:
+
+1. o que a mudança faz, em uma frase;
+2. o comando exato, em bloco de shell, pronto para colar;
+3. a mensagem de commit completa, já no formato da seção de proveniência.
+
+Vale para `commit`, `push`, `merge`, `rebase`, `reset`, `revert`, `cherry-pick`, `checkout`,
+`switch`, `restore`, `add`, `rm`, `mv`, `stash`, `clean`, `apply`, `tag`, `branch` que cria ou
+apaga, `remote` que escreve, `worktree`, `submodule` e `config` que grava.
+
+Mecanismo, não só esta regra: `deny` no `.claude/settings.json` e o hook `PreToolUse`
+`skills/pr-review-guard/scripts/checar-comando-git.sh`, que lê a linha inteira e pega
+`git -C outro commit` e `cd outro && git commit` — formas que o `deny` por prefixo não vê.
+Prove com `--autoteste`.
+
 ## 9. Skills disponíveis
 
 - **`secrets-guard`** — sempre (segredos pessoais).

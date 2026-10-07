@@ -10,10 +10,39 @@
     "deny": [
       "Bash(cat *.env*)",
       "Bash(env)",
-      "Bash(printenv*)"
-    ],
-    "ask": [
-      "Bash(git push*)"
+      "Bash(printenv*)",
+      "Bash(git commit*)",
+      "Bash(git push*)",
+      "Bash(git merge*)",
+      "Bash(git rebase*)",
+      "Bash(git reset*)",
+      "Bash(git revert*)",
+      "Bash(git cherry-pick*)",
+      "Bash(git checkout*)",
+      "Bash(git switch*)",
+      "Bash(git restore*)",
+      "Bash(git stash*)",
+      "Bash(git clean*)",
+      "Bash(git add*)",
+      "Bash(git rm*)",
+      "Bash(git mv*)",
+      "Bash(git apply*)",
+      "Bash(git am*)",
+      "Bash(git filter-branch*)",
+      "Bash(git update-ref*)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/skills/pr-review-guard/scripts/checar-comando-git.sh"
+          }
+        ]
+      }
     ]
   }
 }

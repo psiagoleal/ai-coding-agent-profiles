@@ -90,6 +90,47 @@ else
   falhou "setup-profile.sh não instalou o hook commit-msg"
 fi
 
+# --------------------------------------------------------------------------
+# Caso 4 — a regra "o agente propõe git, a pessoa executa" chega instalada COM mecanismo.
+#
+# Regra escrita é o degrau mais fraco da escada de destinos. O que precisa chegar no projeto
+# é o `deny` e o hook — e o hook tem de pegar as formas que o `deny` por prefixo não vê.
+# --------------------------------------------------------------------------
+printf '\033[1mCaso 4\033[0m — git somente-propor: regra, deny e hook\n'
+alvo4="$(repo git-propor)"
+bash "$INSTALADOR" empresa "$alvo4" >"$TMP/log4" 2>&1
+
+grep -q 'o agente propõe, a pessoa executa' "$alvo4/AGENTS.md" \
+  && ok "a regra está no AGENTS.md instalado" \
+  || falhou "o AGENTS.md instalado não traz a regra"
+grep -q '"Bash(git commit\*)"' "$alvo4/.claude/settings.json" \
+  && ok "deny de git commit no settings.json" \
+  || falhou "settings.json instalado sem o deny de git commit"
+grep -q 'checar-comando-git.sh' "$alvo4/.claude/settings.json" \
+  && ok "hook PreToolUse declarado no settings.json" \
+  || falhou "settings.json instalado sem o hook"
+
+hook4="$alvo4/skills/pr-review-guard/scripts/checar-comando-git.sh"
+if [[ -e "$hook4" ]]; then
+  ok "o script do hook chegou ao projeto"
+  # O que o `deny` por prefixo NÃO pega, e é o motivo de o hook existir.
+  for proibido in 'git commit -m x' 'git -C /outro commit -m x' 'cd /outro && git commit'; do
+    if "$hook4" --comando "$proibido" >/dev/null 2>&1; then
+      falhou "o hook NÃO recusou: $proibido"
+    else
+      ok "o hook recusou: $proibido"
+    fi
+  done
+  "$hook4" --comando 'git status --short' >/dev/null 2>&1 \
+    && ok "o hook libera leitura (git status)" \
+    || falhou "o hook bloqueou leitura — falso positivo"
+  "$hook4" --autoteste >/dev/null 2>&1 \
+    && ok "autoteste do hook passa no projeto instalado" \
+    || falhou "autoteste do hook falha no projeto instalado"
+else
+  falhou "o script do hook não chegou em $hook4"
+fi
+
 printf '\n'
 if (( falhas )); then
   printf '\033[31m%d asserção(ões) falharam\033[0m\n' "$falhas"; exit 1

@@ -37,6 +37,11 @@ jobs:
       - name: Autoteste da guarda de mensagem de commit
         run: skills/pr-review-guard/scripts/checar-mensagem-commit.sh --autoteste
 
+      # O agente propõe git, a pessoa executa. A guarda prova que pega as formas que o
+      # `deny` por prefixo do settings.json não vê (`git -C outro commit`, `cd && git`).
+      - name: Autoteste da guarda de comando git
+        run: skills/pr-review-guard/scripts/checar-comando-git.sh --autoteste
+
       # Regressão do instalador, pelos casos que já causaram dano em campo.
       - name: Testes de regressão do instalador
         run: scripts/testar-instalador.sh
