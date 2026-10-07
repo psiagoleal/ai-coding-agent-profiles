@@ -7,6 +7,27 @@ destino do link (skill `micro-ticket-planner`).
 
 ## Em aberto
 
+Os MT-22 a MT-37 saíram de uma análise comparativa de harness, em duas rodadas, e estão em
+ordem de execução: instrumentar antes de mudar comportamento, porque mudança sem linha de base
+não é refutável. O caminho crítico é MT-22 → MT-25 → MT-26. MT-24 não espera ninguém: é furo
+já publicado.
+
+- [ ] [MT-24](tickets/MT-24.md) — Hook de git em camadas: 8 de 10 formas de indireção passam hoje
+- [ ] [MT-22](tickets/MT-22.md) — Colhedor retroativo de métricas de sessão (linha de base do passado)
+- [ ] [MT-23](tickets/MT-23.md) — Relatório de métricas com comparação antes/depois
+- [ ] [MT-25](tickets/MT-25.md) — Executor de gates: a skill de conclusão não tem script
+- [ ] [MT-26](tickets/MT-26.md) — Lint do próprio `EXPECT`, com corpus de validação
+- [ ] [MT-27](tickets/MT-27.md) — Enumerar skills sem `node_modules`, com teste
+- [ ] [MT-28](tickets/MT-28.md) — Diagnóstico detecta placeholder não substituído
+- [ ] [MT-29](tickets/MT-29.md) — Fronteira negativa nas descrições de skill, com lint
+- [ ] [MT-33](tickets/MT-33.md) — Cliente único para delegação a modelo externo
+- [ ] [MT-35](tickets/MT-35.md) — Roteamento validado das skills de delegação
+- [ ] [MT-36](tickets/MT-36.md) — ADR do hook que recusa, e resolver a ADR 0009
+- [ ] [MT-30](tickets/MT-30.md) — Pin de procedência para fonte externa de skills
+- [ ] [MT-34](tickets/MT-34.md) — Sonda de capacidade de modelo e protocolo de escolha
+- [ ] [MT-31](tickets/MT-31.md) — Mover o catálogo de skills do arquivo de regra para o índice
+- [ ] [MT-32](tickets/MT-32.md) — Relocar segurança e fluxo: detalhe para a skill, fluxo para tabela
+- [ ] [MT-37](tickets/MT-37.md) — Resolver a sobreposição entre as duas skills de fan-out
 - [ ] [MT-2](tickets/MT-2.md) — Skill de núcleo de cálculo C++/CMake: 5 repositórios, nenhum coberto
 - [ ] [MT-3](tickets/MT-3.md) — Skill de biblioteca/CLI em Rust: 8 repositórios com `Cargo.toml`
 - [ ] [MT-6](tickets/MT-6.md) — Propagar às instalações de `~/dev` — adiado pelo autor: cada repositório é atualizado quando a árvore estiver limpa
