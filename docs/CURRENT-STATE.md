@@ -42,16 +42,18 @@
 
 ## Impedimentos abertos
 
-- **Sem VPN**, o gateway OpenAI-compatible fica inalcançável: as rotas `oa-chat` e `agentry
-  --task-class delegada` não funcionam até o acesso voltar. A configuração está pronta e
-  validada (`local-only`, `baseUrl` com `/v1`); falta só conectividade.
-- A variável `AGENTRY_LITELLM_BASE_URL` no `~/.zshrc` (linha 207) **não** termina em `/v1`, e
-  vence o arquivo global. Precisa da correção do mantenedor, senão o `agentry` monta a URL
-  errada mesmo com a VPN de volta.
+- **Sem acesso de rede ao gateway OpenAI-compatible**, as rotas `oa-chat` e
+  `agentry --task-class delegada` não funcionam. A configuração está pronta e validada
+  (`local-only`, `baseUrl` com `/v1`); falta só conectividade.
+- **Precedência de ambiente sobre arquivo, sem validação de formato.** Uma variável
+  `*_BASE_URL` que não termine em `/v1` vence o arquivo global de configuração, e o `agentry`
+  monta a URL errada sem avisar. A precedência está declarada; a verificação do formato não
+  existe. É defeito do nosso lado, não do ambiente de quem instala — remédio na linha do
+  `--doctor`.
 
 ## Próximo passo
 
-1. **Com a VPN de volta:** exercitar a `critico-independente` de ponta a ponta — submeter um
+1. **Com acesso ao gateway:** exercitar a `critico-independente` de ponta a ponta — submeter um
    trabalho recente ao GLM como crítico e ver se ele acrescenta sinal ou só concorda.
 2. Exercitar os adaptadores de subagent ao vivo (`codex debug prompt-input`,
    `opencode agent list`) — hoje a prova é de gramática e parsing, não de carga real.
