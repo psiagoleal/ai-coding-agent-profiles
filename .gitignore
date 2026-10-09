@@ -21,3 +21,11 @@ __pycache__/
 
 # Cache repo-local de skills (venvs, modelos baixados etc.) — ADR 0011
 .cache/
+
+# Worktrees do agente: o nome escolhido pode citar projeto confidencial, e versionar a pasta
+# levaria uma cópia inteira da árvore para dentro dela mesma (MT-40). Ancorado na raiz, porque
+# `.claude/` solto casaria em qualquer nível e engoliria os `profiles/*/.claude/` versionados,
+# que são os templates distribuídos. Só os worktrees e o override local — `/.claude/settings.json`
+# segue versionável, para o framework poder se aplicar a si mesmo.
+/.claude/worktrees/
+/.claude/settings.local.json

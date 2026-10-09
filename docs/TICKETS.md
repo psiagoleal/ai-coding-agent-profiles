@@ -9,10 +9,13 @@ destino do link (skill `micro-ticket-planner`).
 
 Os MT-22 a MT-37 saíram de uma análise comparativa de harness, em duas rodadas, e estão em
 ordem de execução: instrumentar antes de mudar comportamento, porque mudança sem linha de base
-não é refutável. O caminho crítico é MT-22 → MT-25 → MT-26. MT-24 não espera ninguém: é furo
-já publicado.
+não é refutável. O caminho crítico é MT-22 → MT-25 → MT-26. MT-24 e MT-40 não esperam
+ninguém: são furos já publicados.
 
 - [ ] [MT-24](tickets/MT-24.md) — Hook de git em camadas: 8 de 10 formas de indireção passam hoje
+- [ ] [MT-40](tickets/MT-40.md) — Guarda de vazamento cega a nome de ref e a caminho sob o clone
+- [ ] [MT-38](tickets/MT-38.md) — Replay forçado: saliência ou suficiência na escolha de subagente
+- [ ] [MT-39](tickets/MT-39.md) — Resolver a procedência do acervo importado, e decidir o que fica
 - [ ] [MT-22](tickets/MT-22.md) — Colhedor retroativo de métricas de sessão (linha de base do passado)
 - [ ] [MT-23](tickets/MT-23.md) — Relatório de métricas com comparação antes/depois
 - [ ] [MT-25](tickets/MT-25.md) — Executor de gates: a skill de conclusão não tem script
@@ -31,7 +34,7 @@ já publicado.
 - [ ] [MT-2](tickets/MT-2.md) — Skill de núcleo de cálculo C++/CMake: 5 repositórios, nenhum coberto
 - [ ] [MT-3](tickets/MT-3.md) — Skill de biblioteca/CLI em Rust: 8 repositórios com `Cargo.toml`
 - [ ] [MT-6](tickets/MT-6.md) — Propagar às instalações de `~/dev` — adiado pelo autor: cada repositório é atualizado quando a árvore estiver limpa
-- [ ] [MT-21](tickets/MT-21.md) — Contraparte da adoção de papéis: declarar dependência de harness e verificar
+- [ ] [MT-21](tickets/MT-21.md) — Papéis nomeados: verificar **invocação**, não instalação (falha hoje, de propósito)
 - [ ] [MT-20](tickets/MT-20.md) — Decisão tipada como camada de roteamento — bloqueado por medição no `agentry`
 - [ ] [MT-15](tickets/MT-15.md) — Provas adversariais executáveis nas skills de segurança e serviço
 - [ ] [MT-16](tickets/MT-16.md) — Ledger de evidência com impressão digital e validade
