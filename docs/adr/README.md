@@ -22,3 +22,12 @@ reverter, crie um novo ADR e marque o antigo como `Superseded by ADR-NNNN`.
 | [0011](0011-estado-repo-local-e-excecao-de-segredo.md) | Estado de skill é repo-local; segredo é a única exceção | Accepted |
 | [0012](0012-adaptadores-multi-harness.md) | Adaptadores multi-harness (`.claude/skills` + `.agents/skills`) sobre a fonte neutra | Accepted |
 | [0013](0013-taxonomia-subagents-e-bibliotecas-multiplas.md) | Taxonomia por categoria, subagents na fonte neutra e bibliotecas múltiplas | Accepted |
+| [0014](0014-instalacao-guiada-e-portabilidade.md) | Instalação guiada e portabilidade para macOS e Windows | Accepted |
+| [0015](0015-biblioteca-privada-em-repositorio-publico.md) | Biblioteca privada em repositório público ou compartilhado | Accepted |
+| [0016](0016-invocacao-declarada.md) | Invocação declarada na skill, traduzida por harness | Proposed |
+| [0017](0017-cadeia-spec-driven.md) | Cadeia spec-driven, com a spec como artefato numerado | Accepted |
+| [0018](0018-registro-de-recusados.md) | Registro de conceitos recusados, indexado por conceito | Accepted |
+| [0019](0019-barra-de-admissao.md) | Barra de admissão de duas pernas | Accepted |
+| [0020](0020-roteador-de-skills.md) | Roteador de skills, com sincronia verificada por comando | Accepted |
+| [0021](0021-procedencia-do-acervo.md) | Procedência do acervo — amálgama declarado, crédito no artefato | Accepted |
+| [0022](0022-selecao-do-acervo-na-instalacao.md) | Seleção do acervo na instalação, derivada do projeto | Proposed |
