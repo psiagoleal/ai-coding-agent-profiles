@@ -14,23 +14,28 @@ bloqueio, é trabalho que ninguém começou.
 
 Os MT-22 a MT-40 saíram da análise comparativa de harness, em quatro rodadas. O caminho
 crítico é MT-22 → MT-23 → MT-25 → MT-26: instrumentar antes de mudar comportamento, porque
-mudança sem linha de base não é refutável.
+mudança sem linha de base não é refutável. Os MT-43 e MT-44 saíram da análise de biblioteca de
+terceiros, e são as duas pernas do orçamento de catálogo: medir o teto de cada harness, e
+derivar o que é instalado.
 
-Sem ticket ainda, e sabido: orçamento de descrição do catálogo (estourou em campo, 55,3 KB
-contra 50 KB), medição da lista `deny` contra indireção, e o experimento de sandbox do §8 de
-`docs/interop/isolamento-de-execucao.md`.
+Sem ticket ainda, e sabido: a medição da lista `deny` contra indireção e o experimento de
+sandbox do §8 de `docs/interop/isolamento-de-execucao.md` estão dentro do MT-42; não sobra item
+sabido fora de ticket.
 
 - [!] [MT-24](tickets/MT-24.md) — Hook de git em camadas: 8 de 10 formas de indireção passam hoje · furo publicado
 - [!] [MT-40](tickets/MT-40.md) — Guarda de vazamento cega a nome de ref e a caminho sob o clone · furo publicado, já vazou uma vez
 - [!] [MT-39](tickets/MT-39.md) — Resolver a procedência do acervo importado, e decidir o que fica — bloqueado por autorização do autor do acervo: a redistribuição é desconhecida, e é o item que destrava os outros
 - [ ] [MT-41](tickets/MT-41.md) — Verificador do painel não examina seção que ele não conhece
+- [ ] [MT-42](tickets/MT-42.md) — Medir a fronteira de isolamento, e dar mecanismo ao que o perfil já exige
+- [ ] [MT-44](tickets/MT-44.md) — Medir o que cada harness faz com catálogo acima do teto: avisa, corta em silêncio ou não tem limite
+- [ ] [MT-43](tickets/MT-43.md) — Derivar na instalação quais skills do acervo entram no projeto — o acervo é 1,66× o único teto observado
 - [ ] [MT-22](tickets/MT-22.md) — Colhedor retroativo de métricas de sessão (linha de base do passado)
 - [ ] [MT-23](tickets/MT-23.md) — Relatório de métricas com comparação antes/depois
 - [ ] [MT-25](tickets/MT-25.md) — Executor de gates: a skill de conclusão tem 217 linhas e nenhum script
 - [ ] [MT-26](tickets/MT-26.md) — Lint do próprio `EXPECT`, com corpus de validação
 - [ ] [MT-27](tickets/MT-27.md) — Enumerar skills sem `node_modules`, com teste
 - [ ] [MT-28](tickets/MT-28.md) — Diagnóstico detecta placeholder não substituído
-- [ ] [MT-29](tickets/MT-29.md) — Fronteira negativa nas descrições de skill, com lint · precisa de cláusula de orçamento: custa ~58 B por skill
+- [ ] [MT-29](tickets/MT-29.md) — Fronteira negativa nas descrições de skill, com lint — bloqueado por MT-44: custa ~58 B por skill e o teto de cada harness não está medido
 - [ ] [MT-31](tickets/MT-31.md) — Mover o catálogo de skills do arquivo de regra para o índice
 - [ ] [MT-32](tickets/MT-32.md) — Relocar segurança e fluxo: detalhe para a skill, fluxo para tabela
 - [ ] [MT-33](tickets/MT-33.md) — Cliente único para delegação a modelo externo
