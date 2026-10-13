@@ -125,6 +125,44 @@ Para trabalho mecânico — extração, classificação, formatação — **use 
 economia é de uma ordem de grandeza. Reserve o raciocínio para quando a tarefa exige
 inferência e a verificação barata não basta.
 
+### O orçamento de raciocínio escala com o tamanho da TAREFA, não da resposta
+
+Aumentar `--max-tokens` não resolve pedido grande: o raciocínio cresce com o número de
+decisões pedidas. Medido no mesmo modelo, com o mesmo acervo, no mesmo dia:
+
+| Pedido | `--max-tokens` | Saída | Resultado |
+|---|---|---|---|
+| 8 a 15 skills, 9 campos cada, numa chamada | 32.000 | 32.000 | **Vazio** nas 4 tentativas |
+| 1 skill, os mesmos 9 campos | 20.000 | ~6.000 | Completo, com citação por item |
+
+Quatro lotes grandes gastaram ~131 mil tokens e devolveram **nada**; 38 pedidos pequenos
+devolveram 38 respostas. **Divida por item, não por tema**, e sonde com uma chamada antes de
+abrir o leque — a sonda custa uma chamada e evita refazer o lote inteiro.
+
+### Lote: o harness só observa o processo que ele iniciou
+
+Ao disparar várias chamadas, **não use `nohup` nem `&` na chamada que o agente faz**. O
+invólucro sai em segundos, é reportado como concluído — corretamente — e o trabalho destacado
+termina **sem aviso nenhum**. Aconteceu: 21 chamadas ficaram prontas às 16:44 e só foram
+notadas às 19:29.
+
+- O trabalho longo roda em **primeiro plano dentro** da chamada em segundo plano. Aí o fim da
+  notificação coincide com o fim do trabalho.
+- Se o destacamento for inevitável, a chamada seguinte é um **laço de espera** cuja saída
+  coincide com o término — testando arquivo de estado, nunca `sleep` fixo seguido de `echo`.
+- Antes de dizer "ainda rodando", verifique o **processo**: `pgrep -x <binário>`, nunca
+  `pgrep -f`, que casa com a própria linha de comando e sempre acha a si mesma. E o `mtime` do
+  arquivo de estado, que diz quando o trabalho de fato parou.
+
+### Respostas de modelo são material a conferir, não resultado
+
+Toda afirmação do modelo sobre o conteúdo de um arquivo é hipótese até você abrir o arquivo.
+Medido na mesma rodada: um modelo deu veredito oposto ao próprio argumento (recomendou
+substituir o nosso e usou três linhas para mostrar que o nosso era melhor); outro contou "três
+regras" onde o original diz *"two rules"*; e um terceiro declarou lacuna que não existia porque
+**o pedido só lhe deu três dos itens do acervo**. O último é defeito do pedido, não do modelo:
+pergunta cuja evidência não foi entregue não pode ser respondida, e vem respondida.
+
 ## Rota 2 — `agentry`: modo agente
 
 Para varredura ampla, onde o modelo precisa ler arquivos sozinho. Depende de tool-calling
