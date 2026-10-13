@@ -13,6 +13,8 @@ cite o arquivo, para a recorrência virar dado.
 |---|---|---|
 | [flag de harness como mecanismo de invocação](flag-de-harness-como-mecanismo.md) | acopla governança a um harness; três de cinco degradariam em silêncio | ADR 0016 |
 | [spec dentro da ADR](spec-dentro-da-adr.md) | ciclos de vida opostos: ADR é permanente, spec se esgota | ADR 0017 |
+| [pacote de terceiro como skill](pacote-de-terceiro-como-skill.md) | capacidade é a API de um pacote; adotar pacote é decisão de stack, não de acervo | triagem de 2026-10-12 |
+| [guarda de comando por substring, sem ressalva de leitura](guarda-de-comando-por-substring-sem-ressalva.md) | recusa a menção junto com a execução, e impede ler as regras que aplica | triagem de 2026-10-12 |
 
 ## Como escrever um
 
