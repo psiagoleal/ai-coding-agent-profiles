@@ -52,6 +52,9 @@ feito e o que falta. É um índice, não um segundo lugar para o detalhe:
 ## Concluídos
 - [x] [MT-11](plano.md#mt-11) — Validar tamanho do corpo da requisição
 
+## Recusados
+- [~] [spec dentro da ADR](recusados/spec-dentro-da-adr.md) — motivo: ciclos de vida opostos
+
 ## Abandonados
 - [~] [MT-9](plano.md#mt-9) — Cache de sessão · motivo: substituído pelo MT-11
 ```
@@ -68,6 +71,7 @@ sessão inventa destrói exatamente isso.
 | `[!]` | Em aberto | **crítico ou urgente** — exige atenção agora |
 | `[x]` | Concluídos | entregue |
 | `[~]` | Abandonados | abandonado, **com motivo** |
+| `[~]` | Recusados | recusado, **com motivo** e com a fonte da recusa |
 
 **O estado é a seção; o marcador é a situação dentro dela.** `[x]` e `[~]` são redundantes com
 a seção de propósito: ajudam a ler a linha fora de contexto.
@@ -93,13 +97,24 @@ Quatro regras que fecham as ambiguidades:
    começou, herdados da lista de "impedimentos" do handoff. Ao ser obrigado a escrever de que
    dependiam, não havia o que escrever.
 
+5. **Abandonado não é recusado.** `[~]` tem duas seções porque são dois estados terminais
+   diferentes, e a ADR 0019 os separou de propósito: **abandonado** é o que ninguém levou
+   adiante; **recusado** é o que foi decidido que não se faz. Recusa disfarçada de abandono é
+   recusa que volta como proposta nova, porque nada registra que ela já foi examinada. Por
+   isso a linha de recusa cita a **fonte** — a ADR que decidiu ou o arquivo em
+   `docs/recusados/`, que traz a condição de reabertura. O verificador cobra essa citação.
+
+   A seção `Recusados` é opcional: painel que nunca recusou nada não precisa dela, e painel
+   já instalado em outro projeto não é reprovado por não a ter. Quem a usa, usa verificada.
+
 **Sobre a renderização:** o GitHub transforma em caixa de seleção apenas `[ ]` e `[x]`; `[>]`,
 `[!]` e `[~]` aparecem como texto e desalinham a linha. É consciente: como `[!]` e `[>]` são
 raros e `[~]` vive numa seção separada, a maior parte do painel continua uma lista de tarefas
 normal — e o desalinhamento do que é raro **ajuda** a varredura em vez de atrapalhar.
 
-O verificador `scripts/checar-painel.py` confere formato, marcador fora do conjunto, limite de
-`[!]`, link ausente e `[~]` sem motivo:
+O verificador `scripts/checar-painel.py` confere formato, marcador fora do conjunto, marcador
+incompatível com a seção, limite de `[!]`, link ausente, `[~]` sem motivo — a palavra contada
+**fora** do texto do link, que podia passar por motivo — e recusa sem fonte:
 
 ```bash
 python3 skills/micro-ticket-planner/scripts/checar-painel.py docs/TICKETS.md
@@ -132,7 +147,9 @@ Regras, todas obrigatórias:
   não existia era o **aceite**.
 - **Atualize sempre, no mesmo trabalho:** ao **criar** (entra em aberto), ao **começar**
   (marca `[>]` com o que falta), ao **concluir** (marca `[x]` e move), ao **abandonar** (marca
-  `[~]` com o motivo em uma frase). Nunca apague um ticket: o abandonado também é história.
+  `[~]` com o motivo em uma frase) e ao **recusar** (marca `[~]` em `Recusados`, com o motivo e
+  a fonte). Nunca apague um ticket: o abandonado também é história, e a recusa é a que mais
+  precisa sobreviver — é o que impede o conceito de voltar.
 - **Sem duplicar o handoff.** `docs/CURRENT-STATE.md` diz o que está acontecendo agora; o
   painel diz o que existe. O handoff aponta para o painel, não o copia.
 
@@ -157,6 +174,7 @@ Um micro-ticket só é "Concluído" quando:
 - [ ] Todo marcador está no conjunto fechado (`[ ]`, `[>]`, `[!]`, `[x]`, `[~]`); nenhum foi
       inventado.
 - [ ] No máximo três `[!]`, e cada um por decisão de quem prioriza.
-- [ ] Todo `[>]` diz o que falta; todo `[~]` diz o motivo; todo bloqueio diz de que depende.
+- [ ] Todo `[>]` diz o que falta; todo `[~]` diz o motivo; toda recusa cita a ADR ou o
+      arquivo em `docs/recusados/`; todo bloqueio diz de que depende.
 - [ ] Todo ticket em `[>]` tem detalhe próprio com objetivo, escopo e critério de aceite.
 - [ ] `checar-painel.py` passou, com a saída lida.

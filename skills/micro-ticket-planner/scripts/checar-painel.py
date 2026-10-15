@@ -17,10 +17,21 @@ import re
 import sys
 from pathlib import Path
 
-MARCADORES = {" ": "em aberto", ">": "em andamento", "!": "urgente", "x": "concluído", "~": "abandonado"}
-SECAO_DE = {"em aberto": {" ", ">", "!"}, "concluídos": {"x"}, "abandonados": {"~"}}
+MARCADORES = {" ": "em aberto", ">": "em andamento", "!": "urgente", "x": "concluído",
+              "~": "abandonado ou recusado"}
+# `Recusados` é a quarta seção, criada pela ADR 0019: recusa disfarçada de abandono é recusa
+# que volta. Divide o marcador `[~]` com `Abandonados`, e a seção é que diz qual dos dois.
+SECAO_DE = {"em aberto": {" ", ">", "!"}, "concluídos": {"x"}, "abandonados": {"~"},
+            "recusados": {"~"}}
+# Exigidas em todo painel. `Recusados` fica FORA: painel já instalado em outro projeto não a
+# tem, e torná-la obrigatória reprovaria o painel alheio por uma decisão nossa. Quem a usa,
+# usa verificada; quem não a usa não é reprovado.
+SECOES_EXIGIDAS = {"em aberto", "concluídos", "abandonados"}
 LINHA = re.compile(r"^\s*-\s*\[(.)\]\s*(.*)$")
 LINK = re.compile(r"\[[^\]]+\]\([^)]+\)")
+# A ADR 0019 pede que a linha de recusa cite a ADR ou o arquivo em `docs/recusados/`. Sem
+# isto a seção entraria sem exame, que é o defeito do MT-41 aplicado a ela mesma.
+FONTE_DA_RECUSA = re.compile(r"\]\(([^)]*(?:recusados/|adr/)[^)]*)\)")
 
 
 def normalizar(titulo: str) -> str:
@@ -71,10 +82,16 @@ def main() -> int:
             urgentes.append(onde)
         if marcador == ">" and not re.search(r"falta|restam?|pendente", resto, re.I):
             problemas.append(f"{onde}: '[>]' sem dizer o que falta — sem isso é '[ ]' com enfeite")
-        if marcador == "~" and "motivo" not in resto.lower():
+        # Fora do link: o texto do link pode conter a palavra "motivo" e passar por motivo.
+        # Medido em 2026-10-13, com painel fabricado.
+        fora_do_link = LINK.sub("", resto).lower()
+        if marcador == "~" and "motivo" not in fora_do_link:
             problemas.append(f"{onde}: '[~]' sem motivo — o abandonado também é história")
+        if secao == "recusados" and not FONTE_DA_RECUSA.search(resto):
+            problemas.append(f"{onde}: recusa sem citar a ADR nem o arquivo em docs/recusados/ "
+                             f"— recusa sem fonte é recusa que volta")
 
-    faltando = {"em aberto", "concluídos", "abandonados"} - vistas
+    faltando = SECOES_EXIGIDAS - vistas
     if faltando:
         print(f"{arq}: sem as seções {', '.join(sorted(faltando))}", file=sys.stderr)
         return 2

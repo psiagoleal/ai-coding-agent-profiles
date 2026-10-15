@@ -27,6 +27,7 @@ sabido fora de ticket.
 - [!] [MT-40](tickets/MT-40.md) — Guarda de vazamento cega a nome de ref e a caminho sob o clone · furo publicado, já vazou uma vez
 - [!] [MT-39](tickets/MT-39.md) — Resolver a procedência do acervo importado, e decidir o que fica — bloqueado por autorização do autor do acervo: a redistribuição é desconhecida, e é o item que destrava os outros
 - [ ] [MT-41](tickets/MT-41.md) — Verificador do painel não examina seção que ele não conhece
+- [ ] [MT-48](tickets/MT-48.md) — Verificador de links varre o que o `.gitignore` ignora, e a conta local deixa de bater com a do CI
 - [ ] [MT-42](tickets/MT-42.md) — Medir a fronteira de isolamento, e dar mecanismo ao que o perfil já exige
 - [ ] [MT-44](tickets/MT-44.md) — Medir o que cada harness faz com catálogo acima do teto: avisa, corta em silêncio ou não tem limite
 - [ ] [MT-43](tickets/MT-43.md) — Derivar na instalação quais skills do acervo entram no projeto — o acervo é 1,66× o único teto observado
@@ -47,7 +48,7 @@ sabido fora de ticket.
 - [ ] [MT-35](tickets/MT-35.md) — Roteamento validado das skills de delegação
 - [ ] [MT-37](tickets/MT-37.md) — Resolver a sobreposição entre as duas skills de fan-out
 - [ ] [MT-36](tickets/MT-36.md) — ADR do hook que recusa — bloqueado por ADR 0009: ela está `Proposed` e diz "hooks como sensor", o hook novo recusa
-- [ ] [MT-30](tickets/MT-30.md) — Pin de procedência para fonte externa de skills
+- [ ] [MT-30](tickets/MT-30.md) — Pin de procedência para fonte externa de skills — a parte de política foi decidida pela [ADR 0021](adr/0021-procedencia-do-acervo.md); resta o mecanismo de pin
 - [ ] [MT-14](../docs/adr/0015-biblioteca-privada-em-repositorio-publico.md) — Decidir a ADR 0015: biblioteca privada em repositório público
 - [ ] [MT-38](tickets/MT-38.md) — Replay forçado: saliência ou suficiência na escolha de subagente
 - [ ] [MT-21](tickets/MT-21.md) — Papéis nomeados: verificar **invocação**, não instalação (falha hoje, de propósito)
@@ -74,6 +75,18 @@ sabido fora de ticket.
 - [x] MT-1 — [Aplicação desktop Tauri 2: comandos, estado e permissões](../skills/stack/criar-app-tauri/SKILL.md)
 - [x] MT-4 — [Instalação guiada, `--doctor` e portabilidade macOS/Windows](../docs/adr/0014-instalacao-guiada-e-portabilidade.md)
 - [x] MT-9 — [Laço de correção com tentativas contadas, sem score](../skills/laco-de-correcao/SKILL.md)
+
+## Recusados
+
+Conceito avaliado e decidido como fora, com arquivo próprio e condição de reabertura escrita.
+Separado de **Abandonados** pela ADR 0019: abandonado é o que ninguém levou adiante; recusado é
+o que foi decidido que não se faz. Confundir os dois é o que faz recusa voltar como proposta
+nova.
+
+- [~] [pacote de terceiro como skill](recusados/pacote-de-terceiro-como-skill.md) — motivo: a capacidade é a API de um pacote, não lacuna do acervo; adotar pacote é decisão de stack
+- [~] [guarda de comando por substring, sem ressalva de leitura](recusados/guarda-de-comando-por-substring-sem-ressalva.md) — motivo: recusa a menção junto com a execução, e impede ler as regras que ela aplica
+- [~] [flag de harness como mecanismo de invocação](recusados/flag-de-harness-como-mecanismo.md) — motivo: acopla governança a um harness; três de cinco degradariam em silêncio
+- [~] [spec dentro da ADR](recusados/spec-dentro-da-adr.md) — motivo: ciclos de vida opostos — a ADR é permanente, a spec se esgota
 
 ## Abandonados
 

@@ -9,7 +9,8 @@
 >
 > Marcadores (conjunto **fechado**, não invente outro): `[ ]` em aberto · `[>]` em andamento,
 > dizendo o que falta · `[!]` crítico ou urgente, no máximo três · `[x]` concluído ·
-> `[~]` abandonado, com motivo. Bloqueio é texto: `— bloqueado por <o quê>: <frase>`.
+> `[~]` abandonado ou recusado, com motivo — e a recusa também cita a fonte.
+> Bloqueio é texto: `— bloqueado por <o quê>: <frase>`.
 > Confira com `python3 skills/micro-ticket-planner/scripts/checar-painel.py docs/TICKETS.md`.
 
 ## Em aberto
@@ -23,6 +24,12 @@
 ## Concluídos
 
 <!-- - [x] [MT-0](plano.md#mt-0) — <frase curta> -->
+
+## Recusados
+
+<!-- Opcional: só existe se algo foi recusado. Abandonado é o que ninguém levou adiante;
+     recusado é o que foi decidido que não se faz. A linha cita a fonte — ADR 0019. -->
+<!-- - [~] [<conceito>](recusados/<conceito>.md) — motivo: <uma frase> -->
 
 ## Abandonados
 
