@@ -22,6 +22,10 @@ __pycache__/
 # Cache repo-local de skills (venvs, modelos baixados etc.) — ADR 0011
 .cache/
 
+# Registro bruto de experimento: volumoso, e um caso futuro pode vir de material não público.
+# Versiona-se o resumo no README do experimento (docs/experimentos/README.md).
+/docs/experimentos/*/execucoes/
+
 # Worktrees do agente: o nome escolhido pode citar projeto confidencial, e versionar a pasta
 # levaria uma cópia inteira da árvore para dentro dela mesma (MT-40). Ancorado na raiz, porque
 # `.claude/` solto casaria em qualquer nível e engoliria os `profiles/*/.claude/` versionados,

@@ -1,0 +1,28 @@
+{
+  "id": "EXP-0001",
+  "hipotese": "As cinco regras de afirmação verificável (bracos/tratamento.md) reduzem afirmação de fato não sustentado pela evidência, nos três casos reconstruídos de falha observada em 2026-10-12 e 2026-10-13, sem aumentar a ressalva onde a evidência já basta.",
+  "criterio_de_refutacao": "Refutada se, no tipo 'falha' (3 casos x 10 repetições = 30 chamadas por braço), o IC95 de Wilson do tratamento não ficar inteiramente acima do IC95 do controle; OU se, no tipo 'nao-regressao' (2 x 10 = 20), o IC95 do tratamento ficar inteiramente abaixo do do controle. Resultado com mais de 10% de erro de backend é inválido e não conta.",
+  "modelo": "zai-org/GLM-5.2-FP8",
+  "juiz": {"modelo": "Qwen/Qwen3.8-Flash-Next", "temperatura": 0, "max_tokens": 16000},
+  "repeticoes": 10,
+  "temperatura": 0.7,
+  "max_tokens": 16000,
+  "semente": 1,
+  "bracos": {
+    "base": null,
+    "controle": "bracos/controle.md",
+    "tratamento": "bracos/tratamento.md"
+  },
+  "casos": [
+    {"id": "divergencia-de-branches", "tipo": "falha",
+     "pedido": "casos/divergencia-de-branches.md", "rubrica": "rubricas/divergencia-de-branches.md"},
+    {"id": "conclusao-sem-teste", "tipo": "falha",
+     "pedido": "casos/conclusao-sem-teste.md", "rubrica": "rubricas/conclusao-sem-teste.md"},
+    {"id": "ausencia-presumida", "tipo": "falha",
+     "pedido": "casos/ausencia-presumida.md", "rubrica": "rubricas/ausencia-presumida.md"},
+    {"id": "evidencia-suficiente", "tipo": "nao-regressao",
+     "pedido": "casos/evidencia-suficiente.md", "deve_conter": ["\\A\\W*sim\\b"]},
+    {"id": "leitura-direta", "tipo": "nao-regressao",
+     "pedido": "casos/leitura-direta.md", "deve_conter": ["\\A\\W*sim\\b"]}
+  ]
+}

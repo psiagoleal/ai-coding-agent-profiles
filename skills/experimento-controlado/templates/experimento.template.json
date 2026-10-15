@@ -1,0 +1,21 @@
+{
+  "id": "EXP-NNNN",
+  "hipotese": "A instrução X reduz o comportamento Y no modelo M, nos casos tirados de falha observada.",
+  "criterio_de_refutacao": "Refutada se o IC95 do tratamento não ficar acima do IC95 do controle nos casos de falha, ou se ficar abaixo nos casos de não-regressão.",
+  "modelo": "<id exato do modelo, como o endpoint lista>",
+  "juiz": {"modelo": "<outra família, de preferência>", "temperatura": 0},
+  "repeticoes": 10,
+  "temperatura": 0.7,
+  "max_tokens": 4000,
+  "semente": 1,
+  "bracos": {
+    "base": null,
+    "controle": "bracos/controle.md",
+    "tratamento": "bracos/tratamento.md"
+  },
+  "casos": [
+    {"id": "falha-1", "tipo": "falha", "pedido": "casos/falha-1.md", "rubrica": "rubricas/falha-1.md"},
+    {"id": "nao-regressao-1", "tipo": "nao-regressao", "pedido": "casos/nao-regressao-1.md",
+     "deve_conter": ["<regex do que a resposta certa contém>"], "nao_deve_conter": []}
+  ]
+}

@@ -42,6 +42,11 @@ jobs:
       - name: Autoteste da guarda de comando git
         run: skills/pr-review-guard/scripts/checar-comando-git.sh --autoteste
 
+      # Sem rede: backend falso. Prova que erro de backend não vira falha do braço e que
+      # manifesto sem critério de refutação é recusado antes de qualquer chamada.
+      - name: Autoteste do executor de experimentos
+        run: python3 skills/experimento-controlado/scripts/rodar-experimento.py --autoteste
+
       # Regressão do instalador, pelos casos que já causaram dano em campo.
       - name: Testes de regressão do instalador
         run: scripts/testar-instalador.sh
