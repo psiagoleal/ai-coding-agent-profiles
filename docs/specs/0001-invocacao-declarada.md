@@ -5,7 +5,7 @@
 - **Status:** Aceita
 - **Data:** 2026-10-11
 - **Decide a partir de:** ADR 0016
-- **Tickets:** a criar — ver §6
+- **Tickets:** [MT-55](../tickets/MT-55.md) (tradução no instalador, ADR 0023 §6); os demais do §6, a criar
 
 ## Problema
 

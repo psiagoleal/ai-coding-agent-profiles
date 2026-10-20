@@ -30,4 +30,5 @@ reverter, crie um novo ADR e marque o antigo como `Superseded by ADR-NNNN`.
 | [0019](0019-barra-de-admissao.md) | Barra de admissão de duas pernas | Accepted |
 | [0020](0020-roteador-de-skills.md) | Roteador de skills, com sincronia verificada por comando | Accepted |
 | [0021](0021-procedencia-do-acervo.md) | Procedência do acervo — amálgama declarado, crédito no artefato | Accepted |
-| [0022](0022-selecao-do-acervo-na-instalacao.md) | Seleção do acervo na instalação, derivada do projeto | Proposed |
+| [0022](0022-selecao-do-acervo-na-instalacao.md) | Seleção do acervo na instalação, derivada do projeto | Accepted |
+| [0023](0023-instalacao-por-agente-e-troca-de-agente.md) | Instalação por agente, manifesto de instalação e troca de agente | Accepted |

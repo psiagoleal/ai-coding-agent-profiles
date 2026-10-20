@@ -20,7 +20,8 @@ derivar o que é instalado. Os MT-45 a MT-47 são a triagem dessa mesma análise
 a item: o que foi importado, o que virou seção de skill existente e o que foi recusado.
 O MT-49 saiu da leitura de um artigo sobre prompts de raciocínio. O EXP-0001 saiu refutado
 pela letra do critério, com um desenho que não sustentava o veredito; o executor foi corrigido
-no MT-51, e a hipótese segue para o EXP-0002.
+no MT-51, e a hipótese segue para o EXP-0002. Os MT-52 a MT-55 são a ADR 0023: a instalação
+declarada por agente, registrada no projeto, e a troca de agente num projeto em andamento.
 
 Sem ticket ainda, e sabido: a medição da lista `deny` contra indireção e o experimento de
 sandbox do §8 de `docs/interop/isolamento-de-execucao.md` estão dentro do MT-42; não sobra item
@@ -32,6 +33,10 @@ sabido fora de ticket.
 - [ ] [MT-41](tickets/MT-41.md) — Verificador do painel não examina seção que ele não conhece
 - [ ] [MT-48](tickets/MT-48.md) — Verificador de links varre o que o `.gitignore` ignora, e a conta local deixa de bater com a do CI
 - [ ] [MT-42](tickets/MT-42.md) — Medir a fronteira de isolamento, e dar mecanismo ao que o perfil já exige
+- [ ] [MT-52](tickets/MT-52.md) — Manifesto de instalação: a atualização deixa de voltar a `--agent claude` e ao núcleo padrão
+- [ ] [MT-55](tickets/MT-55.md) — Adaptador gerado para skill `invocacao: humano`: symlink não carrega cabeçalho por agente — bloqueado por MT-52
+- [ ] [MT-53](tickets/MT-53.md) — Instalar só o que o agente pedido usa, e imprimir o que falta a cada um — bloqueado por MT-52
+- [ ] [MT-54](tickets/MT-54.md) — Trocar de agente num projeto em andamento: plano de remoção impresso, memória promovida — bloqueado por MT-52 e MT-53
 - [ ] [MT-44](tickets/MT-44.md) — Medir o que cada harness faz com catálogo acima do teto: avisa, corta em silêncio ou não tem limite
 - [ ] [MT-43](tickets/MT-43.md) — Derivar na instalação quais skills do acervo entram no projeto — o acervo é 1,66× o único teto observado
 - [ ] [MT-45](tickets/MT-45.md) — Abrir a categoria `escrita` e importar o trio de escrita autoral — `invocacao: humano`, não disputa o orçamento de catálogo
