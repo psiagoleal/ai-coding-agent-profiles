@@ -18,8 +18,9 @@ mudança sem linha de base não é refutável. Os MT-43 e MT-44 saíram da anál
 terceiros, e são as duas pernas do orçamento de catálogo: medir o teto de cada harness, e
 derivar o que é instalado. Os MT-45 a MT-47 são a triagem dessa mesma análise já decidida item
 a item: o que foi importado, o que virou seção de skill existente e o que foi recusado.
-O MT-49 saiu da leitura de um artigo sobre prompts de raciocínio, e espera o primeiro
-experimento controlado, cujo método é o MT-50.
+O MT-49 saiu da leitura de um artigo sobre prompts de raciocínio. O EXP-0001 saiu refutado
+pela letra do critério, com um desenho que não sustentava o veredito; o executor foi corrigido
+no MT-51, e a hipótese segue para o EXP-0002.
 
 Sem ticket ainda, e sabido: a medição da lista `deny` contra indireção e o experimento de
 sandbox do §8 de `docs/interop/isolamento-de-execucao.md` estão dentro do MT-42; não sobra item
@@ -36,7 +37,7 @@ sabido fora de ticket.
 - [ ] [MT-45](tickets/MT-45.md) — Abrir a categoria `escrita` e importar o trio de escrita autoral — `invocacao: humano`, não disputa o orçamento de catálogo
 - [ ] [MT-46](tickets/MT-46.md) — Skill de reexplicação: a mesma resposta por outro caminho, não a mesma mais longa
 - [ ] [MT-47](tickets/MT-47.md) — Dados de teste parciais sem mentir ao compilador, em `teste-primeiro`
-- [ ] [MT-49](tickets/MT-49.md) — Afirmação verificável: rodar o EXP-0001 pré-registrado, e só então criar a skill, arquivar inconclusivo ou recusar
+- [>] [MT-49](tickets/MT-49.md) — Afirmação verificável: EXP-0001 refutado pela letra e auditado; falta o EXP-0002, com gêmeos, cinco braços e juiz aferido · falta: os arquivos do EXP-0002 (casos aprovados em 2026-10-16) e a execução
 - [ ] [MT-22](tickets/MT-22.md) — Colhedor retroativo de métricas de sessão (linha de base do passado)
 - [ ] [MT-23](tickets/MT-23.md) — Relatório de métricas com comparação antes/depois
 - [ ] [MT-25](tickets/MT-25.md) — Executor de gates: a skill de conclusão tem 217 linhas e nenhum script
@@ -68,6 +69,7 @@ sabido fora de ticket.
 
 ## Concluídos
 
+- [x] [MT-51](tickets/MT-51.md) — O executor de experimentos media menos do que dizia: juiz em uma linha, pré-registro só do manifesto, 3 casos contados como 30
 - [x] [MT-50](tickets/MT-50.md) — Experimento controlado de instrução: método, executor com autoteste no CI e worktree de experimentos
 - [x] [MT-0](../skills/pr-review-guard/scripts/checar-mensagem-commit.sh) — Painel de tickets e proibição de entrada extra em commit e documentação
 - [x] MT-5 — [Regra transversal de comportamento questionador](../skills/perguntar-antes-de-construir/SKILL.md)

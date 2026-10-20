@@ -1,21 +1,24 @@
 {
   "id": "EXP-NNNN",
-  "hipotese": "A instrução X reduz o comportamento Y no modelo M, nos casos tirados de falha observada.",
-  "criterio_de_refutacao": "Refutada se o IC95 do tratamento não ficar acima do IC95 do controle nos casos de falha, ou se ficar abaixo nos casos de não-regressão.",
+  "hipotese": "A instrução X reduz o comportamento Y no modelo M, nos casos tirados de falha observada, sem aumentá-lo onde a evidência já decide.",
+  "criterio_de_refutacao": "Sobre a diferença tratamento − controle, estratificada por caso, nos PARES (falha + gêmeo): CONFIRMADA se o limite inferior do IC95 for > 0 e o tratamento ficar à frente na maioria dos pares; REFUTADA se o limite superior do IC95 for < +0,10 (efeito, se houver, pequeno demais para justificar a instrução) ou se o tratamento ficar ABAIXO da base nos gêmeos — a refutação prevalece sobre a confirmação; INCONCLUSIVA nos demais casos. Resultado com mais de 10% de erro é inválido e não conta.",
   "modelo": "<id exato do modelo, como o endpoint lista>",
-  "juiz": {"modelo": "<outra família, de preferência>", "temperatura": 0},
-  "repeticoes": 10,
+  "juiz": {"modelo": "<outra família, de preferência>", "temperatura": 0, "concordancia_minima": 0.85},
+  "repeticoes": 5,
   "temperatura": 0.7,
   "max_tokens": 4000,
   "semente": 1,
   "bracos": {
     "base": null,
+    "placebo": "bracos/placebo.md",
     "controle": "bracos/controle.md",
+    "minimo": "bracos/minimo.md",
     "tratamento": "bracos/tratamento.md"
   },
+  "bracos_de_tamanho_livre": ["minimo"],
   "casos": [
-    {"id": "falha-1", "tipo": "falha", "pedido": "casos/falha-1.md", "rubrica": "rubricas/falha-1.md"},
-    {"id": "nao-regressao-1", "tipo": "nao-regressao", "pedido": "casos/nao-regressao-1.md",
-     "deve_conter": ["<regex do que a resposta certa contém>"], "nao_deve_conter": []}
+    {"id": "falha-1", "tipo": "falha", "origem": "novo", "pedido": "casos/falha-1.md", "rubrica": "rubricas/falha-1.md"},
+    {"id": "falha-1-gemeo", "tipo": "gemeo", "gemeo_de": "falha-1", "pedido": "casos/falha-1-gemeo.md",
+     "rubrica": "rubricas/falha-1-gemeo.md"}
   ]
 }
