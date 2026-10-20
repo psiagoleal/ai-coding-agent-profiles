@@ -9,7 +9,7 @@ justifica ou para [`docs/recusados/`](../recusados/README.md).
 
 | Experimento | Pergunta | Estado | Resultado |
 |---|---|---|---|
-| [EXP-0001](EXP-0001-afirmacao-verificavel/README.md) | regras de afirmação verificável reduzem afirmação sem sustentação, sem aumentar ressalva? | rascunho | — |
+| [EXP-0001](EXP-0001-afirmacao-verificavel/README.md) | regras de afirmação verificável reduzem afirmação sem sustentação, sem aumentar ressalva? | concluído | refutada pela letra do critério; desenho auditado — a hipótese segue para o EXP-0002 |
 
 ## Anatomia
 
@@ -17,7 +17,7 @@ justifica ou para [`docs/recusados/`](../recusados/README.md).
 EXP-NNNN-<slug>/
   README.md          registro: hipótese, critério, braços, casos, piloto, resultado, não medido
   experimento.json   manifesto — o commit dele é o pré-registro
-  bracos/            controle.md e tratamento.md (a base é o modelo sem sistema)
+  bracos/            placebo, controle, minimo e tratamento (a base é o modelo sem sistema)
   casos/             um pedido por arquivo
   rubricas/          uma por caso corrigido por juiz
   execucoes/         registro bruto de cada execução — fora do git (ver abaixo)
