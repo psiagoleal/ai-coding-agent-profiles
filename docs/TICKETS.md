@@ -12,9 +12,16 @@ publicado** primeiro, depois **o que destrava outros**, depois o resto por tema.
 texto na própria linha, com a dependência nomeada — linha sem dependência nomeada não é
 bloqueio, é trabalho que ninguém começou.
 
+**Specs.** Desde 2026-10-29 (ADR 0024), toda frente com mais de um ticket tem spec em
+[`specs/`](specs/README.md), e o ticket cita a spec. O índice lá lista também os tickets sem
+frente. Spec em Rascunho não gera implementação; a decisão pendente que bloqueia um ticket
+está escrita na linha dele.
+
 Os MT-22 a MT-40 saíram da análise comparativa de harness, em quatro rodadas. O caminho
-crítico é MT-22 → MT-23 → MT-25 → MT-26: instrumentar antes de mudar comportamento, porque
-mudança sem linha de base não é refutável. Os MT-43 e MT-44 saíram da análise de biblioteca de
+crítico é MT-22 → MT-23 → MT-25 → MT-26 ([spec 0004](specs/0004-linha-de-base-e-gates.md)):
+instrumentar antes de mudar comportamento, porque mudança sem linha de base não é refutável.
+Por isso ele vem logo depois dos urgentes e dos verificadores, antes de todo trabalho que muda
+comportamento. Os MT-43 e MT-44 saíram da análise de biblioteca de
 terceiros, e são as duas pernas do orçamento de catálogo: medir o teto de cada harness, e
 derivar o que é instalado. Os MT-45 a MT-47 são a triagem dessa mesma análise já decidida item
 a item: o que foi importado, o que virou seção de skill existente e o que foi recusado.
@@ -22,43 +29,57 @@ O MT-49 saiu da leitura de um artigo sobre prompts de raciocínio. O EXP-0001 sa
 pela letra do critério, com um desenho que não sustentava o veredito; o executor foi corrigido
 no MT-51, e a hipótese segue para o EXP-0002. Os MT-52 a MT-55 são a ADR 0023: a instalação
 declarada por agente, registrada no projeto, e a troca de agente num projeto em andamento.
+Os MT-56 a MT-59 saíram da adequação da spec 0001 e da verificação da cadeia (ADR 0024).
 
-Sem ticket ainda, e sabido: a medição da lista `deny` contra indireção e o experimento de
-sandbox do §8 de `docs/interop/isolamento-de-execucao.md` estão dentro do MT-42; não sobra item
-sabido fora de ticket.
+A medição da lista `deny` contra indireção e o experimento de sandbox do §8 de
+`docs/interop/isolamento-de-execucao.md` estão dentro do MT-42.
+
+**Sabido e sem ticket** (revisto em 2026-10-29; o texto anterior dizia que não sobrava nada):
+
+- **os 32 itens restantes da triagem de skills de terceiros**: 15 sobreposições parciais, 14
+  aprimoramentos das nossas e 3 descartes, ainda por decidir;
+- **a construção do roteador da ADR 0020**, condicionada ao fim dessa triagem. O MT-20 é outro
+  roteador;
+- **as ADRs 0001 a 0006**, `Proposed` desde o início, "pendentes de validação", sem trabalho
+  que as valide. A 0009 tem o MT-36;
+- **a hipótese de compressão das descrições**, de 200 B contra os nossos 482 B, ainda sem
+  decisão de virar ADR e medição.
 
 - [!] [MT-24](tickets/MT-24.md) — Hook de git em camadas: a camada de texto foi medida e fechou 11 vetores; **4 lacunas declaradas** só a camada 1 fecha · furo publicado
 - [!] [MT-40](tickets/MT-40.md) — Guarda de vazamento cega a nome de ref e a caminho sob o clone · furo publicado, já vazou uma vez
 - [!] [MT-39](tickets/MT-39.md) — Resolver a procedência do acervo importado, e decidir o que fica — bloqueado por autorização do autor do acervo: a redistribuição é desconhecida, e é o item que destrava os outros
 - [ ] [MT-41](tickets/MT-41.md) — Verificador do painel não examina seção que ele não conhece
 - [ ] [MT-48](tickets/MT-48.md) — Verificador de links varre o que o `.gitignore` ignora, e a conta local deixa de bater com a do CI
+- [ ] [MT-22](tickets/MT-22.md) — Colhedor retroativo de métricas de sessão (linha de base do passado) — bloqueado pela decisão C da [spec 0004](specs/0004-linha-de-base-e-gates.md): onde o ledger mora, porque as transcrições cobrem projetos confidenciais
+- [ ] [MT-23](tickets/MT-23.md) — Relatório de métricas com comparação antes/depois — bloqueado por MT-22
+- [ ] [MT-25](tickets/MT-25.md) — Executor de gates: a skill de conclusão tem 217 linhas e nenhum script
+- [ ] [MT-26](tickets/MT-26.md) — Lint do próprio `EXPECT`, com corpus de validação — depois do MT-25
+- [ ] [MT-59](tickets/MT-59.md) — Verificar a cadeia spec ↔ ticket, como a ADR 0017 pedia e nada fazia
 - [ ] [MT-42](tickets/MT-42.md) — Medir a fronteira de isolamento, e dar mecanismo ao que o perfil já exige
+- [ ] [MT-56](tickets/MT-56.md) — Declarar `invocacao` em toda skill das duas fontes, com verificador — antes da reprovação, ou toda instalação quebra
+- [ ] [MT-57](tickets/MT-57.md) — O instalador reprova skill sem `invocacao` ou com valor inválido — bloqueado por MT-56
 - [ ] [MT-52](tickets/MT-52.md) — Manifesto de instalação: a atualização deixa de voltar a `--agent claude` e ao núcleo padrão
 - [ ] [MT-55](tickets/MT-55.md) — Adaptador gerado para skill `invocacao: humano`: symlink não carrega cabeçalho por agente — bloqueado por MT-52
 - [ ] [MT-53](tickets/MT-53.md) — Instalar só o que o agente pedido usa, e imprimir o que falta a cada um — bloqueado por MT-52
 - [ ] [MT-54](tickets/MT-54.md) — Trocar de agente num projeto em andamento: plano de remoção impresso, memória promovida — bloqueado por MT-52 e MT-53
+- [ ] [MT-58](tickets/MT-58.md) — Medir o catálogo depois da invocação declarada: a spec 0001 acertou a faixa? — bloqueado por MT-56 e MT-55
 - [ ] [MT-44](tickets/MT-44.md) — Medir o que cada harness faz com catálogo acima do teto: avisa, corta em silêncio ou não tem limite
-- [ ] [MT-43](tickets/MT-43.md) — Derivar na instalação quais skills do acervo entram no projeto — o acervo é 1,66× o único teto observado
-- [ ] [MT-45](tickets/MT-45.md) — Abrir a categoria `escrita` e importar o trio de escrita autoral — `invocacao: humano`, não disputa o orçamento de catálogo
-- [ ] [MT-46](tickets/MT-46.md) — Skill de reexplicação: a mesma resposta por outro caminho, não a mesma mais longa
+- [ ] [MT-43](tickets/MT-43.md) — Derivar na instalação quais skills do acervo entram no projeto — o acervo é 1,66× o único teto observado — bloqueado pelas decisões A e B da [spec 0003](specs/0003-orcamento-de-contexto.md) e por MT-52
+- [ ] [MT-45](tickets/MT-45.md) — Abrir a categoria `escrita` e importar o trio de escrita autoral — `invocacao: humano`, não disputa o orçamento de catálogo — bloqueado por MT-55: sem a tradução no instalador, disputaria
+- [ ] [MT-46](tickets/MT-46.md) — Skill de reexplicação: a mesma resposta por outro caminho, não a mesma mais longa — bloqueado por MT-55
 - [ ] [MT-47](tickets/MT-47.md) — Dados de teste parciais sem mentir ao compilador, em `teste-primeiro`
 - [>] [MT-49](tickets/MT-49.md) — Afirmação verificável: EXP-0001 refutado pela letra e auditado; falta o EXP-0002, com gêmeos, cinco braços e juiz aferido · falta: os arquivos do EXP-0002 (casos aprovados em 2026-10-16) e a execução
-- [ ] [MT-22](tickets/MT-22.md) — Colhedor retroativo de métricas de sessão (linha de base do passado)
-- [ ] [MT-23](tickets/MT-23.md) — Relatório de métricas com comparação antes/depois
-- [ ] [MT-25](tickets/MT-25.md) — Executor de gates: a skill de conclusão tem 217 linhas e nenhum script
-- [ ] [MT-26](tickets/MT-26.md) — Lint do próprio `EXPECT`, com corpus de validação
 - [ ] [MT-27](tickets/MT-27.md) — Enumerar skills sem `node_modules`, com teste
 - [ ] [MT-28](tickets/MT-28.md) — Diagnóstico detecta placeholder não substituído
 - [ ] [MT-29](tickets/MT-29.md) — Fronteira negativa nas descrições de skill, com lint — bloqueado por MT-44: custa ~58 B por skill e o teto de cada harness não está medido
 - [ ] [MT-31](tickets/MT-31.md) — Mover o catálogo de skills do arquivo de regra para o índice
 - [ ] [MT-32](tickets/MT-32.md) — Relocar segurança e fluxo: detalhe para a skill, fluxo para tabela
-- [ ] [MT-33](tickets/MT-33.md) — Cliente único para delegação a modelo externo
-- [ ] [MT-34](tickets/MT-34.md) — Sonda de capacidade de modelo e protocolo de escolha
+- [ ] [MT-33](tickets/MT-33.md) — Cliente único para delegação a modelo externo — bloqueado pela decisão E da [spec 0006](specs/0006-delegacao-externa.md): o destino do script pessoal
+- [ ] [MT-34](tickets/MT-34.md) — Sonda de capacidade de modelo e protocolo de escolha — fatia do raciocínio entregue em 2026-10-29 (`--sonda-think`)
 - [ ] [MT-35](tickets/MT-35.md) — Roteamento validado das skills de delegação
 - [ ] [MT-37](tickets/MT-37.md) — Resolver a sobreposição entre as duas skills de fan-out
 - [ ] [MT-36](tickets/MT-36.md) — ADR do hook que recusa — bloqueado por ADR 0009: ela está `Proposed` e diz "hooks como sensor", o hook novo recusa
 - [ ] [MT-30](tickets/MT-30.md) — Pin de procedência para fonte externa de skills — a parte de política foi decidida pela [ADR 0021](adr/0021-procedencia-do-acervo.md); resta o mecanismo de pin
-- [ ] [MT-14](../docs/adr/0015-biblioteca-privada-em-repositorio-publico.md) — Decidir a ADR 0015: biblioteca privada em repositório público
 - [ ] [MT-38](tickets/MT-38.md) — Replay forçado: saliência ou suficiência na escolha de subagente
 - [ ] [MT-21](tickets/MT-21.md) — Papéis nomeados: verificar **invocação**, não instalação (falha hoje, de propósito)
 - [ ] [MT-7](tickets/MT-7.md) — Medir a nossa verificação contra o laço com score, em gabarito comum
@@ -74,6 +95,7 @@ sabido fora de ticket.
 
 ## Concluídos
 
+- [x] [MT-14](../docs/adr/0015-biblioteca-privada-em-repositorio-publico.md) — ADR 0015 decidida: biblioteca privada em repositório público (aceita em 2026-09-24; o painel só soube em 2026-10-29)
 - [x] [MT-51](tickets/MT-51.md) — O executor de experimentos media menos do que dizia: juiz em uma linha, pré-registro só do manifesto, 3 casos contados como 30
 - [x] [MT-50](tickets/MT-50.md) — Experimento controlado de instrução: método, executor com autoteste no CI e worktree de experimentos
 - [x] [MT-0](../skills/pr-review-guard/scripts/checar-mensagem-commit.sh) — Painel de tickets e proibição de entrada extra em commit e documentação

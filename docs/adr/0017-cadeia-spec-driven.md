@@ -2,7 +2,7 @@
 
 # ADR 0017: Cadeia spec-driven, com a spec como artefato numerado
 
-- **Status:** Accepted
+- **Status:** Accepted — complementada pela [ADR 0024](0024-spec-como-contrato-no-framework.md) (formato EARS com prova, adequação retroativa)
 - **Data:** 2026-10-11
 - **Decisores:** Iago Leal (mantenedor), com Claude Code
 - **Tags:** fluxo, spec, tickets, rastreabilidade
