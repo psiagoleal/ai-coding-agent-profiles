@@ -48,6 +48,11 @@ jobs:
       - name: Autoteste do executor de experimentos
         run: python3 skills/experimento-controlado/scripts/rodar-experimento.py --autoteste
 
+      # Endpoint fabricado em 127.0.0.1: o recuo da chave recusada e a classificação da sonda
+      # de raciocínio, sem rede e sem credencial.
+      - name: Autoteste do cliente de delegação (oa-chat)
+        run: skills/delegacao-openai-compat/scripts/testar-oa-chat.sh
+
       # Regressão do instalador, pelos casos que já causaram dano em campo.
       - name: Testes de regressão do instalador
         run: scripts/testar-instalador.sh

@@ -8,8 +8,19 @@
 #   git diff | oa-chat -s "voce e revisor" -   # corpo via stdin
 #   oa-chat -m <modelo> --json -f pedido.md    # exige JSON (response_format)
 #   oa-chat --models                           # lista modelos do endpoint
-#   oa-chat --no-think -m <modelo> "..."       # desliga raciocínio (vLLM/SGLang)
+#   oa-chat --no-think -m <modelo> "..."       # pede para desligar o raciocínio (ver abaixo)
+#   oa-chat --sonda-think -m <modelo>          # mede qual chave desliga o raciocínio AQUI
 #   oa-chat --extra '{"top_p":0.9}' "..."      # campos extras no corpo, sem validação
+#
+# --no-think manda as duas chaves conhecidas, porque cada servidor obedece a uma:
+#   chat_template_kwargs.enable_thinking=false  (vLLM/SGLang, pelo template do modelo)
+#   thinking={"type":"disabled"}                (API no formato Anthropic/Z.ai, e proxies que a
+#                                                repassam — resolveu GLM-5.3 onde a outra falhava)
+# Endpoint que RECUSA uma delas (LiteLLM responde 400 para `thinking` em modelo que não a
+# declara) recebe a chamada de novo sem a chave recusada, com aviso em stderr. Chave passada
+# pelo usuário em --extra nunca é retirada. Nenhuma das duas é garantia: há implantação em que
+# o raciocínio continua, e há em que ele VAZA para o conteúdo — código 0 com o pensamento no
+# lugar da resposta. Rode --sonda-think uma vez por endpoint e modelo antes de confiar.
 #
 # Configuração — nada fixo no script (ver SKILL.md):
 #   OPENAI_COMPAT_BASE_URL   com ou sem /v1           (fallback: AGENTRY_LITELLM_BASE_URL)
@@ -32,7 +43,9 @@ MODEL="${OPENAI_COMPAT_MODEL:-}"
 MAXTOK="${OPENAI_COMPAT_MAX_TOKENS:-8000}"
 TEMP="${OPENAI_COMPAT_TEMPERATURE:-0.2}"
 TIMEOUT="${OPENAI_COMPAT_TIMEOUT:-900}"
-SYSTEM=""; PROMPT=""; JSON=0; LIST=0; tem_prompt=0; EXTRA="{}"
+SYSTEM=""; PROMPT=""; JSON=0; LIST=0; tem_prompt=0; EXTRA="{}"; NOTHINK=0; SONDA=0
+# Chaves que --no-think acrescenta. Ficam separadas de EXTRA para o recuo poder tirar só elas.
+NOTHINK_CHAVES='{"chat_template_kwargs":{"enable_thinking":false},"thinking":{"type":"disabled"}}'
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -44,11 +57,12 @@ while [[ $# -gt 0 ]]; do
                       PROMPT+="${PROMPT:+$'\n\n'}$(<"$2")"; tem_prompt=1; shift 2 ;;
     -)                PROMPT+="${PROMPT:+$'\n\n'}$(cat)"; tem_prompt=1; shift ;;
     --json)           JSON=1; shift ;;
-    --no-think)       EXTRA="$(jq -c '. * {chat_template_kwargs:{enable_thinking:false}}' <<<"$EXTRA")"; shift ;;
+    --no-think)       NOTHINK=1; shift ;;
+    --sonda-think)    SONDA=1; shift ;;
     --extra)          jq -e 'type=="object"' <<<"$2" >/dev/null 2>&1 || die 2 "--extra exige objeto JSON"
                       EXTRA="$(jq -c --argjson x "$2" '. * $x' <<<"$EXTRA")"; shift 2 ;;
     --models)         LIST=1; shift ;;
-    -h|--help)        sed -n '2,24p' "$0" | sed 's/^# \{0,1\}//'; exit 0 ;;
+    -h|--help)        sed -n '2,34p' "$0" | sed 's/^# \{0,1\}//'; exit 0 ;;
     -*)               die 2 "opção desconhecida: $1" ;;
     *)                PROMPT+="${PROMPT:+ }$1"; tem_prompt=1; shift ;;
   esac
@@ -101,19 +115,96 @@ if [[ $LIST -eq 1 ]]; then
 fi
 
 [[ -n "$MODEL" ]] || die 2 "sem modelo: use -m <modelo> ou OPENAI_COMPAT_MODEL (veja --models)"
+
+# Sonda: qual chave desliga o raciocínio neste endpoint e modelo. Pedido trivial com resposta
+# conhecida ("OK"), três vezes por configuração — uma chamada só não separa chave de sorte.
+# Classifica pelo que voltou, não pelo código de saída: código 0 com o pensamento no conteúdo
+# é o caso mais perigoso, porque passa por resposta.
+if [[ $SONDA -eq 1 ]]; then
+  pedido='Responda apenas com a palavra OK, sem mais nada.'
+  sondar() {  # <nome> [flags...] — três chamadas em paralelo, resultado em $tmp/s.<nome>.<i>.*
+    local nome="$1"; shift
+    for i in 1 2 3; do
+      ( set +e; "$0" -m "$MODEL" --max-tokens 2000 -t 0 "$@" "$pedido" \
+          >"$tmp/s.$nome.$i.out" 2>"$tmp/s.$nome.$i.err"; echo $? >"$tmp/s.$nome.$i.rc" ) &
+    done
+  }
+  sondar 1-padrao
+  sondar 2-template --extra '{"chat_template_kwargs":{"enable_thinking":false}}'
+  sondar 3-thinking --extra '{"thinking":{"type":"disabled"}}'
+  sondar 4-no-think --no-think
+  wait
+  printf 'sonda de raciocínio — modelo %s, pedido "OK", 3 chamadas por configuração\n\n' "$MODEL"
+  printf '  %-12s %-9s %-9s %-9s %-9s %-9s  %s\n' configuração desligou pensou vazou estourou recusou "tokens de saída"
+  declare -A desligou=()
+  for nome in 1-padrao 2-template 3-thinking 4-no-think; do
+    d=0 p=0 v=0 e=0 r=0 toks=""
+    for i in 1 2 3; do
+      rc="$(cat "$tmp/s.$nome.$i.rc" 2>/dev/null || echo 1)"
+      # `|| true`: chamada recusada não tem linha de uso, e com pipefail o grep vazio mataria a sonda.
+      t="$(grep -o 'saida=[0-9?]*' "$tmp/s.$nome.$i.err" 2>/dev/null | tail -1 | cut -d= -f2 || true)"
+      toks+="${t:--} "
+      case "$rc" in
+        0) if grep -qiE '^[^[:alnum:]]*ok[^[:alnum:]]*$' "$tmp/s.$nome.$i.out" \
+              && [[ "$(wc -l < "$tmp/s.$nome.$i.out")" -le 1 ]]; then
+             if [[ "$t" =~ ^[0-9]+$ && "$t" -le 50 ]]; then d=$((d+1)); else p=$((p+1)); fi
+           else v=$((v+1)); fi ;;
+        3) e=$((e+1)) ;;
+        *) r=$((r+1)) ;;
+      esac
+    done
+    printf '  %-12s %-9s %-9s %-9s %-9s %-9s  %s\n' "${nome#*-}" $d $p $v $e $r "$toks"
+    desligou[$nome]=$d
+  done
+  echo
+  echo "  desligou = respondeu OK com ≤50 tokens · pensou = OK, mas raciocinou (tokens altos)"
+  echo "  vazou = código 0 com outra coisa no lugar do OK — em geral o raciocínio no conteúdo"
+  if [[ ${desligou[4-no-think]} -eq 3 ]]; then
+    echo "  → --no-think funciona neste endpoint e modelo"
+  elif [[ ${desligou[2-template]} -eq 3 ]]; then
+    echo "  → --no-think falhou; use --extra '{\"chat_template_kwargs\":{\"enable_thinking\":false}}'"
+  elif [[ ${desligou[3-thinking]} -eq 3 ]]; then
+    echo "  → --no-think falhou; use --extra '{\"thinking\":{\"type\":\"disabled\"}}'"
+  else
+    echo "  → nenhuma chave desligou o raciocínio 3 em 3: não conte com --no-think neste modelo;"
+    echo "    dimensione --max-tokens e divida o pedido por item"
+  fi
+  exit 0
+fi
+
 [[ $tem_prompt -eq 1 ]] || { [[ -t 0 ]] && die 2 "sem pedido (argumento, -f ou -)"; PROMPT="$(cat)"; }
 [[ -n "$PROMPT" ]] || die 2 "pedido vazio"
 
 printf '%s' "$PROMPT" > "$tmp/prompt"
-jq -n --arg m "$MODEL" --arg s "$SYSTEM" --rawfile p "$tmp/prompt" \
-      --argjson t "$TEMP" --argjson mt "$MAXTOK" --argjson js "$JSON" --argjson x "$EXTRA" '
-  {model:$m, temperature:$t, max_tokens:$mt,
-   messages: (if $s == "" then [] else [{role:"system",content:$s}] end)
-             + [{role:"user",content:$p}]}
-  + (if $js == 1 then {response_format:{type:"json_object"}} else {} end)
-  + $x' > "$tmp/body"
+montar_corpo() {  # $1 = campos extras já combinados
+  jq -n --arg m "$MODEL" --arg s "$SYSTEM" --rawfile p "$tmp/prompt" \
+        --argjson t "$TEMP" --argjson mt "$MAXTOK" --argjson js "$JSON" --argjson x "$1" '
+    {model:$m, temperature:$t, max_tokens:$mt,
+     messages: (if $s == "" then [] else [{role:"system",content:$s}] end)
+               + [{role:"user",content:$p}]}
+    + (if $js == 1 then {response_format:{type:"json_object"}} else {} end)
+    + $x' > "$tmp/body"
+}
 
-code="$(chamar "$BASE/chat/completions" "$tmp/body")"; checa_http "$code"
+AUTO='{}'; [[ $NOTHINK -eq 1 ]] && AUTO="$NOTHINK_CHAVES"
+# Recuo: endpoint que recusa uma chave do --no-think com 4xx NOMEANDO a chave recebe a chamada
+# de novo sem ela. Uma chave por volta, e só as que o --no-think pôs: o que veio de --extra é
+# pedido explícito, e recusa dele é erro de verdade.
+while :; do
+  montar_corpo "$(jq -c --argjson x "$EXTRA" '. * $x' <<<"$AUTO")"
+  code="$(chamar "$BASE/chat/completions" "$tmp/body")"
+  [[ "$code" == 4* && "$AUTO" != '{}' ]] || break
+  erro="$(head -c 4000 "$tmp/resp")"; tirar=""
+  for k in thinking chat_template_kwargs; do
+    jq -e --arg k "$k" 'has($k)' <<<"$AUTO" >/dev/null || continue
+    jq -e --arg k "$k" 'has($k)' <<<"$EXTRA" >/dev/null && continue
+    [[ "$erro" == *"$k"* ]] && { tirar="$k"; break; }
+  done
+  [[ -n "$tirar" ]] || break
+  printf 'oa-chat: aviso: o endpoint recusou `%s` (HTTP %s); repetindo sem ela\n' "$tirar" "$code" >&2
+  AUTO="$(jq -c --arg k "$tirar" 'del(.[$k])' <<<"$AUTO")"
+done
+checa_http "$code"
 
 jq -r --arg m "$MODEL" '"[uso] modelo=\($m) entrada=\(.usage.prompt_tokens // "?") saida=\(.usage.completion_tokens // "?") fim=\(.choices[0].finish_reason // "?")"' \
   "$tmp/resp" >&2
@@ -122,7 +213,7 @@ conteudo="$(jq -r '.choices[0].message.content // empty' "$tmp/resp")"
 fim="$(jq -r '.choices[0].finish_reason // ""' "$tmp/resp")"
 if [[ -z "$conteudo" ]]; then
   if [[ "$fim" == "length" ]]; then
-    die 3 "resposta vazia com finish_reason=length: modelo de raciocínio esgotou max_tokens=$MAXTOK antes de responder. Aumente --max-tokens."
+    die 3 "resposta vazia com finish_reason=length: modelo de raciocínio esgotou max_tokens=$MAXTOK antes de responder. Aumente --max-tokens, ou rode --sonda-think para saber se dá para desligar o raciocínio neste endpoint."
   fi
   die 3 "resposta vazia (finish_reason=${fim:-?})"
 fi

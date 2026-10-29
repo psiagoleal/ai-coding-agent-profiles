@@ -39,7 +39,7 @@ tudo vem do ambiente.
 | `messages`, `temperature`, `max_tokens` | Universal |
 | `response_format: json_object` | Comum, não universal — confira a saída mesmo assim |
 | Campo de raciocínio (`reasoning_content`) | Não é OpenAI; aparece em vLLM/SGLang com modelos de raciocínio |
-| Desligar raciocínio | Específico do servidor: `chat_template_kwargs.enable_thinking=false` (vLLM/SGLang); `reasoning_effort` pode ser **ignorado** em silêncio |
+| Desligar raciocínio | Específico da **implantação**, não do modelo: `chat_template_kwargs.enable_thinking=false` (vLLM/SGLang) ou `thinking: {"type": "disabled"}` (formato Anthropic/Z.ai, repassado por alguns proxies); `reasoning_effort` pode ser **ignorado** em silêncio. Ver [Desligar o raciocínio](#desligar-o-raciocínio-a-chave-depende-da-implantação) |
 | Tool-calling | Varia muito por modelo e servidor — não presuma |
 | Campo desconhecido no corpo | Uns ignoram, outros respondem `400` |
 
@@ -124,6 +124,49 @@ Medido num GLM servido por vLLM atrás de LiteLLM, pedindo um parágrafo de 150 
 Para trabalho mecânico — extração, classificação, formatação — **use `--no-think`**. A
 economia é de uma ordem de grandeza. Reserve o raciocínio para quando a tarefa exige
 inferência e a verificação barata não basta.
+
+### Desligar o raciocínio: a chave depende da implantação
+
+Não existe chave padrão. Cada servidor obedece a uma, e o **mesmo modelo** responde diferente
+conforme quem o serve. O `--no-think` manda as duas conhecidas:
+
+| Chave | Quem obedece |
+|---|---|
+| `chat_template_kwargs.enable_thinking=false` | vLLM/SGLang, pelo template de chat do modelo |
+| `thinking: {"type": "disabled"}` | API no formato Anthropic/Z.ai, e proxies que a repassam ao servidor |
+
+Endpoint que **recusa** uma delas — o LiteLLM responde `400 UnsupportedParamsError` para
+`thinking` em modelo que não a declara, como os servidos por Ollama — recebe a chamada de novo
+sem a chave recusada, com aviso em stderr. Chave pedida em `--extra` nunca é retirada: ali a
+recusa é erro de verdade.
+
+Medido em 2026-10-29, mesmo gateway LiteLLM, pedido trivial ("responda OK"), 3 chamadas por
+configuração (`--sonda-think`):
+
+| Modelo | `template` | `thinking` | `--no-think` (as duas) |
+|---|---|---|---|
+| GLM-5.2 (vLLM) | **desliga** (2 tokens) | ignorado (139) | **desliga** |
+| GLM-5.3 | **vaza** | ignorado (88) | **vaza** |
+| qwen3-coder (Ollama) | desliga | **recusado (400)** | desliga, pelo recuo |
+
+**GLM-5.3 é o caso a conhecer.** Em uso real atrás de LiteLLM, o `--no-think` antigo (só
+`template`) estourava `max_tokens` raciocinando, e `thinking: {"type": "disabled"}` resolveu —
+foi por isso que a chave entrou no `--no-think`. Na medição acima, nenhuma das duas desligou,
+e a de template fez pior: o raciocínio **vazou para o conteúdo** ("The user is asking…") com
+código 0. A diferença entre os dois resultados é a razão da sonda: o que vale num endpoint não
+se transfere para outro. É o pior modo de falha, porque passa por resposta. Desconfie de
+resposta em outra língua, ou que começa descrevendo o pedido.
+
+Por isso, **antes de confiar no `--no-think` num endpoint e modelo novos, sonde uma vez:**
+
+```bash
+$OA --sonda-think -m <modelo>
+```
+
+A sonda faz 12 chamadas triviais e classifica cada uma como **desligou**, **pensou**
+(respondeu certo, mas raciocinando), **vazou** (código 0 com outra coisa no lugar da resposta),
+**estourou** ou **recusou**. No fim diz qual chave usar, ou que nenhuma serve. Se nenhuma serve,
+dimensione `--max-tokens` e divida o pedido por item (seção seguinte).
 
 ### O orçamento de raciocínio escala com o tamanho da TAREFA, não da resposta
 
@@ -223,6 +266,7 @@ com três agravantes:
 | "O formato veio certo, o conteúdo deve estar" | Formato certo é pré-condição, não evidência. Amostre. |
 | "São 135 itens, conferir três não prova nada" | Prova o suficiente para **descartar** o lote. Um erro na amostra derruba tudo. |
 | "É o modelo grande do gateway, é confiável" | Você não mediu. E `--no-think` muda o comportamento dele. |
+| "Passei `--no-think`, então ele não raciocina" | Depende de quem serve o modelo. Já se mediu `--no-think` ignorado e vazando o raciocínio para o conteúdo com código 0. `--sonda-think` uma vez por endpoint e modelo. |
 | "Veio `SEM_ACHADOS`, então não há achados" | Pode ser `401`, candidato indisponível ou pedido mal entendido. Sentinela inesperada é falha de rota. |
 | "Refazer aqui custaria a cota que eu queria poupar" | Usar resultado errado custa mais que a cota. |
 
