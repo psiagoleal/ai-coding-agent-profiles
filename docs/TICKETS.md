@@ -95,6 +95,7 @@ A medição da lista `deny` contra indireção e o experimento de sandbox do §8
 
 ## Concluídos
 
+- [x] [MT-60](tickets/MT-60.md) — Checagem de fatos: fonte oficial primeiro, referência etiquetada `[O]`/`[N]` e validador do relatório
 - [x] [MT-14](../docs/adr/0015-biblioteca-privada-em-repositorio-publico.md) — ADR 0015 decidida: biblioteca privada em repositório público (aceita em 2026-09-24; o painel só soube em 2026-10-29)
 - [x] [MT-51](tickets/MT-51.md) — O executor de experimentos media menos do que dizia: juiz em uma linha, pré-registro só do manifesto, 3 casos contados como 30
 - [x] [MT-50](tickets/MT-50.md) — Experimento controlado de instrução: método, executor com autoteste no CI e worktree de experimentos

@@ -48,6 +48,10 @@ jobs:
       - name: Autoteste do executor de experimentos
         run: python3 skills/experimento-controlado/scripts/rodar-experimento.py --autoteste
 
+      # Sem rede: escala, etiqueta [O]/[N] e declaração de ausência de fonte oficial.
+      - name: Autoteste do validador de checagem de fatos
+        run: python3 skills/dominio/checagem-fatos/scripts/checar-relatorio.py --autoteste
+
       # Endpoint fabricado em 127.0.0.1: o recuo da chave recusada e a classificação da sonda
       # de raciocínio, sem rede e sem credencial.
       - name: Autoteste do cliente de delegação (oa-chat)
