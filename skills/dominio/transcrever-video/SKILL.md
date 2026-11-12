@@ -3,8 +3,9 @@ name: transcrever-video
 description: >-
   Obtém a transcrição de um vídeo online pelo caminho barato — a legenda que a
   plataforma já tem — convertendo-a em texto corrido com yt-dlp, sem baixar o
-  vídeo, sem ffmpeg e sem modelo de fala. Traz o caminho caro (ASR local) como
-  alternativa para quando não há legenda. Aciona ao pedir "transcreva este
+  vídeo, sem ffmpeg e sem modelo de fala. Sem legenda — o caso comum em
+  Facebook, Instagram, TikTok e áudio de WhatsApp —, traz o caminho caro: ASR
+  local com Whisper, ainda sem ffmpeg. Aciona ao pedir "transcreva este
   vídeo", ao usar vídeo como fonte de pesquisa, ou quando a leitura direta da
   página do YouTube falhar por bloqueio.
 ---
@@ -63,10 +64,26 @@ legenda** (manual ou automática). Sem legenda, o script sai com código `3` e d
 
 ## Quando não há legenda: o caminho caro
 
-Aí sim vale baixar o áudio e rodar ASR local — `yt-dlp` para o áudio, `ffmpeg` para converter,
-um modelo de fala para transcrever. Custa `ffmpeg` no sistema, alguns GB de modelo e minutos
-por vídeo. Rode local: mandar áudio para serviço externo é o caso que a `meeting-minutes`
-trata como exfiltração do material mais sensível de um projeto.
+É o caso **comum** em Facebook, Instagram, TikTok e áudio de WhatsApp — as plataformas
+sociais raramente expõem legenda. Aí vale baixar só o áudio e rodar ASR local:
+
+```bash
+S=skills/dominio/transcrever-video/scripts
+uv run --no-project --with faster-whisper --with yt-dlp \
+    --with nvidia-cublas-cu12 --with "nvidia-cudnn-cu12==9.*" \
+    python $S/asr-local.py "<url-ou-arquivo>"           # sem GPU: omita os --with nvidia-*
+```
+
+- **Sem `ffmpeg` no sistema**: o áudio é decodificado pelo PyAV, que traz as próprias libs.
+- **GPU se houver**: `large-v3-turbo` em float16 transcreve 9 min em ~20 s numa RTX 3070
+  (8 GB). Sem GPU, cai para `small` em CPU e **declara** isso na 1ª linha do `.txt`.
+- Entrada pode ser URL (yt-dlp baixa só o áudio) ou arquivo local (áudio de WhatsApp
+  exportado, `.ogg`/`.opus`/`.m4a`).
+- Post que exige login (Instagram, às vezes Facebook): baixe o arquivo pelo navegador e passe
+  o caminho — evite `--cookies-from-browser`, que entrega a sessão inteira da pessoa ao script.
+
+Rode local: mandar áudio para serviço externo é o caso que a `meeting-minutes` trata como
+exfiltração do material mais sensível de um projeto.
 
 ## Ligação com o resto do acervo
 

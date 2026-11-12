@@ -3,7 +3,8 @@ name: checagem-fatos
 invocacao: modelo
 description: >-
   Verifica conteúdo suspeito ou alarmista (vídeo, áudio, print, texto de
-  WhatsApp, link de notícia) pelo método das agências de checagem: extrai as
+  WhatsApp, post de Facebook, Instagram ou TikTok, link de notícia) pelo método
+  das agências de checagem: extrai as
   alegações checáveis, busca primeiro em fonte oficial, classifica cada uma numa
   escala fixa e entrega relatório com a informação correta e as referências
   marcadas como oficiais ou não oficiais, mais um resumo pronto para responder a
@@ -35,15 +36,37 @@ Lupa, Aos Fatos, Comprova e AFP Checamos — com a leitura lateral do método SI
 Conteúdo alarmista é apagado ou editado depois que viraliza. Registre o link, a data de
 publicação, o autor/canal e guarde o material:
 
-| Formato | Como obter o texto |
-|---|---|
-| Vídeo (YouTube etc.) | skill [`dominio/transcrever-video`](../transcrever-video/SKILL.md); copie a transcrição para junto do relatório |
-| Áudio de WhatsApp | ASR **local** (ver `transcrever-video`, caminho caro) — áudio de família não vai para serviço externo |
-| Print / imagem | transcreva o texto; faça busca reversa da imagem (Google Lens, TinEye) para achar a origem e a data reais |
-| Texto encaminhado | busque um trecho exato entre aspas — corrente costuma ter anos e várias versões |
-| Notícia / site | salve no Web Archive (`web.archive.org/save/<url>`) e anote a data da matéria |
+| Origem | Como obter o conteúdo | O que guardar |
+|---|---|---|
+| **YouTube** | legenda da plataforma — `transcrever-video/scripts/legendas.py` | `.txt` + `.meta` |
+| **Facebook, Instagram, TikTok, Kwai, X** (vídeo/Reels) | quase nunca há legenda: `transcrever-video/scripts/asr-local.py <url>` (baixa só o áudio, Whisper local) | `.txt` com origem ASR declarada + `.meta` (autor, data, legenda do post) |
+| Post de rede social **que exige login** | o usuário baixa o arquivo ou tira print e passa o caminho; ou leitura pelo navegador da própria pessoa (Claude in Chrome), só de leitura | arquivo/print + URL |
+| **Texto do post** (legenda, descrição) | vem no `.meta` (`title`) via yt-dlp; senão, print | idem |
+| **Áudio de WhatsApp/Telegram** | exportar o `.opus`/`.ogg` e rodar `asr-local.py <arquivo>` — **nunca** serviço externo | `.txt` |
+| **Print / imagem** | transcreva o texto; busca reversa (Google Lens, TinEye, Yandex) para achar origem e data reais | print |
+| **Texto encaminhado** (corrente) | busque um trecho exato entre aspas — corrente costuma ter anos e várias versões | o texto |
+| **Notícia / site / blog** | leitura direta; salve no Web Archive (`web.archive.org/save/<url>`) | URL arquivada + data da matéria |
+| **PDF** (relatório, "documento vazado") | `dominio/docling-local`; confira se o documento existe no site do emissor | PDF + `.md` |
+
+Os scripts são da skill [`dominio/transcrever-video`](../transcrever-video/SKILL.md). Copie a
+transcrição para junto do relatório — o post pode sumir.
 
 **Não registre** nome, telefone ou dado pessoal de quem enviou. O relatório trata do conteúdo.
+
+#### Acesso às redes sociais: por que não há chave de API
+
+Nenhuma das três oferece API de leitura de posts públicos para uso pessoal:
+
+- **Meta (Facebook/Instagram)** — a Graph API só lê páginas e contas que você administra. O
+  acesso a conteúdo público de terceiros é a **Meta Content Library**, restrita a pesquisadores
+  de instituições sem fins lucrativos, com candidatura revisada.
+- **TikTok** — a Research API é para pesquisadores acadêmicos e organizações sem fins
+  lucrativos aprovados; a API de exibição só mostra o conteúdo da própria conta.
+
+O caminho prático é o mesmo de um checador sem convênio: **yt-dlp para vídeo público**,
+**arquivo ou print enviado pela pessoa** quando há login, e **o navegador da própria pessoa**
+quando é preciso ler a página. Não use `--cookies-from-browser`: entrega a sessão inteira ao
+script, e conta usada por automação pode ser bloqueada.
 
 ### 2. Avaliar a fonte (leitura lateral)
 
@@ -57,6 +80,23 @@ do SIFT):
 - **Quem ganha?** Monetização por clique, patrocínio, venda de produto (kits de sobrevivência,
   suplemento, curso). Título alarmista com conteúdo moderado é *clickbait*: registre, mas
   julgue as alegações, não o título.
+
+Em **rede social**, além disso:
+
+- **Cadeia de repostagem.** "Reprodução: @perfil", marca d'água de outro app, corte de live:
+  ache o **post original** e a data dele — o repost muda contexto e data sem avisar.
+- **Conta.** Idade da conta, troca de nome, verificação, outros posts do mesmo tom. Selo de
+  verificado prova identidade, não veracidade.
+- **Engajamento não é evidência.** "99 mil visualizações" mede alcance, não verdade.
+- **Mídia reciclada ou sintética.** Imagem/vídeo de outro evento ou de anos antes (busca
+  reversa por quadro-chave — extensão InVID-WeVerify); voz ou rosto gerado por IA (lábio fora
+  de sincronia, voz sem respiração, mãos e texto deformados). Suspeita sem prova vira ❔, não ❌.
+- **Rótulo da plataforma.** Aviso de checagem, Nota da Comunidade (X) ou "informação falsa"
+  (Meta) entram como `[N]`, com o link do checador que o originou.
+- **Narrativa costurada.** O formato mais comum em vídeo de opinião: uma sequência de
+  notícias verdadeiras ("vamos aos fatos") seguida de uma conclusão que nenhuma delas sustenta.
+  Cheque as notícias uma a uma, e trate a **ligação entre elas** como alegação própria — é ali
+  que costuma estar o 🟠.
 
 ### 3. Extrair as alegações checáveis
 
