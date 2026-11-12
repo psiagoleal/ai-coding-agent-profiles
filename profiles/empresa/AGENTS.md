@@ -257,6 +257,8 @@ descobre via adaptador `.claude/skills/` (ponteiros gerados por `scripts/setup-p
   reservar orçamento para o handoff antes da virada da janela.
 - **`caveman`** — modo de comunicação comprimida em sessão longa ou com cota apertada;
   vale na conversa, nunca em ADR, handoff, ATA, commit ou PR.
+- **`didatica`** — quando pedirem para explicar ou entender um conceito: uma pergunta de
+  calibração, âncora no que a pessoa já sabe e uma ideia por rodada; "vai direto" desliga.
 - **`licoes-aprendidas`** — ao terminar trabalho não trivial, depois de incidente, ou na
   segunda vez do mesmo erro: a lição vira comando, teste ou hook — regra escrita é o último
   recurso, não o primeiro.

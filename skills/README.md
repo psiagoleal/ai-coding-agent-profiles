@@ -46,6 +46,7 @@ A biblioteca tem **dois níveis**, e a distinção é o que mantém o catálogo 
 | [`definir-stack`](definir-stack/SKILL.md) | Questionário de stack por tipo de projeto; respostas vão para as ilhas do `AGENTS.md`, ADR e `DESIGN.md`, com todo comando executado antes de declarado | Projeto novo; stack não escrita; antes de escolher framework; agente adivinhando comando de build |
 | [`mapa-de-arquitetura`](mapa-de-arquitetura/SKILL.md) | Gera e mantém `docs/architecture.md` com a arquitetura efetiva — componentes, responsabilidades, dependências com evidência e Mermaid — sem encaixe forçado em padrão | Adoção em projeto existente; `docs/architecture.md` ausente ou velho; mudança altera dependências entre módulos |
 | [`experimento-controlado`](experimento-controlado/SKILL.md) | Medir se uma instrução (regra, skill, prompt) muda o modelo antes de adotar ou recusar: critério de refutação versionado antes, braço de controle do mesmo tamanho, repetição, correção cega, intervalo por braço | Propor regra ou skill "que melhora o raciocínio"; citar artigo ou benchmark como prova; adoção que depende de "o modelo vai se comportar melhor" |
+| [`didatica`](didatica/SKILL.md) | Explicação em rodadas: uma pergunta de calibração, âncora no que a pessoa já sabe, uma ideia por rodada com o ponto a observar, do concreto ao abstrato, e pergunta de verificação que decide a rodada seguinte | "Me explica", "não entendi", "qual a intuição"; matéria de estudo; desliga com "vai direto" |
 
 ## Bibliotecas extras
 

@@ -229,7 +229,7 @@ Prove com `--autoteste`.
   **`gates-de-conclusao`**, **`paralelizacao-em-grafo`**, **`spec-como-contrato`**,
   **`teste-primeiro`**, **`critico-independente`**, **`mapa-de-arquitetura`**,
   **`definir-stack`**,
-  **`perguntar-antes-de-construir`**, **`laco-de-correcao`** — conforme a
+  **`perguntar-antes-de-construir`**, **`laco-de-correcao`**, **`didatica`** — conforme a
   necessidade do projeto. Ver seção 9 do perfil empresa para os gatilhos, e
   as categorias `stack/` (ex.: `criar-servico-fastapi`, `criar-ui-sveltekit`,
   `criar-app-tauri`), `entrega/` (CI e deploy) e `conhecimento/` (opt-in) e
