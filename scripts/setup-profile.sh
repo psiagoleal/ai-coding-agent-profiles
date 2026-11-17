@@ -833,7 +833,7 @@ for s in "${SKILLS[@]}"; do
     install_file "$NEUTRAL_DIR/$_dest/$rel" "$f" "$TARGET/$NEUTRAL_DIR/$_dest/$rel"
   done < <(find "$(skill_dir "$s")" -type f \
              -not -path '*/node_modules/*' -not -path '*/__pycache__/*' \
-             -not -path '*/.venv/*' -not -name '*.pyc' -print0)
+             -not -path '*/.venv/*' -not -path '*/.cache/*' -not -name '*.pyc' -print0)
 done
 echo
 

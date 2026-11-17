@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="pt-BR" data-tema="tecnico" data-temas="tecnico">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Título do deck</title>
+<style>
+/* Canvas fixo 1600x900 (16:9) escalado para a janela. Medidas em px do canvas.
+   Tema: tokens gerados por scripts/tema.py a partir de temas.json; não editar o bloco. */
+/* TEMAS:inicio */
+:root, :root[data-tema="tecnico"] {
+  --fundo: #f6f7f9; --superficie: #ffffff; --texto: #16202b; --suave: #5a6776; --linha: #d9dee5;
+  --primaria: #0b6e7a; --primaria-suave: #e2f1f2; --sobre-primaria: #ffffff; --enfase: #a64b0b;
+  --cinza: #9aa5b1; --ok: #2f7d4f; --alerta: #8f5a12; --erro: #b42318; --codigo: #eef1f4;
+  --fonte-titulo: "Space Grotesk", "Segoe UI", system-ui, sans-serif;
+  --fonte-texto: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --fonte-mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+  color-scheme: light;
+}
+:root { --temas: "tecnico"; }
+/* TEMAS:fim */
+
+:root { --escala: 1; }
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body { margin: 0; background: var(--fundo); color: var(--texto); font-family: var(--fonte-texto); }
+
+/* ---------- Deck e modos ---------- */
+.deck { position: fixed; inset: 0; display: grid; place-items: center; overflow: hidden; }
+.slide {
+  width: 1600px; height: 900px; zoom: var(--escala);
+  grid-area: 1 / 1; display: none;
+  grid-template-rows: auto 1fr auto; gap: 28px;
+  padding: 64px 96px 40px;
+  background: var(--fundo); color: var(--texto);
+  font-size: 30px; line-height: 1.4;
+  position: relative; overflow: hidden;
+}
+.slide.ativo { display: grid; }
+html[data-modo="leitura"] body { overflow: auto; }
+html[data-modo="leitura"] .deck { position: static; display: flex; flex-direction: column; align-items: center; gap: 24px; padding: 24px 0 96px; overflow: visible; }
+html[data-modo="leitura"] .slide { display: grid; border: 1px solid var(--linha); }
+html[data-modo="leitura"] .passo { visibility: visible !important; }
+html[data-modo="leitura"] .notas { display: block; position: absolute; right: 24px; bottom: 64px; max-width: 560px; font-size: 18px; line-height: 1.45; background: var(--superficie); border: 1px dashed var(--linha); padding: 10px 14px; color: var(--suave); }
+
+/* ---------- Tipografia ---------- */
+h1, h2, h3 { font-family: var(--fonte-titulo); margin: 0; line-height: 1.12; text-wrap: balance; color: var(--texto); }
+h1 { font-size: 84px; font-weight: 700; letter-spacing: -0.01em; }
+h2 { font-size: 50px; font-weight: 600; max-width: 1350px; }  /* título-afirmação: frase, até 2 linhas */
+h3 { font-size: 32px; font-weight: 600; }
+p { margin: 0; max-width: 38em; }
+strong { font-weight: 600; }
+.etiqueta { font: 500 20px/1 var(--fonte-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--primaria); }
+.suave { color: var(--suave); }
+.destaque { color: var(--enfase); font-weight: 600; }
+code, .mono { font-family: var(--fonte-mono); font-size: .85em; }
+ul, ol { margin: 0; padding-left: 1.1em; display: grid; gap: 14px; }
+li::marker { color: var(--primaria); }
+
+/* ---------- Estrutura do slide ---------- */
+.cabecalho { display: grid; gap: 14px; align-content: start; }
+.corpo { min-height: 0; min-width: 0; display: grid; gap: 28px; align-content: start; }
+.corpo > * { min-width: 0; }
+.corpo.centro { align-content: center; }
+.rodape { display: flex; justify-content: space-between; align-items: end; gap: 24px; font-size: 18px; color: var(--suave); border-top: 1px solid var(--linha); padding-top: 12px; }
+.fonte::before { content: "Fonte: "; }
+.duas-colunas { grid-template-columns: 1fr 1fr; gap: 56px; grid-template-rows: minmax(0, 1fr); align-items: center; }
+.texto-figura { grid-template-columns: 2fr 3fr; gap: 56px; grid-template-rows: minmax(0, 1fr); align-items: center; }
+.tres-colunas { grid-template-columns: repeat(3, 1fr); gap: 32px; }
+
+/* ---------- Layouts de slide ---------- */
+.slide.capa { grid-template-rows: 1fr auto; background: var(--primaria); color: var(--sobre-primaria); padding: 96px; }
+.slide.capa h1, .slide.capa .etiqueta, .slide.capa p { color: var(--sobre-primaria); }
+.slide.capa .meta { font-size: 24px; display: flex; gap: 40px; flex-wrap: wrap; }
+.slide.secao { grid-template-rows: 1fr; align-content: center; background: var(--primaria-suave); }
+.slide.secao .num { font: 700 160px/1 var(--fonte-titulo); color: var(--primaria); }
+.slide.numero .valor { font: 700 180px/1 var(--fonte-titulo); color: var(--primaria); font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+.slide.numero .unidade { font-size: .4em; color: var(--suave); margin-left: 12px; }
+.slide.citacao blockquote { margin: 0; font: 400 52px/1.3 var(--fonte-titulo); max-width: 1250px; }
+.slide.citacao cite { display: block; margin-top: 28px; font: 400 24px/1.3 var(--fonte-texto); color: var(--suave); font-style: normal; }
+.slide.figura .corpo { grid-template-rows: minmax(0, 1fr); }
+
+/* ---------- Componentes ---------- */
+.cartao { background: var(--superficie); border: 1px solid var(--linha); border-radius: 8px; padding: 28px 32px; display: grid; gap: 12px; align-content: start; }
+.callout { border-left: 6px solid var(--enfase); background: var(--superficie); padding: 20px 28px; }
+.chip { display: inline-block; font: 500 18px/1 var(--fonte-mono); padding: 8px 12px; border-radius: 4px; border: 1px solid currentColor; }
+.chip.ok { color: var(--ok); } .chip.alerta { color: var(--alerta); } .chip.erro { color: var(--erro); } .chip.primaria { color: var(--primaria); }
+figure { margin: 0; display: grid; gap: 12px; justify-items: center; min-width: 0; min-height: 0; height: 100%; grid-template-rows: minmax(0, 1fr) auto; }
+figure img, figure > svg { width: 100%; height: 100%; min-height: 0; object-fit: contain; }
+figcaption { font-size: 20px; color: var(--suave); }
+table { border-collapse: collapse; width: 100%; font-size: 24px; }
+th, td { text-align: left; padding: 12px 16px; border-bottom: 1px solid var(--linha); vertical-align: top; }
+th { font: 600 18px/1.2 var(--fonte-mono); letter-spacing: .05em; text-transform: uppercase; color: var(--suave); }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+tr.destaque td { background: var(--primaria-suave); }
+pre.codigo { margin: 0; background: var(--codigo); border: 1px solid var(--linha); border-radius: 8px; padding: 24px; font: 400 22px/1.5 var(--fonte-mono); overflow: hidden; white-space: pre-wrap; }
+.equacao { display: grid; justify-items: center; gap: 40px; font-size: 52px; }
+dl.simbolos { display: grid; grid-template-columns: auto 1fr; gap: 8px 24px; margin: 0; font-size: 24px; }
+dl.simbolos dt { font-family: var(--fonte-mono); color: var(--primaria); }
+dl.simbolos dd { margin: 0; color: var(--suave); }
+.diagrama { display: grid; place-items: center; min-width: 0; min-height: 0; height: 100%; }
+.diagrama svg { max-width: 100%; max-height: 100%; height: auto; }
+.tex svg, .tex-bloco svg { vertical-align: middle; }
+.passo { visibility: hidden; }
+.passo.visivel { visibility: visible; }
+.notas { display: none; }
+
+/* ---------- HUD ---------- */
+.hud { position: fixed; inset: auto 0 0 0; height: 4px; z-index: 5; }
+.hud .barra { height: 100%; width: 0; background: var(--primaria); transition: width .2s; }
+.controles { position: fixed; right: 12px; bottom: 12px; z-index: 6; display: flex; gap: 6px; align-items: center; font: 500 13px/1 var(--fonte-mono); color: var(--suave); background: var(--superficie); border: 1px solid var(--linha); border-radius: 6px; padding: 4px 6px; opacity: .25; transition: opacity .2s; }
+.controles:hover, .controles:focus-within { opacity: 1; }
+.controles button { font: inherit; color: var(--texto); background: transparent; border: 1px solid var(--linha); border-radius: 4px; padding: 5px 8px; cursor: pointer; }
+.controles button:focus-visible { outline: 2px solid var(--primaria); outline-offset: 2px; }
+.painel-notas { position: fixed; left: 12px; right: 12px; bottom: 56px; z-index: 7; max-height: 40vh; overflow: auto; background: var(--superficie); color: var(--texto); border: 1px solid var(--linha); border-radius: 8px; padding: 14px 18px; font: 400 16px/1.5 var(--fonte-texto); }
+.painel-notas .tempo { font-family: var(--fonte-mono); color: var(--primaria); float: right; margin-left: 16px; }
+@media (prefers-reduced-motion: reduce) { .hud .barra { transition: none; } }
+
+/* ---------- Impressão / PDF: um slide por página ---------- */
+@page { size: 1600px 900px; margin: 0; }
+@media print {
+  html, body { height: auto; }
+  .deck { position: static; display: block; }
+  .slide { display: grid !important; zoom: 1; break-after: page; border: 0; }
+  .passo { visibility: visible !important; }
+  .hud, .controles, .painel-notas { display: none !important; }
+  html[data-modo="leitura"] .notas { display: none; }
+}
+</style>
+</head>
+<body>
+<main class="deck">
+
+  <section class="slide capa">
+    <div class="corpo centro">
+      <div class="etiqueta">Contexto · reunião · data</div>
+      <h1>Título que diz a ideia central</h1>
+      <p>Uma frase com o que o público deve decidir, entender ou fazer depois desta apresentação.</p>
+    </div>
+    <div class="meta"><span>Autor</span><span>Área</span><span>dd/mm/aaaa</span></div>
+    <aside class="notas">Abertura: diga a ideia central em uma frase antes de qualquer detalhe.</aside>
+  </section>
+
+  <section class="slide">
+    <header class="cabecalho">
+      <div class="etiqueta">Seção</div>
+      <h2>Título-afirmação: a conclusão deste slide em uma frase</h2>
+    </header>
+    <div class="corpo texto-figura">
+      <div><p>Evidência curta que sustenta o título. O visual ao lado prova; o texto só guia o olhar.</p></div>
+      <figure><img src="figura.svg" alt="Descrever o que a figura mostra"><figcaption>Legenda com unidade</figcaption></figure>
+    </div>
+    <footer class="rodape"><span class="fonte">origem do dado</span><span class="num-slide"></span></footer>
+    <aside class="notas">O que dizer aqui que não está escrito no slide.</aside>
+  </section>
+
+</main>
+<div class="hud" aria-hidden="true"><div class="barra"></div></div>
+<nav class="controles" aria-label="Controles da apresentação">
+  <button type="button" data-acao="anterior" aria-label="Slide anterior">←</button>
+  <span class="posicao">1 / 1</span>
+  <button type="button" data-acao="proximo" aria-label="Próximo slide">→</button>
+  <button type="button" data-acao="tema" aria-label="Trocar tema">T</button>
+  <button type="button" data-acao="notas" aria-label="Mostrar notas">N</button>
+  <button type="button" data-acao="leitura" aria-label="Modo leitura">L</button>
+</nav>
+<div class="painel-notas" hidden></div>
+<script>
+(function () {
+  "use strict";
+  var raiz = document.documentElement;
+  var slides = Array.prototype.slice.call(document.querySelectorAll(".slide"));
+  var temas = (raiz.getAttribute("data-temas") || "tecnico").split(",");
+  var posicao = document.querySelector(".posicao");
+  var barra = document.querySelector(".hud .barra");
+  var painel = document.querySelector(".painel-notas");
+  var inicio = null, atual = 0;
+
+  function guardar(chave, valor) { try { localStorage.setItem("deck:" + chave, valor); } catch (e) {} }
+  function ler(chave) { try { return localStorage.getItem("deck:" + chave); } catch (e) { return null; } }
+
+  slides.forEach(function (s, i) {
+    var n = s.querySelector(".num-slide");
+    if (n) n.textContent = (i + 1) + " / " + slides.length;
+  });
+
+  function leitura() { return raiz.getAttribute("data-modo") === "leitura"; }
+  function escalar() {
+    var e = Math.min(window.innerWidth / 1600, window.innerHeight / 900);
+    if (leitura()) e = Math.min(1, (window.innerWidth - 32) / 1600);
+    raiz.style.setProperty("--escala", String(e));
+  }
+  function passos(s) { return Array.prototype.slice.call(s.querySelectorAll(".passo")); }
+  function mostrar(i, ultimoPasso) {
+    atual = Math.max(0, Math.min(slides.length - 1, i));
+    slides.forEach(function (s, j) { s.classList.toggle("ativo", j === atual); });
+    passos(slides[atual]).forEach(function (p) { p.classList.toggle("visivel", !!ultimoPasso); });
+    posicao.textContent = (atual + 1) + " / " + slides.length;
+    barra.style.width = ((atual + 1) / slides.length * 100) + "%";
+    if (location.hash !== "#" + (atual + 1)) history.replaceState(null, "", "#" + (atual + 1));
+    atualizarNotas();
+  }
+  function proximo() {
+    var p = passos(slides[atual]).filter(function (x) { return !x.classList.contains("visivel"); });
+    if (p.length && !leitura()) { p[0].classList.add("visivel"); return; }
+    mostrar(atual + 1, false);
+  }
+  function anterior() {
+    var p = passos(slides[atual]).filter(function (x) { return x.classList.contains("visivel"); });
+    if (p.length && !leitura()) { p[p.length - 1].classList.remove("visivel"); return; }
+    mostrar(atual - 1, true);
+  }
+  function trocarTema() {
+    var i = (temas.indexOf(raiz.getAttribute("data-tema")) + 1) % temas.length;
+    raiz.setAttribute("data-tema", temas[i]);
+    guardar("tema", temas[i]);
+  }
+  function alternarLeitura() {
+    var ligado = leitura();
+    if (ligado) raiz.removeAttribute("data-modo"); else raiz.setAttribute("data-modo", "leitura");
+    escalar();
+    if (!ligado) slides[atual].scrollIntoView({ block: "start" }); else mostrar(atual, false);
+  }
+  function atualizarNotas() {
+    if (painel.hidden) return;
+    var n = slides[atual].querySelector(".notas");
+    var seg = inicio ? Math.floor((Date.now() - inicio) / 1000) : 0;
+    var t = String(Math.floor(seg / 60)).padStart(2, "0") + ":" + String(seg % 60).padStart(2, "0");
+    painel.innerHTML = '<span class="tempo">' + t + "</span>";
+    painel.appendChild(document.createTextNode(n ? n.textContent.trim() : "Sem notas neste slide."));
+  }
+  function alternarNotas() {
+    painel.hidden = !painel.hidden;
+    if (!inicio) inicio = Date.now();
+    atualizarNotas();
+  }
+  setInterval(atualizarNotas, 1000);
+
+  var acoes = { anterior: anterior, proximo: proximo, tema: trocarTema, notas: alternarNotas, leitura: alternarLeitura };
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest && e.target.closest("[data-acao]");
+    if (b) acoes[b.getAttribute("data-acao")]();
+  });
+  document.addEventListener("keydown", function (e) {
+    if (e.target.closest && e.target.closest("input, textarea, select")) return;
+    var k = e.key;
+    if (k === "ArrowRight" || k === "PageDown" || k === " ") { e.preventDefault(); proximo(); }
+    else if (k === "ArrowLeft" || k === "PageUp") { e.preventDefault(); anterior(); }
+    else if (k === "Home") mostrar(0, false);
+    else if (k === "End") mostrar(slides.length - 1, false);
+    else if (k === "t" || k === "T") trocarTema();
+    else if (k === "n" || k === "N") alternarNotas();
+    else if (k === "l" || k === "L") alternarLeitura();
+    else if ((k === "f" || k === "F") && raiz.requestFullscreen) {
+      if (document.fullscreenElement) document.exitFullscreen(); else raiz.requestFullscreen().catch(function () {});
+    }
+  });
+  var toqueX = null;
+  document.addEventListener("touchstart", function (e) { toqueX = e.touches[0].clientX; }, { passive: true });
+  document.addEventListener("touchend", function (e) {
+    if (toqueX === null || leitura()) return;
+    var d = e.changedTouches[0].clientX - toqueX;
+    if (Math.abs(d) > 50) { if (d < 0) proximo(); else anterior(); }
+    toqueX = null;
+  });
+  window.addEventListener("resize", escalar);
+  window.addEventListener("hashchange", function () { mostrar((parseInt(location.hash.slice(1), 10) || 1) - 1, false); });
+
+  var params = new URLSearchParams(location.search);
+  var temaPedido = params.get("tema") || ler("tema");
+  if (temaPedido && temas.indexOf(temaPedido) >= 0) raiz.setAttribute("data-tema", temaPedido);
+  if (params.get("modo") === "leitura") raiz.setAttribute("data-modo", "leitura");
+  escalar();
+  mostrar((parseInt(location.hash.slice(1), 10) || 1) - 1, false);
+  window.deck = { mostrar: mostrar, total: slides.length };
+})();
+</script>
+</body>
+</html>

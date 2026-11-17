@@ -1,0 +1,16 @@
+{
+  "name": "apresentacao-html",
+  "private": true,
+  "type": "module",
+  "description": "Ferramentas da skill de apresentações HTML autocontidas: render de Mermaid e LaTeX, fontes embutidas, captura de tela e exportação.",
+  "dependencies": {
+    "playwright-core": "1.49.1",
+    "mermaid": "11.4.1",
+    "mathjax": "3.2.2",
+    "@fontsource/ibm-plex-sans": "5.1.1",
+    "@fontsource/ibm-plex-mono": "5.1.1",
+    "@fontsource/space-grotesk": "5.1.1",
+    "@fontsource/source-serif-4": "5.1.1",
+    "@fontsource/inter": "5.1.1"
+  }
+}

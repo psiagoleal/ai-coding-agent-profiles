@@ -1,0 +1,6 @@
+# Caminho relativo: skills/dominio/apresentacao-html/.gitignore
+# Dependências (Mermaid, MathJax, Playwright, fontes) e caches são instalados sob
+# demanda (npm install, scripts/ambiente.sh) e somam centenas de MB.
+node_modules/
+.cache/
+__pycache__/

@@ -1,0 +1,11 @@
+\documentclass[border=4pt]{standalone}
+\usepackage[european]{circuitikz} % [siunitx] exige o pacote siunitx (texlive-science)
+% Equivalente monofásico de uma linha curta: fonte, impedância série e carga.
+\begin{document}
+\begin{circuitikz}[scale=1.2, transform shape]
+  \draw (0,0) to[sV, l=$\dot V_1$] (0,3)
+        to[R, l=$R$] (2.5,3)
+        to[L, l=$jX$, i>^=$\dot I$] (5,3)
+        to[european resistor, l_=$Z_{c}$, v^>=$\dot V_2$] (5,0) -- (0,0);
+\end{circuitikz}
+\end{document}

@@ -1,0 +1,93 @@
+{
+  "_sobre": "Fonte única dos temas. tema.py gera o CSS do template, construir.mjs embute as fontes e colore o Mermaid, estilo_mpl.py colore os gráficos. Editar aqui, nunca no CSS gerado.",
+  "temas": {
+    "tecnico": {
+      "rotulo": "Técnico",
+      "uso": "Padrão para reunião de engenharia e refinamento; sala iluminada.",
+      "modo": "claro",
+      "cores": {
+        "fundo": "#f6f7f9",
+        "superficie": "#ffffff",
+        "texto": "#16202b",
+        "suave": "#5a6776",
+        "linha": "#d9dee5",
+        "primaria": "#0b6e7a",
+        "primaria-suave": "#e2f1f2",
+        "sobre-primaria": "#ffffff",
+        "enfase": "#a64b0b",
+        "cinza": "#9aa5b1",
+        "ok": "#2f7d4f",
+        "alerta": "#8f5a12",
+        "erro": "#b42318",
+        "codigo": "#eef1f4"
+      },
+      "fontes": { "titulo": "Space Grotesk", "texto": "IBM Plex Sans", "mono": "IBM Plex Mono" }
+    },
+    "institucional": {
+      "rotulo": "Institucional",
+      "uso": "Gestão e diretoria; tom sóbrio, tipografia serifada nos títulos.",
+      "modo": "claro",
+      "cores": {
+        "fundo": "#ffffff",
+        "superficie": "#f3f5f8",
+        "texto": "#0f1d2e",
+        "suave": "#4b5b6e",
+        "linha": "#d5dbe3",
+        "primaria": "#1f3b66",
+        "primaria-suave": "#e6ecf5",
+        "sobre-primaria": "#ffffff",
+        "enfase": "#b3420a",
+        "cinza": "#a3adba",
+        "ok": "#24704a",
+        "alerta": "#8a5a10",
+        "erro": "#a8251b",
+        "codigo": "#f1f3f6"
+      },
+      "fontes": { "titulo": "Source Serif 4", "texto": "Inter", "mono": "IBM Plex Mono" }
+    },
+    "auditorio": {
+      "rotulo": "Auditório",
+      "uso": "Projeção em sala escura; fundo escuro reduz ofuscamento.",
+      "modo": "escuro",
+      "cores": {
+        "fundo": "#0f1419",
+        "superficie": "#182029",
+        "texto": "#eef2f6",
+        "suave": "#a7b3c0",
+        "linha": "#2c3845",
+        "primaria": "#5cc8d4",
+        "primaria-suave": "#17323a",
+        "sobre-primaria": "#0f1419",
+        "enfase": "#f2b84b",
+        "cinza": "#5d6b7a",
+        "ok": "#6cc28f",
+        "alerta": "#e9b25c",
+        "erro": "#f08a80",
+        "codigo": "#0b1015"
+      },
+      "fontes": { "titulo": "Space Grotesk", "texto": "IBM Plex Sans", "mono": "IBM Plex Mono" }
+    },
+    "impressao": {
+      "rotulo": "Impressão",
+      "uso": "Versão de leitura e PDF para distribuir; contraste máximo, legível em preto e branco.",
+      "modo": "claro",
+      "cores": {
+        "fundo": "#ffffff",
+        "superficie": "#ffffff",
+        "texto": "#000000",
+        "suave": "#3d3d3d",
+        "linha": "#b8b8b8",
+        "primaria": "#1a1a1a",
+        "primaria-suave": "#eeeeee",
+        "sobre-primaria": "#ffffff",
+        "enfase": "#0047a3",
+        "cinza": "#9a9a9a",
+        "ok": "#1d6b3f",
+        "alerta": "#7a4d00",
+        "erro": "#9b1c13",
+        "codigo": "#f2f2f2"
+      },
+      "fontes": { "titulo": "Inter", "texto": "Source Serif 4", "mono": "IBM Plex Mono" }
+    }
+  }
+}

@@ -65,10 +65,11 @@ todas as fontes: colisão é erro, porque os adaptadores são planos.
 | [`dominio/transcrever-video`](dominio/transcrever-video/SKILL.md) | Transcrição pelo caminho barato: a legenda que a plataforma já tem, sem ffmpeg nem modelo de fala; ASR local só quando não há legenda | "transcreva este vídeo"; vídeo como fonte de pesquisa; página do YouTube bloqueada |
 | [`dominio/exercicio-resolvido`](dominio/exercicio-resolvido/SKILL.md) | Exercício de engenharia em três artefatos: notebook sympy com fórmula → substituição → resultado, guia por questão com a derivação e o que ela ensina, e a fronteira do que fica com o aluno | Lista, prelab, prova antiga; "notebook com as contas"; "guia passo a passo" |
 | [`dominio/checagem-fatos`](dominio/checagem-fatos/SKILL.md) | Checar conteúdo alarmista pelo método das agências: alegação por alegação, fonte oficial primeiro, escala fixa, tabela com informação correta e referência etiquetada `[O]`/`[N]`, resumo para quem mandou | "Isso é verdade?", "é fake?", "checar/verificar"; link ou mensagem com tom de alerta |
+| [`dominio/apresentacao-html`](dominio/apresentacao-html/SKILL.md) | Deck em HTML autocontido (abre sem rede): roteiro de títulos-afirmação antes do design, temas trocáveis ou derivados de uma identidade visual com contraste verificado, visuais técnicos por ferramenta (Mermaid, LaTeX, schemdraw, CircuiTikZ, matplotlib, captura e vídeo com Playwright) e exportação em PDF e PNG | "apresentação", "deck", "slides"; material para reunião ou para projetar; transformar análise em slides |
 | [`dominio/docling-local`](dominio/docling-local/SKILL.md) | PDF em Markdown pelo docling local, preservando equações em LaTeX, com procedência declarada | Extrair/converter PDF; citar norma ou artigo; alimentar base de referências |
 
-Estas trazem *scripts* anexos e dependências próprias (Playwright, `curl_cffi`, `pikepdf`, um serviço docling local e um venv Piper para TTS), instaladas
-sob demanda — por isso `node_modules/`, `.venv/` e `__pycache__/` nunca são copiados para o
+Estas trazem *scripts* anexos e dependências próprias (Playwright, Mermaid e MathJax, `curl_cffi`, `pikepdf`, um serviço docling local e um venv Piper para TTS), instaladas
+sob demanda — por isso `node_modules/`, `.venv/`, `.cache/` e `__pycache__/` nunca são copiados para o
 alvo. Dado do usuário (listas de compra, mockups) mora no diretório de trabalho do projeto,
 **nunca dentro da skill**.
 
